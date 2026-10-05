@@ -1,0 +1,5 @@
+.env
+*.token
+.DS_Store
+# Raw exports before scrubbing never get committed
+exports-raw/

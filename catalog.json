@@ -1,0 +1,452 @@
+{
+  "schema_version": 1,
+  "links_checked": "2026-10-05",
+  "note": "Every brand is invented; no order, booking or payment is real.",
+  "experiences": [
+    {
+      "id": "01",
+      "slug": "01-whatsapp-lookalike",
+      "title": "WhatsApp lookalike",
+      "category": "support",
+      "channel": "web",
+      "summary": "A web chat that reads like a messenger thread, ticks and all.",
+      "brand": "Wendra",
+      "languages": null,
+      "live_url": "https://landbot.pro/v3/H-3514728-BX6Q6HCOMGIG6RS3/index.html",
+      "landbot_channel_id": 3514728,
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "02",
+      "slug": "02-fintech-salary-advance",
+      "title": "Fintech salary advance",
+      "category": "lead-capture",
+      "channel": "web",
+      "summary": "Amount chips, a live fee card and one confirm button.",
+      "brand": "Ondalia",
+      "languages": [
+        "es"
+      ],
+      "live_url": "https://landbot.pro/v3/H-3516185-76ORG9MIIYQPFYSU/index.html",
+      "landbot_channel_id": 3516185,
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "03",
+      "slug": "03-job-application-stepper",
+      "title": "Job application stepper",
+      "category": "lead-capture",
+      "channel": "web",
+      "summary": "Twelve questions in three sections, CV upload, Back and Continue.",
+      "brand": "Brisevale Labs",
+      "languages": null,
+      "live_url": "https://landbot.pro/v3/H-3516157-6L93GIJIEO7V2GUQ/index.html",
+      "landbot_channel_id": 3516157,
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "04",
+      "slug": "04-booking-stepper",
+      "title": "Booking stepper",
+      "category": "commerce",
+      "channel": "web",
+      "summary": "Airport search, dates and passengers in an airline-style stepper.",
+      "brand": "Vireo Air",
+      "languages": null,
+      "live_url": "https://landbot.pro/v3/H-3516162-ZKX809OOMBOZ9QTE/index.html",
+      "landbot_channel_id": 3516162,
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "05",
+      "slug": "05-language-app-lesson",
+      "title": "Language-app lesson",
+      "category": "engagement",
+      "channel": "web",
+      "summary": "A gamified lesson with hearts, streaks and a score.",
+      "brand": null,
+      "languages": [
+        "en",
+        "fr"
+      ],
+      "live_url": "https://landbot.pro/v3/H-3513672-YEY9C2IJRZ8GWMDY/index.html",
+      "landbot_channel_id": 3513672,
+      "alt_urls": {
+        "fr": "https://landbot.pro/v3/H-3513668-Q5J2R99E3QX18FXX/index.html"
+      },
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "06",
+      "slug": "06-personality-quiz",
+      "title": "Personality quiz",
+      "category": "engagement",
+      "channel": "web",
+      "summary": "Eight questions, three trait scores and a shareable result card.",
+      "brand": "Ottervane",
+      "languages": null,
+      "live_url": "https://landbot.pro/v3/H-3516146-100HWB7OBBE7NZJN/index.html",
+      "landbot_channel_id": 3516146,
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "07",
+      "slug": "07-choose-your-own-adventure",
+      "title": "Choose-your-own-adventure",
+      "category": "engagement",
+      "channel": "web",
+      "summary": "Five chapters, two endings and an inventory that remembers.",
+      "brand": "Mossglen Tales",
+      "languages": null,
+      "live_url": "https://landbot.pro/v3/H-3516220-N8VD6WKOL8JOGLBQ/index.html",
+      "landbot_channel_id": 3516220,
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "08",
+      "slug": "08-retro-terminal",
+      "title": "Retro terminal",
+      "category": "engagement",
+      "channel": "web",
+      "summary": "A green-screen game you play with A, B, C and Enter.",
+      "brand": "Pellowin OS",
+      "languages": null,
+      "live_url": "https://landbot.pro/v3/H-3516229-G39U5YH2ATTARKPP/index.html",
+      "landbot_channel_id": 3516229,
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "09",
+      "slug": "09-product-configurator",
+      "title": "Product configurator",
+      "category": "sales",
+      "channel": "web",
+      "summary": "Pick options with a photo hero; the spec builds as you go.",
+      "brand": "Kestrel",
+      "languages": null,
+      "live_url": "https://landbot.pro/v3/H-3514134-V0E3711UHWFANDQM/index.html",
+      "landbot_channel_id": 3514134,
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "10",
+      "slug": "10-food-ordering-menu",
+      "title": "Food ordering menu",
+      "category": "commerce",
+      "channel": "web",
+      "summary": "Category tabs, dish cards and a running cart with a minimum order.",
+      "brand": "Zumbalú Cantina",
+      "languages": null,
+      "live_url": "https://landbot.pro/v3/H-3516187-7RC1DBU60T5YKLYT/index.html",
+      "landbot_channel_id": 3516187,
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "11",
+      "slug": "11-insurance-quote",
+      "title": "Insurance quote",
+      "category": "lead-capture",
+      "channel": "web",
+      "summary": "Two cover options, a live price card and one call to action.",
+      "brand": "Hearthmoor",
+      "languages": null,
+      "live_url": "https://landbot.pro/v3/H-3516133-T5KS146P4NKRFXVN/index.html",
+      "landbot_channel_id": 3516133,
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "12",
+      "slug": "12-year-in-review-story",
+      "title": "Year-in-review story",
+      "category": "engagement",
+      "channel": "web",
+      "summary": "Full-screen story cards personalised from the link you open.",
+      "brand": "Brioletta Bakehouse",
+      "languages": null,
+      "live_url": "https://landbot.pro/v3/H-3516208-R4Y38WBZ7T7ZTO2Z/index.html",
+      "landbot_channel_id": 3516208,
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "13",
+      "slug": "13-demo-booking",
+      "title": "Demo booking",
+      "category": "sales",
+      "channel": "web",
+      "summary": "Qualify in three taps, then pick a day and a time slot.",
+      "brand": "Plumfold",
+      "languages": null,
+      "live_url": "https://landbot.pro/v3/H-3517943-AJ7TOHVPHQJEWXHY/index.html",
+      "landbot_channel_id": 3517943,
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "14",
+      "slug": "14-bot-to-human-handoff",
+      "title": "Bot-to-human handoff",
+      "category": "support",
+      "channel": "web",
+      "summary": "The bot collects the context, then a person takes over.",
+      "brand": "Quenderly",
+      "languages": null,
+      "live_url": "https://landbot.pro/v3/H-3517955-1I10TFZYN1KVK5S3/index.html",
+      "landbot_channel_id": 3517955,
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "15",
+      "slug": "15-property-viewing-finder",
+      "title": "Property viewing finder",
+      "category": "sales",
+      "channel": "web",
+      "summary": "Filter chips, listing cards with a match score, book a viewing.",
+      "brand": "Balcovell",
+      "languages": null,
+      "live_url": "https://landbot.pro/v3/H-3517957-9NEVALIKU1YSBJ2D/index.html",
+      "landbot_channel_id": 3517957,
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "16",
+      "slug": "16-exit-intent-lead-magnet",
+      "title": "Exit-intent lead magnet",
+      "category": "lead-capture",
+      "channel": "web",
+      "summary": "A bottom sheet that offers a report before the visitor leaves.",
+      "brand": "Quillmarsh",
+      "languages": null,
+      "live_url": "https://landbot.pro/v3/H-3517953-6FMKHVMZGWEK2LS8/index.html",
+      "landbot_channel_id": 3517953,
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "17",
+      "slug": "17-order-tracking",
+      "title": "Order tracking",
+      "category": "support",
+      "channel": "web",
+      "summary": "Delivery timeline plus three ways to change the drop-off.",
+      "brand": "Kettlestow",
+      "languages": null,
+      "live_url": "https://landbot.pro/v3/H-3517947-BR31AMEDVHR5UGKQ/index.html",
+      "landbot_channel_id": 3517947,
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "18",
+      "slug": "18-returns-swap-before-refund",
+      "title": "Returns: swap before refund",
+      "category": "commerce",
+      "channel": "web",
+      "summary": "Pick a reason; if the other size is in stock, swap it.",
+      "brand": "Oskelund",
+      "languages": null,
+      "live_url": "https://landbot.pro/v3/H-3517951-DR0X1YWLK206N08B/index.html",
+      "landbot_channel_id": 3517951,
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "19",
+      "slug": "19-technical-support-by-voice-note",
+      "title": "Technical support by voice note",
+      "category": "support",
+      "channel": "web",
+      "summary": "The farmer records a real voice note; an AI agent reads it and answers with the exact part to check, circled on a picture.",
+      "brand": "Surquel",
+      "languages": [
+        "en"
+      ],
+      "live_url": "https://landbot.pro/v3/H-3519270-KU8ZUVJ1Q7TKFDSG/index.html",
+      "landbot_channel_id": 3519270,
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "20",
+      "slug": "20-nps-survey-with-routing",
+      "title": "NPS survey with routing",
+      "category": "engagement",
+      "channel": "web",
+      "summary": "A 0–10 score that decides what happens next.",
+      "brand": "Pennaloft",
+      "languages": null,
+      "live_url": "https://landbot.pro/v3/H-3517945-X8NTBLHB8POF3GTH/index.html",
+      "landbot_channel_id": 3517945,
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "21",
+      "slug": "21-holiday-rental-guest-line",
+      "title": "Holiday-rental guest line",
+      "category": "support",
+      "channel": "voice",
+      "summary": "Guests call about parking or a problem; it answers from approved info and hands over when they are stuck.",
+      "brand": "Costaluma Stays",
+      "languages": [
+        "en",
+        "es"
+      ],
+      "live_url": "https://experiences.getagent.page/voice/guest-line",
+      "platform": "elevenlabs",
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "22",
+      "slug": "22-restaurant-bookings-by-phone",
+      "title": "Restaurant bookings by phone",
+      "category": "commerce",
+      "channel": "voice",
+      "summary": "Checks availability, offers two other times when yours is full, and reads the booking back.",
+      "brand": "Trattoria Fenzolo",
+      "languages": null,
+      "live_url": "https://experiences.getagent.page/voice/restaurant",
+      "platform": "elevenlabs",
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "23",
+      "slug": "23-inbound-lead-qualifier-call",
+      "title": "Inbound lead qualifier call",
+      "category": "sales",
+      "channel": "voice",
+      "summary": "Qualifies a new lead in two minutes, then books a demo or points small teams to the free trial.",
+      "brand": "Quillbeam",
+      "languages": null,
+      "live_url": "https://experiences.getagent.page/voice/lead-qualifier",
+      "platform": "elevenlabs",
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    },
+    {
+      "id": "24",
+      "slug": "24-broadband-troubleshooting",
+      "title": "Broadband troubleshooting",
+      "category": "support",
+      "channel": "voice",
+      "summary": "Checks your area, walks you through the router lights, and books an engineer if a restart fails.",
+      "brand": "Norrowline Fibre",
+      "languages": null,
+      "live_url": "https://experiences.getagent.page/voice/fibre-support",
+      "platform": "elevenlabs",
+      "export": {
+        "flow": false,
+        "ai_agents": false,
+        "channel_css": false,
+        "assets": false
+      }
+    }
+  ]
+}

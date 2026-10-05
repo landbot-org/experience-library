@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Checks that every live_url and alt_url in catalog.json answers 200.
+# Exits non-zero if any link fails, so CI can use it as-is.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+fail=0
+while read -r id url; do
+  code=$(curl -s -o /dev/null -w '%{http_code}' -L --max-time 20 "$url" || echo 000)
+  printf '%s  %s  %s\n' "$code" "$id" "$url"
+  [ "$code" = 200 ] || fail=1
+done < <(jq -r '.experiences[] | (.id + " " + .live_url), (.alt_urls // {} | to_entries[] | ("alt " + .value))' catalog.json)
+exit $fail
