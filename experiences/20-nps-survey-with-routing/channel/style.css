@@ -1,0 +1,235 @@
+/* lb-style: nps-pennaloft 2026-09-25 · [mockup 20] NPS survey · Pennaloft (invented invoicing app) · bot 4073840 / channel 3517945 · v4 3.1.0
+   Target: assets/mockups-library-13-20/20-nps.html (390×844): navy ground, cream Fraunces question, 0–10 row as 6 + 5 cells, amber pick,
+   "Not likely / Very likely", divider, score-aware follow-up, optional answer box, note card, amber Send, "Powered by Landbot" pill.
+   Channel JS adds: header row, held score row, end labels, answer box, note, Send, message kinds. Without JS the chat still works.
+   Layers: THEME · HEADER · SCREEN MODE [OFF-CATALOG] · MESSAGES · SCORE ROW [OFF-CATALOG list/search] · BUTTONS · INPUT · INJECTED · END · DESKTOP · SCROLLBARS. */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Karla:wght@400;600;700&display=swap');
+
+:root {
+  --np-bg:#1E2433; --np-ink:#F4F1EA; --np-sub:#B9BFCC; --np-cell:#262D3F; --np-line:#3A4257; --np-amber:#F2B84B;
+  --background:#1E2433 !important;
+  --foreground:#F4F1EA !important;
+  --muted:#B9BFCC !important;
+  --muted-foreground:#B9BFCC !important;
+  --border:#3A4257 !important;
+  --select-content-background:#262D3F !important;
+  --select-item-background-default:#262D3F !important;
+  --select-item-color-default:#F4F1EA !important;
+  --select-item-background-hover:#2E3649 !important;
+  --button-color-primary-default:#F2B84B !important;
+  --button-border-color-primary-default:#F2B84B !important;
+  --button-font-color-primary-default:#1E2433 !important;
+  --chat-bubble-color-font-bot:#F4F1EA !important;
+  --chat-bubble-surface-user:#262D3F !important;
+  --chat-bubble-border-color-user:#3A4257 !important;
+  --chat-bubble-color-font-user:#F4F1EA !important;
+  --input-background-default:#262D3F !important;
+  --textarea-background-default:#262D3F !important;
+  --input-border-color-default:#3A4257 !important;
+  --textarea-border-color-default:#3A4257 !important;
+  --input-color-text-default:#F4F1EA !important;
+  --textarea-color-text-default:#F4F1EA !important;
+  --web-chat-header-background:#1E2433 !important;
+  --web-chat-header-text-color:#F4F1EA !important;
+  --font-family-sans:"Karla",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+  --typography-font-family:"Karla",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+  --chat-bubble-font-family:"Karla",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+}
+html, body { background:#1E2433 !important; color:#F4F1EA; }
+[data-lb-part="window"] { background:#1E2433 !important; border:none !important; border-radius:0 !important; box-shadow:none !important; }
+
+/* HEADER [OFF-CATALOG]: native header row replaced by #np-top (logo tile + kicker), parked by JS */
+[data-lb-part="header"] { background:#1E2433 !important; border:none !important; }
+[data-lb-part="header"] > .responsive-container { padding:30px 22px 0 !important; }
+body.np-js [data-lb-part="header"] > .responsive-container > div:not(#np-top) { display:none !important; }
+[data-lb-part="header"] + div { display:none !important; }
+#np-top { display:flex; align-items:center; gap:10px; font:400 14px/1.2 "Karla",sans-serif; color:#B9BFCC; }
+#np-top .np-logo { width:32px; height:32px; border-radius:8px; background:#F4F1EA; color:#1E2433; display:inline-flex; align-items:center; justify-content:center; font:700 15px/1 "Karla",sans-serif; flex:0 0 auto; }
+
+/* SCREEN MODE [OFF-CATALOG]: current turn only (JS arrival order), thread at content height, footer takes the rest */
+[aria-label="Scrollable conversation area"] { flex:0 1 auto !important; min-height:0 !important; scrollbar-width:none; }
+[aria-label="Scrollable conversation area"]::-webkit-scrollbar { display:none; }
+[data-lb-part="window"] > .responsive-container:last-child { flex:1 0 auto; display:flex; flex-direction:column; padding:16px 22px 22px !important; gap:0; }
+[aria-label="Conversation messages"] { padding:20px 22px 0 !important; gap:0 !important; }
+[aria-label="Conversation messages"] > div[data-np-old] { display:none !important; }
+body:not(.np-js) [aria-label="Conversation messages"] > div:has([data-lb-author="user"]) { display:none !important; }
+body:not(.np-js) [aria-label="Conversation messages"] > div:has(~ div [data-lb-author="user"]) { display:none !important; }
+[aria-label="Conversation messages"] > span { display:none !important; }
+[data-lb-part="message"][data-lb-author="bot"] > div:has([data-lb-part="message-avatar"]) { display:none !important; }
+[data-lb-part="message-avatar"], [data-lb-part="message-timestamp"] { display:none !important; }
+/* NATIVE BACK [OFF-CATALOG selector]: design.back_button_visible = true. Shown as "‹ Back" on every question after the score
+   (follow-up, review ask, follow-up ask, email); hover-only by default → forced opacity:1 (phones); kept in the page flow (no position:fixed).
+   Hidden on the score screen and on the end screens (results, not questions). JS also drives it for "tap another score". */
+[aria-label="Conversation messages"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { opacity:1 !important; display:flex !important; justify-content:flex-start; }
+body.np-js:is([data-np-screen="score"],[data-np-screen="end"],[data-np-screen="fail"],[data-np-screen="loading"]) [aria-label="Conversation messages"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { display:none !important; }
+body:is([data-np-screen="follow"],[data-np-screen="email"]) [aria-label="Conversation messages"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { order:-1; margin:0 0 10px; }
+body:is([data-np-screen="review"],[data-np-screen="dfollow"]) [aria-label="Conversation messages"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { margin-top:6px; }
+[aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"] { background:transparent !important; border:none !important; box-shadow:none !important; color:#B9BFCC !important;
+  font:600 14px/1 "Karla",sans-serif !important; height:auto !important; min-height:32px; padding:6px 10px 6px 0 !important; gap:4px !important; cursor:pointer; }
+[aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"] svg { width:16px !important; height:16px !important; color:#B9BFCC !important; }
+[aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"]:hover { color:#F4F1EA !important; background:transparent !important; }
+[aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"]:focus-visible { outline:3px solid rgba(242,184,75,.55); outline-offset:2px; border-radius:6px; }
+[aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"].np-pressed { color:#F2B84B !important; }
+[data-lb-part="message"] { animation:np-in .28s cubic-bezier(.2,.7,.2,1); }
+[data-lb-part="message"][data-np-kind="held"] { animation:none; }
+@keyframes np-in { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+/* MESSAGES: no bubbles. Default = lead text; kinds from JS */
+[data-lb-part="message"][data-lb-author="bot"] > div { align-items:stretch !important; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-bubble"] { background:transparent !important; border:none !important; box-shadow:none !important; padding:0 !important; border-radius:0 !important; max-width:100% !important; width:100%; flex-direction:column !important; align-items:stretch !important; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-text"] { font:400 17px/1.45 "Karla",sans-serif; color:#D8DCE4; white-space:pre-line; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-text"] p { margin:0; }
+[aria-label="Conversation messages"] > div + div { margin-top:14px; }
+/* the score question (first screen and held) */
+[data-lb-part="message"][data-np-kind="q-score"] [data-lb-part="message-text"], .np-q,
+body:not(.np-js) [aria-label="Conversation messages"] > div:first-child [data-lb-part="message-text"] { font:700 30px/1.15 "Fraunces",Georgia,serif; color:#F4F1EA; letter-spacing:-0.2px; }
+.np-q { display:block; }
+/* follow-up / email question */
+[data-lb-part="message"][data-np-kind="q-follow"] [data-lb-part="message-text"] { font:600 22px/1.25 "Fraunces",Georgia,serif; color:#F4F1EA; }
+[aria-label="Conversation messages"] > div:has(> [data-np-kind="q-follow"]) { margin-top:20px; }
+[data-lb-part="message"][data-np-kind="title"] [data-lb-part="message-text"] { font:700 30px/1.15 "Fraunces",Georgia,serif; color:#F4F1EA; letter-spacing:-0.2px; }
+[data-lb-part="message"][data-np-kind="fine"] [data-lb-part="message-text"] { font:400 13px/1.45 "Karla",sans-serif; color:#B9BFCC; }
+[aria-label="Conversation messages"] > div:has(> [data-np-kind="record"]), [aria-label="Conversation messages"] > div:has(> [data-np-kind="card"]) { margin-top:20px; }
+[data-np-src] { display:none !important; }
+.np-clone { width:100%; flex:1 1 auto; align-self:stretch; margin-top:0 !important; }
+
+/* SCORE ROW [OFF-CATALOG]: the native 5+ list (11 options) → no prompt, no search box, 6 + 5 grid */
+div:has(> [data-lb-part="options-group"]) { border:none !important; padding:0 !important; background:transparent !important; box-shadow:none !important; border-radius:0 !important; }
+[data-lb-part="options-group"] { background:transparent !important; border:none !important; padding:0 !important; box-shadow:none !important; gap:0 !important; }
+[data-lb-part="options-prompt"], div:has(> [data-lb-part="options-prompt"]) { display:none !important; }
+[data-lb-part="options-group"] > div[data-slot="input-group"], [data-lb-part="options-search"] { display:none !important; }
+[data-lb-part="options-group"] > div:has(> [data-slot="separator"]), [data-lb-part="options-group"] > [data-slot="separator"] { display:none !important; }
+[data-lb-part="options-list"] { display:flex !important; flex-direction:column !important; gap:10px !important; max-height:none !important; height:auto !important; overflow:visible !important; padding:0 !important; background:transparent !important; border:none !important; }
+body[data-np-screen="score"] [data-lb-part="options-list"], body:not(.np-js) [data-lb-part="options-list"]:has(> [data-lb-part="option-button"]:nth-child(11)) {
+  display:grid !important; grid-template-columns:repeat(30, minmax(0, 1fr)); gap:8px 6px !important; }
+.np-grid { display:grid; grid-template-columns:repeat(30, minmax(0, 1fr)); gap:8px 6px; margin-top:20px; }
+body[data-np-screen="score"] [data-lb-part="option-button"]:nth-child(-n+6), .np-grid > .np-cell:nth-child(-n+6),
+body:not(.np-js) [data-lb-part="options-list"]:has(> :nth-child(11)) > [data-lb-part="option-button"]:nth-child(-n+6) { grid-column:span 5; }
+body[data-np-screen="score"] [data-lb-part="option-button"]:nth-child(n+7), .np-grid > .np-cell:nth-child(n+7),
+body:not(.np-js) [data-lb-part="options-list"]:has(> :nth-child(11)) > [data-lb-part="option-button"]:nth-child(n+7) { grid-column:span 6; }
+body[data-np-screen="score"] [data-lb-part="option-button"], .np-cell,
+body:not(.np-js) [data-lb-part="options-list"]:has(> :nth-child(11)) > [data-lb-part="option-button"] {
+  display:flex !important; align-items:center !important; justify-content:center !important; min-height:48px !important; height:48px !important; width:auto !important; margin:0 !important; padding:0 !important;
+  border:1px solid #3A4257 !important; border-radius:10px !important; background:#262D3F !important; color:#F4F1EA !important; box-shadow:none !important;
+  font:700 17px/1 "Karla",sans-serif !important; cursor:pointer; -webkit-tap-highlight-color:transparent; transition:background .12s, border-color .12s, transform .08s; }
+body[data-np-screen="score"] [data-lb-part="option-button"] span { flex-grow:0 !important; text-align:center !important; overflow:visible !important; }
+@media (hover:hover) { body[data-np-screen="score"] [data-lb-part="option-button"]:hover, .np-cell:hover { border-color:#6B7489 !important; background:#2E3649 !important; } }
+body[data-np-screen="score"] [data-lb-part="option-button"][data-np-tap], .np-cell[data-on] { background:#F2B84B !important; color:#1E2433 !important; border-color:#F2B84B !important; transition:none !important; }
+body[data-np-screen="score"] [data-lb-part="option-button"]:active, .np-cell:active { transform:scale(.96); }
+body[data-np-screen="score"] [data-lb-part="option-button"]:focus-visible, .np-cell:focus-visible { outline:3px solid rgba(242,184,75,.55); outline-offset:2px; }
+.np-ends { display:flex; justify-content:space-between; font:400 13px/1.2 "Karla",sans-serif; color:#B9BFCC; margin-top:8px; }
+.np-rule { height:1px; background:#3A4257; margin-top:26px; }
+body.np-changing .np-held .np-cell[data-on] { animation:np-pulse .6s ease infinite alternate; }
+@keyframes np-pulse { from { opacity:1; } to { opacity:.6; } }
+
+/* BUTTONS on the other screens: amber primary, outlined secondary */
+[data-lb-part="option-button"][data-np-role="primary"], [data-lb-part="option-button"][data-np-role="secondary"],
+body:not(.np-js) [data-lb-part="options-list"]:not(:has(> :nth-child(11))) > [data-lb-part="option-button"] {
+  display:flex !important; align-items:center !important; justify-content:center !important; width:100%; min-height:54px; height:auto !important; padding:12px 18px !important; margin:0 !important;
+  border-radius:12px !important; font:700 16px/1.2 "Karla",sans-serif !important; box-shadow:none !important; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+[data-lb-part="option-button"][data-np-role="primary"], body:not(.np-js) [data-lb-part="options-list"]:not(:has(> :nth-child(11))) > [data-lb-part="option-button"] { background:#F2B84B !important; color:#1E2433 !important; border:0 !important; }
+[data-lb-part="option-button"][data-np-role="secondary"] { background:transparent !important; color:#F4F1EA !important; border:1px solid #3A4257 !important; }
+[data-lb-part="option-button"][data-np-role] span { flex-grow:0 !important; text-align:center !important; white-space:normal !important; }
+@media (hover:hover) { [data-lb-part="option-button"][data-np-role="primary"]:hover { background:#F5C466 !important; } [data-lb-part="option-button"][data-np-role="secondary"]:hover { border-color:#6B7489 !important; } }
+[data-lb-part="option-button"][data-np-role][data-np-tap] { filter:brightness(.9); transform:scale(.985); }
+[data-lb-part="option-button"][data-np-role]:focus-visible { outline:3px solid rgba(242,184,75,.55); outline-offset:2px; }
+
+/* TEXT INPUT (email; the follow-up field is driven by #np-box). Input-row guard (REFERENCE §4). */
+[data-lb-part="text-input"] { padding:0 !important; }
+[data-lb-part="input-field"] { display:flex !important; flex-direction:row !important; flex-wrap:nowrap !important; align-items:center !important; gap:8px !important; height:auto !important;
+  background:#262D3F !important; border:1px solid #3A4257 !important; border-radius:12px !important; box-shadow:none !important; padding:4px 6px 4px 14px !important; min-height:54px; }
+[data-lb-part="input-field"]:focus-within { border-color:#F2B84B !important; }
+[data-lb-part="text-input"][data-lb-state="error"] [data-lb-part="input-field"] { border-color:#ff8a80 !important; }
+[data-lb-part="input-field"] > input, [data-lb-part="input-field"] > textarea { flex:1 1 0% !important; width:auto !important; min-width:0 !important; height:auto !important; padding:10px 0 !important;
+  border:none !important; outline:none !important; box-shadow:none !important; background:transparent !important; color:#F4F1EA !important; font:400 16px/1.4 "Karla",sans-serif !important; }
+[data-lb-part="input-field"] > input::placeholder { color:#7E869A !important; }
+[data-lb-part="input-field"] > div { flex:0 0 auto !important; width:auto !important; max-width:none !important; }
+[data-lb-part="input-submit"] { background:#F2B84B !important; color:#1E2433 !important; border:none !important; border-radius:10px !important; min-width:42px; min-height:42px; }
+[data-lb-part="input-submit"] svg { color:#1E2433 !important; stroke:#1E2433 !important; }
+body.np-js [data-lb-part="input-submit"] { display:none !important; }
+body.np-js [data-lb-part="input-field"] { padding:4px 14px !important; }
+[data-lb-part="input-error"] { color:#ff8a80 !important; font:600 13px/1.4 "Karla",sans-serif !important; margin-top:8px; }
+/* follow-up screen: the native one-line field stays in the DOM for the flow, #np-box is what the visitor sees */
+body.np-js[data-np-screen="follow"] [data-lb-part="text-input"] { position:absolute !important; left:-9999px !important; width:300px; height:1px; overflow:hidden; opacity:0; pointer-events:none; }
+
+/* INJECTED: answer box, note card, Send */
+#np-box { display:flex; flex-direction:column; gap:6px; font:600 13px/1.2 "Karla",sans-serif; color:#B9BFCC; }
+#np-why { box-sizing:border-box; width:100%; min-height:114px; padding:12px 14px; border:1px solid #3A4257; border-radius:12px; background:#262D3F; color:#F4F1EA;
+  font:400 16px/1.4 "Karla",sans-serif; resize:none; outline:0; }
+#np-why::placeholder { color:#7E869A; }
+#np-why:focus { border-color:#F2B84B; }
+#np-note { display:flex; align-items:center; gap:12px; margin-top:20px; padding:14px 16px; border-radius:12px; background:#262D3F; font:400 14px/1.4 "Karla",sans-serif; color:#D8DCE4; }
+.np-star { flex:0 0 auto; width:22px; height:22px; background:no-repeat center / 22px 22px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F2B84B' stroke-width='2' stroke-linejoin='round'><path d='M12 3l2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 16.8 6.6 19.7l1.1-6.1-4.5-4.2 6.1-.8z'/></svg>"); }
+#np-send-wrap { margin-top:auto; padding-top:24px; position:relative; }
+#np-send-wrap[hidden] { display:none; }
+#np-send { display:flex; align-items:center; justify-content:center; width:100%; min-height:54px; border:0; border-radius:12px; background:#F2B84B; color:#1E2433; font:700 17px/1 "Karla",sans-serif; letter-spacing:.02em; cursor:pointer; -webkit-tap-highlight-color:transparent; transition:transform .08s, background .12s; }
+#np-send:hover { background:#F5C466; }
+#np-send.np-pressed, #np-send:active { transform:scale(.985); background:#E0A73D; }
+#np-send[aria-disabled="true"] { opacity:.5; }
+#np-send:focus-visible { outline:3px solid rgba(242,184,75,.55); outline-offset:2px; }
+#np-hint { position:absolute; left:0; right:0; top:0; text-align:center; font:600 13px/1.2 "Karla",sans-serif; color:#F2B84B; }
+body.np-nudge [data-lb-part="options-list"] { animation:np-nudge .36s ease; }
+@keyframes np-nudge { 0%,100% { transform:none; } 25% { transform:translateX(-5px); } 75% { transform:translateX(5px); } }
+
+/* END: placeholder review card + record */
+.np-card { display:flex; gap:12px; align-items:flex-start; padding:14px 16px; border-radius:12px; background:#262D3F; border:1px dashed #3A4257; }
+.np-card-t { font:700 15px/1.3 "Karla",sans-serif; color:#F4F1EA; }
+.np-card-u { font:600 15px/1.4 "Karla",sans-serif; color:#F2B84B; }
+.np-card-n { font:400 13px/1.4 "Karla",sans-serif; color:#B9BFCC; margin-top:4px; }
+.np-record { background:#262D3F; border-radius:12px; padding:14px 16px; }
+.np-r-t { font:700 12px/1.2 "Karla",sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#B9BFCC; margin-bottom:6px; }
+.np-r-row { display:flex; justify-content:space-between; gap:12px; padding:7px 0; border-top:1px solid #3A4257; font:400 14px/1.35 "Karla",sans-serif; color:#F4F1EA; }
+.np-r-row:first-of-type { border-top:none; }
+.np-r-k { color:#B9BFCC; flex:0 0 auto; }
+.np-r-v { font-weight:700; text-align:right; overflow-wrap:anywhere; }
+body[data-np-screen="end"] [data-lb-part="window"] > .responsive-container:last-child, body[data-np-screen="review"] [data-lb-part="window"] > .responsive-container:last-child,
+body[data-np-screen="dfollow"] [data-lb-part="window"] > .responsive-container:last-child { padding-top:22px !important; }
+[data-np-role] ~ [data-np-role] { margin-top:10px !important; }
+
+/* BRANDING: "Powered by Landbot" pill at the bottom */
+[data-lb-part="window"] > .responsive-container:last-child > div:last-child { padding-top:20px !important; display:flex; justify-content:center; }
+body:not([data-np-screen="score"]):not([data-np-screen="follow"]):not([data-np-screen="email"]) [data-lb-part="window"] > .responsive-container:last-child > div:last-child { margin-top:auto; }
+[data-lb-part="branding"] { display:inline-block !important; white-space:nowrap; padding:7px 14px !important; border-radius:999px; background:#262D3F; color:#B9BFCC !important; font:600 12px/1.2 "Karla",sans-serif !important; }
+[data-lb-part="branding"]::before { content:""; display:inline-block; vertical-align:0; width:8px; height:8px; margin-right:8px; border-radius:50%; background:#B9BFCC; }
+[data-lb-part="branding"] a, [data-lb-part="branding"] * { color:#B9BFCC !important; font-weight:600 !important; }
+
+/* SCREEN CHANGE: fade on send (JS body.np-leaving) */
+[aria-label="Conversation messages"], [data-lb-part="window"] > .responsive-container:last-child > div:first-child { transition:opacity .16s ease; }
+body.np-leaving [aria-label="Conversation messages"] > div:not(:has([data-np-kind="held"])), body.np-leaving [data-lb-part="window"] > .responsive-container:last-child > div:first-child { opacity:.35; transition:opacity .12s ease .08s; }
+
+/* DESKTOP: centred column */
+.responsive-container { max-width:480px !important; margin-left:auto !important; margin-right:auto !important; width:100%; }
+@media (min-width:700px) {
+  [data-lb-part="window"] { justify-content:flex-start !important; }
+  [data-lb-part="header"] > .responsive-container { padding-top:max(40px, 6vh) !important; }
+  [data-lb-part="window"] > .responsive-container:last-child { flex:0 0 auto; }
+}
+
+/* SCROLLBARS */
+* { scrollbar-width:thin; scrollbar-color:#3A4257 transparent; }
+*::-webkit-scrollbar { width:8px; height:8px; }
+*::-webkit-scrollbar-track { background:transparent; }
+*::-webkit-scrollbar-thumb { background:#3A4257; border-radius:8px; }
+*::-webkit-scrollbar-thumb:hover { background:#4A536A; }
+
+/* ROUND 1: email error under the field, in the survey's words */
+[data-lb-part="text-input"] > [data-lb-part="input-error"], [data-lb-part="text-input"] > div:has(> [data-lb-part="input-error"]) { order:2; }
+body[data-np-screen="email"] [data-lb-part="input-error"] > * { display:none !important; }
+body[data-np-screen="email"] [data-lb-part="input-error"]::after { content:"That email looks incomplete. Try name@example.com."; }
+body[data-np-screen="email"] [data-lb-part="text-input"]::after { content:"Only used for this follow-up. Demo: no one is contacted."; order:3; display:block; margin-top:10px; font:400 13px/1.4 "Karla",sans-serif; color:#B9BFCC; }
+
+/* ROUND 2 (cold review): the <p> inside message-text keeps web-chat's own line-height/tracking → glyph jump and clipped descenders */
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-text"] p { font:inherit !important; letter-spacing:inherit !important; line-height:inherit !important; color:inherit !important; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-text"] { overflow:visible !important; padding-bottom:2px; }
+[data-np-still] { animation:none !important; }
+#np-why:focus { border-color:#8A93A8; }
+/* ROUND 3: follow-up spacing to the mockup's 20 px rhythm */
+body[data-np-screen="follow"] [data-lb-part="window"] > .responsive-container:last-child { padding-top:8px !important; }
+#np-note { margin-top:14px; line-height:1.35; padding:14px; }
+/* BACK ROUND: the Back row costs ~40 px on the follow-up screen → tighter rhythm so 390×844 fits without clipping */
+body[data-np-screen="follow"] .np-rule { margin-top:16px; }
+body:is([data-np-screen="follow"],[data-np-screen="email"]) [aria-label="Conversation messages"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { margin:6px 0 2px; }
+body[data-np-screen="follow"] [aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"] { min-height:26px; padding-top:4px !important; padding-bottom:4px !important; }
+body[data-np-screen="follow"] #np-send-wrap { padding-top:16px; }
+body[data-np-screen="follow"] #np-note { margin-top:12px; }

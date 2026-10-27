@@ -1,0 +1,189 @@
+#!/usr/bin/env python3
+"""Generate experiences/<slug>/README.md and the "Try them" tables in README.md
+from catalog.json, so the docs never drift from the catalog.
+
+Run after editing catalog.json or after scripts/pull-public.
+"""
+import json
+import pathlib
+import re
+
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+REPO = "https://github.com/landbot-org/experience-library"
+
+CATEGORIES = [
+    ("lead-capture", "Lead capture"),
+    ("sales", "Sales"),
+    ("commerce", "Commerce"),
+    ("support", "Support"),
+    ("engagement", "Engagement"),
+]
+CATEGORY_NAME = dict(CATEGORIES)
+LANGUAGE_NAME = {"en": "English", "es": "Spanish", "fr": "French"}
+EXPORT_LAYERS = [
+    ("flow", "Flow (blocks and connections)"),
+    ("ai_agents", "AI agents"),
+    ("channel_css", "Channel Custom CSS"),
+    ("channel_js", "Channel Custom JS"),
+    ("assets", "Media used in the flow"),
+]
+START = "<!-- experiences:start -->"
+END = "<!-- experiences:end -->"
+
+
+def languages(exp):
+    langs = exp.get("languages") or ["en"]
+    return ", ".join(LANGUAGE_NAME.get(l, l) for l in langs)
+
+
+def try_links(exp, relative_to=""):
+    verb = "Talk to it" if exp["channel"] == "voice" else "Try it"
+    alts = exp.get("alt_urls") or {}
+    if not alts:
+        return f"[{verb} live]({exp['live_url']})"
+    main = LANGUAGE_NAME.get((exp.get("languages") or ["en"])[0], "Live")
+    links = [f"[{main}]({exp['live_url']})"]
+    links += [f"[{LANGUAGE_NAME.get(k, k)}]({v})" for k, v in alts.items()]
+    return " · ".join(links)
+
+
+def welcome(exp):
+    cfg = ROOT / "experiences" / exp["slug"] / "channel" / "config.json"
+    if not cfg.exists():
+        return None
+    msgs = json.loads(cfg.read_text()).get("welcome") or []
+    text = " ".join(m.get("message", "") for m in msgs).strip()
+    return text or None
+
+
+def experience_readme(exp):
+    d = ROOT / "experiences" / exp["slug"]
+    voice = exp["channel"] == "voice"
+    brand = f"**{exp['brand']}** (invented)" if exp.get("brand") else "No brand"
+    lines = [
+        f"# {exp['title']}",
+        "",
+        f"{exp['summary']}",
+        "",
+        f"| | |",
+        f"|---|---|",
+        f"| Use case | {CATEGORY_NAME[exp['category']]} |",
+        f"| Channel | {'Voice agent (ElevenLabs)' if voice else 'Landbot web chat'} |",
+        f"| Runs as | {brand} |",
+        f"| Language | {languages(exp)} |",
+        f"| Try it | {try_links(exp)} |",
+        "",
+        f'<img src="preview.jpg" alt="{exp["title"]}, screenshot of the live experience" width="300">',
+        "",
+    ]
+    if exp.get("hold"):
+        lines += [f"> **On hold.** {exp['hold']}", ""]
+    if exp.get("recipe"):
+        lines += [
+            "## Build it in your own account",
+            "",
+            "Follow [`RECIPE.md`](RECIPE.md) with your agent and the",
+            f"[Landbot plugin]({REPO}#what-you-need). Check its status first: a recipe",
+            "with a section marked PENDING is not ready to build.",
+            "",
+        ]
+    first = welcome(exp)
+    if first:
+        lines += ["## How it opens", "", f"> {first}", ""]
+
+    if voice:
+        lines += [
+            "## What is in this folder",
+            "",
+            "| File | What it is |",
+            "|---|---|",
+            "| `preview.jpg` | Screenshot of the live call at phone width |",
+            "",
+            "## Rebuilding it",
+            "",
+            "Not possible from this repo. Voice agents run on ElevenLabs, not Landbot,",
+            "and their configuration is not exported here. Calls end after four minutes;",
+            "the card beside the call shows what would land in the Landbot inbox.",
+            "",
+        ]
+    else:
+        files = [("preview.jpg", "Screenshot of the live bot at phone width")]
+        if (d / "RECIPE.md").exists():
+            files.insert(0, ("RECIPE.md", "How to build it with the Landbot plugin"))
+        ch = d / "channel"
+        if (ch / "style.css").exists():
+            files.append(("channel/style.css", "The channel's Custom CSS, as published"))
+        if (ch / "custom.js").exists():
+            files.append(("channel/custom.js", "The channel's Custom JS, as published"))
+        if (ch / "config.json").exists():
+            files.append(("channel/config.json", "Design settings, welcome message and texts, as published"))
+        if (ch / "assets").exists():
+            files.append(("channel/assets/", "Media referenced by the channel config (avatar, logo)"))
+        lines += ["## What is in this folder", "", "| File | What it is |", "|---|---|"]
+        lines += [f"| [`{f}`]({f}) | {w} |" for f, w in files]
+        lines += [""]
+
+        ex = exp["export"]
+        lines += [
+            "## Export status",
+            "",
+            "| Layer | In this repo |",
+            "|---|---|",
+        ]
+        lines += [f"| {name} | {'✅' if ex.get(k) else '—'} |" for k, name in EXPORT_LAYERS]
+        lines += [""]
+        if all(ex.get(k) for k, _ in EXPORT_LAYERS):
+            lines += [
+                "Everything needed to rebuild it is here. See",
+                f"[Rebuild one in your own Landbot account]({REPO}#rebuild-one-in-your-own-landbot-account).",
+                "",
+            ]
+        elif not exp.get("recipe"):
+            lines += [
+                "**It cannot be rebuilt from this repo yet.** There is no recipe for it,",
+                "and its flow has not been exported. Until then, try it live.",
+                "",
+            ]
+        if ex.get("channel_js"):
+            lines += [
+                "Its look depends on Custom JS. Landbot serves Custom JS only to accounts",
+                "with the Custom Code feature, so a rebuild on an account without it will",
+                "not look like the preview.",
+                "",
+            ]
+    lines += [f"[← Back to the library]({REPO}#try-them)", ""]
+    (d / "README.md").write_text("\n".join(lines))
+
+
+def library_tables(exps):
+    out = []
+    for key, name in CATEGORIES:
+        rows = [e for e in exps if e["category"] == key]
+        if not rows:
+            continue
+        out += [f"### {name}", "", "| Experience | What it shows | Try it |", "|---|---|---|"]
+        for e in rows:
+            mark = " 🎙️" if e["channel"] == "voice" else ""
+            out.append(
+                f"| [{e['title']}](experiences/{e['slug']}){mark} | {e['summary']} | {try_links(e)} |"
+            )
+        out.append("")
+    return "\n".join(out).rstrip() + "\n"
+
+
+def main():
+    exps = json.loads((ROOT / "catalog.json").read_text())["experiences"]
+    for e in exps:
+        experience_readme(e)
+    readme = ROOT / "README.md"
+    text = readme.read_text()
+    block = f"{START}\n{library_tables(exps)}{END}"
+    text, n = re.subn(re.escape(START) + r".*?" + re.escape(END), block, text, flags=re.S)
+    if n != 1:
+        raise SystemExit(f"README.md needs exactly one {START} … {END} block")
+    readme.write_text(text)
+    print(f"wrote {len(exps)} experience READMEs and the library tables")
+
+
+if __name__ == "__main__":
+    main()

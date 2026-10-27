@@ -18,8 +18,11 @@
         "flow": false,
         "ai_agents": false,
         "channel_css": false,
+        "channel_js": false,
         "assets": false
-      }
+      },
+      "hold": "The live demo has known issues (mic and menu do nothing, no mobile keyboard handling, slow loader). Its CSS/JS stays out of the repo until the fixed version passes the iPhone test.",
+      "recipe": "experiences/01-whatsapp-lookalike/RECIPE.md"
     },
     {
       "id": "02",
@@ -37,7 +40,8 @@
       "export": {
         "flow": false,
         "ai_agents": false,
-        "channel_css": false,
+        "channel_css": true,
+        "channel_js": true,
         "assets": false
       }
     },
@@ -55,7 +59,8 @@
       "export": {
         "flow": false,
         "ai_agents": false,
-        "channel_css": false,
+        "channel_css": true,
+        "channel_js": true,
         "assets": false
       }
     },
@@ -73,7 +78,8 @@
       "export": {
         "flow": false,
         "ai_agents": false,
-        "channel_css": false,
+        "channel_css": true,
+        "channel_js": true,
         "assets": false
       }
     },
@@ -97,7 +103,8 @@
       "export": {
         "flow": false,
         "ai_agents": false,
-        "channel_css": false,
+        "channel_css": true,
+        "channel_js": true,
         "assets": false
       }
     },
@@ -115,7 +122,8 @@
       "export": {
         "flow": false,
         "ai_agents": false,
-        "channel_css": false,
+        "channel_css": true,
+        "channel_js": true,
         "assets": false
       }
     },
@@ -133,7 +141,8 @@
       "export": {
         "flow": false,
         "ai_agents": false,
-        "channel_css": false,
+        "channel_css": true,
+        "channel_js": true,
         "assets": false
       }
     },
@@ -151,7 +160,8 @@
       "export": {
         "flow": false,
         "ai_agents": false,
-        "channel_css": false,
+        "channel_css": true,
+        "channel_js": true,
         "assets": false
       }
     },
@@ -169,7 +179,8 @@
       "export": {
         "flow": false,
         "ai_agents": false,
-        "channel_css": false,
+        "channel_css": true,
+        "channel_js": true,
         "assets": false
       }
     },
@@ -187,7 +198,8 @@
       "export": {
         "flow": false,
         "ai_agents": false,
-        "channel_css": false,
+        "channel_css": true,
+        "channel_js": true,
         "assets": false
       }
     },
@@ -205,7 +217,8 @@
       "export": {
         "flow": false,
         "ai_agents": false,
-        "channel_css": false,
+        "channel_css": true,
+        "channel_js": true,
         "assets": false
       }
     },
@@ -223,7 +236,8 @@
       "export": {
         "flow": false,
         "ai_agents": false,
-        "channel_css": false,
+        "channel_css": true,
+        "channel_js": true,
         "assets": false
       }
     },
@@ -241,7 +255,8 @@
       "export": {
         "flow": false,
         "ai_agents": false,
-        "channel_css": false,
+        "channel_css": true,
+        "channel_js": true,
         "assets": false
       }
     },
@@ -259,7 +274,8 @@
       "export": {
         "flow": false,
         "ai_agents": false,
-        "channel_css": false,
+        "channel_css": true,
+        "channel_js": true,
         "assets": false
       }
     },
@@ -277,7 +293,8 @@
       "export": {
         "flow": false,
         "ai_agents": false,
-        "channel_css": false,
+        "channel_css": true,
+        "channel_js": true,
         "assets": false
       }
     },
@@ -295,7 +312,8 @@
       "export": {
         "flow": false,
         "ai_agents": false,
-        "channel_css": false,
+        "channel_css": true,
+        "channel_js": true,
         "assets": false
       }
     },
@@ -313,7 +331,8 @@
       "export": {
         "flow": false,
         "ai_agents": false,
-        "channel_css": false,
+        "channel_css": true,
+        "channel_js": true,
         "assets": false
       }
     },
@@ -331,7 +350,8 @@
       "export": {
         "flow": false,
         "ai_agents": false,
-        "channel_css": false,
+        "channel_css": true,
+        "channel_js": true,
         "assets": false
       }
     },
@@ -351,7 +371,8 @@
       "export": {
         "flow": false,
         "ai_agents": false,
-        "channel_css": false,
+        "channel_css": true,
+        "channel_js": true,
         "assets": false
       }
     },
@@ -369,7 +390,8 @@
       "export": {
         "flow": false,
         "ai_agents": false,
-        "channel_css": false,
+        "channel_css": true,
+        "channel_js": true,
         "assets": false
       }
     },
@@ -391,6 +413,7 @@
         "flow": false,
         "ai_agents": false,
         "channel_css": false,
+        "channel_js": false,
         "assets": false
       }
     },
@@ -409,6 +432,7 @@
         "flow": false,
         "ai_agents": false,
         "channel_css": false,
+        "channel_js": false,
         "assets": false
       }
     },
@@ -427,6 +451,7 @@
         "flow": false,
         "ai_agents": false,
         "channel_css": false,
+        "channel_js": false,
         "assets": false
       }
     },
@@ -445,6 +470,7 @@
         "flow": false,
         "ai_agents": false,
         "channel_css": false,
+        "channel_js": false,
         "assets": false
       }
     }

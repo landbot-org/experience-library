@@ -1,0 +1,227 @@
+/* lb-style: oskelund-returns 2026-09-25 */
+/* [mockup 18] Returns: swap before refund · Oskelund (invented) · bot 4073846 / channel 3517951 · v4 web chat 3.1.0
+   Target: assets/mockups-library-13-20/18-returns.html (390x844): Archivo, ink #111, grey #6B6B6B, hairline #E6E6E6, square corners,
+   brand row + "RETURN · N OF 3", item card with tile, 24/800 question, radio rows, tinted offer card with black + outlined buttons.
+   Channel JS adds: header row, item/order/record/label clones, still reason list, offer card, roles on buttons.
+   Layers: THEME · HEADER · SCREEN MODE [OFF-CATALOG] · MESSAGES · CLONES · OPTIONS · OFFER · INPUT · BRANDING · DESKTOP · SCROLLBARS. */
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap');
+
+:root {
+  --background:#FFFFFF !important;
+  --foreground:#111111 !important;
+  --muted-foreground:#6B6B6B !important;
+  --border:#E6E6E6 !important;
+  --button-color-primary-default:#111111 !important;
+  --button-border-color-primary-default:#111111 !important;
+  --button-font-color-primary-default:#FFFFFF !important;
+  --chat-bubble-color-font-bot:#111111 !important;
+  --input-background-default:#FFFFFF !important;
+  --input-border-color-default:#E6E6E6 !important;
+  --input-border-color-focus:#111111 !important;
+  --input-ring-color-focus:transparent !important;
+  --input-color-text-default:#111111 !important;
+  --web-chat-header-background:#FFFFFF !important;
+  --web-chat-header-text-color:#111111 !important;
+  --font-family-sans:"Archivo",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+  --typography-font-family:"Archivo",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+  --chat-bubble-font-family:"Archivo",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+}
+html, body { background:#FFFFFF !important; }
+[data-lb-part="window"] { background:#FFFFFF !important; border:none !important; border-radius:0 !important; box-shadow:none !important; }
+
+/* HEADER [OFF-CATALOG]: native row hidden, #rt-top (brand + step) parked in the header container by JS */
+[data-lb-part="header"] { background:#FFFFFF !important; }
+[data-lb-part="header"] > div { padding:24px 20px 0 !important; display:block !important; }
+body.rt-js [data-lb-part="header"] > div > div:not(#rt-top) { display:none !important; }
+[data-lb-part="header"] + div { display:none !important; }
+#rt-top { display:flex; justify-content:space-between; align-items:center; gap:12px; font:600 13px/1.1 "Archivo",sans-serif; letter-spacing:.06em; text-transform:uppercase; }
+#rt-top .rt-brand { color:#111111; }
+#rt-top .rt-step { color:#6B6B6B; }
+#rt-top .rt-right { display:flex; align-items:center; gap:14px; }
+#rt-back { all:unset; box-sizing:border-box; cursor:pointer; display:inline-flex; align-items:center; min-height:32px; margin:-9px 0; padding:0 10px; border:1px solid #111111; color:#111111;
+  font:600 12px/1 "Archivo",sans-serif; letter-spacing:.06em; text-transform:uppercase; -webkit-tap-highlight-color:transparent; }
+#rt-back[hidden] { display:none; }
+@media (hover:hover) { #rt-back:hover { background:#F2EFE9; } }
+#rt-back:active { background:#3A3A3A; color:#FFFFFF; }
+#rt-back:focus-visible { outline:2px solid #111111; outline-offset:2px; }
+body:not(.rt-js) [data-lb-part="header"] h4 { font:600 13px/1.2 "Archivo",sans-serif !important; letter-spacing:.06em; text-transform:uppercase; }
+
+/* SCREEN MODE [OFF-CATALOG]: the current screen only; thread takes its content height, the footer follows */
+[aria-label="Scrollable conversation area"] { flex:0 1 auto !important; min-height:0 !important; scrollbar-width:none; }
+[aria-label="Scrollable conversation area"]::-webkit-scrollbar { display:none; }
+[aria-label="Conversation messages"] { padding:16px 20px 0 !important; gap:16px !important; }
+[aria-label="Conversation messages"] > div[data-rt-old] { display:none !important; }
+body:not(.rt-js) [aria-label="Conversation messages"] > div:has([data-lb-author="user"]) { display:none !important; }
+[aria-label="Conversation messages"] > span { display:none !important; }                              /* typing indicator */
+[data-lb-part="message"][data-lb-author="bot"] > div:has([data-lb-part="message-avatar"]) { display:none !important; }
+[data-lb-part="message-timestamp"] { display:none !important; }
+/* NATIVE BACK (design.back_button_visible:true). With the skin on, the header "‹ Back" (#rt-top) clicks this same native button,
+   so the in-thread copy is not drawn twice. Without the skin it shows, forced visible (it is hover-only on phones) and in flow. */
+body.rt-js [aria-label="Conversation messages"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { display:none !important; }
+body:not(.rt-js) [aria-label="Conversation messages"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { opacity:1 !important; position:static !important; }
+[data-lb-part="message"] { animation:rt-in .28s cubic-bezier(.2,.7,.2,1); }
+@keyframes rt-in { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+/* MESSAGES: text on the page, no bubble */
+[data-lb-part="message"][data-lb-author="bot"] > div { align-items:stretch !important; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-bubble"] { background:transparent !important; border:none !important; box-shadow:none !important; padding:0 !important; border-radius:0 !important; max-width:100% !important; width:100%; flex-direction:column !important; align-items:stretch !important; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-text"] { font:400 15px/1.45 "Archivo",sans-serif; color:#111111; white-space:pre-line; }
+[data-lb-part="message"][data-rt-kind="question"] [data-lb-part="message-text"], [data-lb-part="message"][data-rt-kind="email"] [data-lb-part="message-text"] { font:800 24px/1.2 "Archivo",sans-serif; }
+[data-lb-part="message"][data-rt-kind="fine"] [data-lb-part="message-text"] { color:#6B6B6B; }
+[data-rt-src] { display:none !important; }
+.rt-clone { width:100%; }
+
+/* CLONES */
+.rt-title { font:800 24px/1.2 "Archivo",sans-serif; color:#111111; letter-spacing:-.01em; }
+.rt-hello { font:400 15px/1.4 "Archivo",sans-serif; color:#6B6B6B; margin-bottom:6px; }
+.rt-kick { font:800 13px/1.2 "Archivo",sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#111111; }
+.rt-item { display:flex; align-items:center; gap:14px; padding:12px; border:1px solid #E6E6E6; }
+.rt-tile { flex:0 0 72px; height:88px; display:flex; align-items:center; justify-content:center; background:#EDE9E3; color:#8A7F70; }
+.rt-it { display:flex; flex-direction:column; gap:4px; min-width:0; }
+.rt-in { font:800 16px/1.1 "Archivo",sans-serif; color:#111111; }
+.rt-im { font:400 14px/1.1 "Archivo",sans-serif; color:#6B6B6B; }
+.rt-ip { font:600 14px/1.1 "Archivo",sans-serif; color:#111111; }
+.rt-order { display:flex; flex-direction:column; gap:10px; }
+.rt-order .rt-kick { color:#6B6B6B; font-weight:600; }
+.rt-item-s { padding:8px; gap:12px; }
+.rt-item-s .rt-tile { flex:0 0 44px; height:52px; }
+.rt-item-s .rt-in { font-size:15px; }
+.rt-item-s .rt-im, .rt-item-s .rt-ip { font-size:13px; }
+.rt-done { width:44px; height:44px; display:flex; align-items:center; justify-content:center; background:#111111; color:#FFFFFF; margin-bottom:14px; }
+.rt-record { border:1px solid #E6E6E6; padding:14px 16px; }
+.rt-record .rt-kick { margin-bottom:8px; color:#6B6B6B; font-weight:600; }
+.rt-r-row { display:flex; justify-content:space-between; gap:12px; padding:8px 0; border-top:1px solid #F0F0F0; font:400 14px/1.35 "Archivo",sans-serif; color:#111111; }
+.rt-r-row:first-of-type { border-top:none; }
+.rt-r-k { color:#6B6B6B; flex:0 0 auto; max-width:48%; }
+.rt-r-v { font-weight:600; text-align:right; min-width:0; overflow-wrap:anywhere; }
+.rt-r-v b { display:block; font-weight:600; }
+.rt-r-v small { display:block; font:400 12px/1.3 "Archivo",sans-serif; color:#6B6B6B; margin-top:2px; }
+.rt-record .rt-kick { letter-spacing:.04em; }
+.rt-r-total { border-top:1px solid #111111; margin-top:4px; padding-top:10px; }
+.rt-r-total .rt-r-k, .rt-r-total .rt-r-v { color:#111111; font-weight:800; font-size:15px; }
+.rt-label { display:flex; gap:16px; align-items:center; padding:16px; background:#F2EFE9; }
+.rt-qr { flex:0 0 96px; line-height:0; background:#FFFFFF; padding:6px; }
+.rt-l-t { display:flex; flex-direction:column; gap:6px; min-width:0; }
+.rt-l-b { font:400 14px/1.4 "Archivo",sans-serif; color:#111111; }
+.rt-l-f { font:600 12px/1.3 "Archivo",sans-serif; color:#6B6B6B; }
+
+/* STILL REASON LIST (JS): the answered list stays on screen; a tap on another row changes the reason */
+.rt-q .rt-title { margin-bottom:16px; }
+.rt-still { display:flex; flex-direction:column; border-top:1px solid #E6E6E6; }
+.rt-row { all:unset; box-sizing:border-box; display:flex; align-items:center; justify-content:space-between; height:52px; padding:0 4px; border-bottom:1px solid #E6E6E6; font:400 16px/1 "Archivo",sans-serif; color:#111111; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.rt-row i { width:22px; height:22px; box-sizing:border-box; border-radius:50%; border:2px solid #B5B5B5; }
+.rt-row[data-on] { font-weight:800; cursor:default; }
+.rt-row[data-on] i { border:7px solid #111111; }
+.rt-row:focus-visible { outline:2px solid #111111; outline-offset:-2px; }
+@media (hover:hover) { .rt-row:not([data-on]):hover i { border-color:#111111; } }
+
+/* OPTIONS: the reason list as radio rows (tap sends; JS marks the pick at once) */
+div:has(> [data-lb-part="options-group"]) { border:none !important; padding:0 !important; background:transparent !important; box-shadow:none !important; border-radius:0 !important; }
+[data-lb-part="options-group"] { background:transparent !important; border:none !important; padding:0 !important; box-shadow:none !important; }
+[data-lb-part="options-prompt"], div:has(> [data-lb-part="options-prompt"]) { display:none !important; }
+[data-lb-part="options-group"] > div:has(> input) { display:none !important; }
+[data-lb-part="options-list"] { display:flex !important; flex-direction:column !important; gap:0 !important; max-height:none !important; height:auto !important; overflow:visible !important; padding:0 !important; border-top:1px solid #E6E6E6; }
+[data-lb-part="option-button"] {
+  display:flex !important; align-items:center !important; justify-content:space-between !important; height:52px !important; min-height:52px; width:100%; padding:0 4px !important;
+  background:#FFFFFF !important; color:#111111 !important; border:none !important; border-bottom:1px solid #E6E6E6 !important; border-radius:0 !important; box-shadow:none !important;
+  font:400 16px/1 "Archivo",sans-serif !important; cursor:pointer; -webkit-tap-highlight-color:transparent; transition:none !important;
+}
+[data-lb-part="option-button"] span { white-space:normal !important; overflow:visible !important; text-overflow:clip !important; }
+[data-lb-part="option-button"]::after { content:""; flex:0 0 22px; width:22px; height:22px; box-sizing:border-box; border-radius:50%; border:2px solid #B5B5B5; }
+@media (hover:hover) { [data-lb-part="option-button"]:hover::after { border-color:#111111; } }
+[data-lb-part="option-button"][data-lb-picked] { font-weight:800 !important; }
+[data-lb-part="option-button"][data-lb-picked]::after { border:7px solid #111111; }
+[data-lb-part="option-button"]:focus-visible { outline:2px solid #111111; outline-offset:-2px; }
+/* single-button screens (welcome, summary, fail): one black button */
+[data-lb-part="option-button"][data-rt-role="primary"], [data-lb-part="option-button"][data-rt-role="secondary"] { justify-content:center !important; border:1px solid #111111 !important; font-weight:800 !important; }
+[data-lb-part="option-button"][data-rt-role]::after { display:none; }
+[data-lb-part="option-button"][data-rt-role="primary"] { background:#111111 !important; color:#FFFFFF !important; }
+[data-lb-part="option-button"][data-rt-role="primary"]:hover { background:#2A2A2A !important; }
+[data-lb-part="option-button"][data-rt-role="primary"]:active, [data-lb-part="option-button"][data-rt-role="primary"][data-lb-picked] { background:#3A3A3A !important; }
+[data-lb-part="option-button"][data-rt-role="secondary"] { background:transparent !important; font-weight:600 !important; }
+[data-lb-part="option-button"][data-rt-role="secondary"]:active, [data-lb-part="option-button"][data-rt-role="secondary"][data-lb-picked] { background:#E6E1D8 !important; }
+[data-lb-part="option-button"][data-rt-role="change"] { display:none !important; }
+body[data-rt-screen="welcome"] [data-lb-part="options-list"], body[data-rt-screen="summary"] [data-lb-part="options-list"], body[data-rt-screen="fail"] [data-lb-part="options-list"] { border-top:none; }
+body.rt-js[data-rt-screen="welcome"] [data-lb-part="option-button"], body.rt-js[data-rt-screen="summary"] [data-lb-part="option-button"], body.rt-js[data-rt-screen="fail"] [data-lb-part="option-button"] { height:54px !important; }
+
+/* OFFER: tinted card = #rt-offer (JS, kicker + body) + the options card below it, one surface */
+#rt-offer { background:#F2EFE9; padding:16px 16px 11px; display:flex; flex-direction:column; gap:12px; }
+#rt-offer[hidden] { display:none; }
+#rt-offer .rt-o-k { display:flex; align-items:center; gap:10px; font:800 13px/1.2 "Archivo",sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#111111; }
+#rt-offer .rt-o-i { display:flex; }
+#rt-offer .rt-o-b { font:400 15px/1.45 "Archivo",sans-serif; color:#111111; }
+body[data-rt-screen="offer"] [data-lb-part="options-group"] { background:#F2EFE9 !important; padding:0 16px 16px !important; }
+body[data-rt-screen="offer"] [data-lb-part="options-list"] { display:grid !important; grid-template-columns:1fr 1fr; gap:8px !important; border-top:none; }
+body[data-rt-screen="offer"] [data-lb-part="option-button"] { height:50px !important; min-height:50px; padding:0 6px !important; font-size:15px !important; text-align:center; }
+body[data-rt-screen="offer"] [data-lb-part="option-button"] span { text-align:center !important; flex-grow:1; }
+body.rt-js[data-rt-screen="offer"] [data-lb-part="window"] > .responsive-container:last-child { padding-top:16px !important; }
+/* the native reason list lines up with the still copy (16 px under the question, as in the mockup) */
+body.rt-js[data-rt-screen="reason"] [data-lb-part="window"] > .responsive-container:last-child { padding-top:0 !important; }
+/* between screens: pending (reason tapped, offer on its way) and switching reasons keep the still list, hide the rest */
+body[data-rt-screen="pending"] [data-lb-part="options-group"], body.rt-switch [data-lb-part="options-group"] { visibility:hidden; }
+#rt-offer[data-kind="loading"] { min-height:128px; }
+#rt-offer[data-kind="loading"] .rt-o-k { color:#8A7F70; }
+#rt-offer[data-kind="loading"] .rt-o-b { display:flex; flex-direction:column; gap:10px; padding-top:4px; }
+.rt-bar { display:block; height:12px; width:92%; background:linear-gradient(90deg,#E6E1D8 0%,#F7F4EE 50%,#E6E1D8 100%); background-size:200% 100%; animation:rt-shimmer 1.1s linear infinite; }
+.rt-bar-s { width:58%; }
+@keyframes rt-shimmer { from { background-position:100% 0; } to { background-position:-100% 0; } }
+@media (prefers-reduced-motion:reduce) { .rt-bar { animation:none; } [data-lb-part="message"] { animation:none; } }
+[aria-label="Conversation messages"], #rt-offer, [data-lb-part="window"] > .responsive-container:last-child > div:not(#rt-offer):not(#rt-hint):first-of-type { transition:opacity .16s ease; }
+body.rt-leaving [aria-label="Conversation messages"], body.rt-leaving #rt-offer, body.rt-leaving [data-lb-part="options-group"] { opacity:.25; transition:opacity .1s ease; }
+
+/* TEXT INPUT (email): square field, black square submit; Enter submits */
+[data-lb-part="text-input"] { padding:0 !important; }
+[data-lb-part="input-field"] { display:flex !important; flex-direction:row !important; flex-wrap:nowrap !important; align-items:center !important; gap:8px !important;
+  background:#FFFFFF !important; border:1px solid #111111 !important; border-radius:0 !important; box-shadow:none !important; padding:4px 4px 4px 14px !important; min-height:56px; }
+[data-lb-part="text-input"][data-lb-state="error"] [data-lb-part="input-field"] { border-color:#B42318 !important; }
+[data-lb-part="input-field"] > input, [data-lb-part="input-field"] > textarea { flex:1 1 0% !important; width:auto !important; min-width:0 !important; height:auto !important; padding:10px 0 !important;
+  border:none !important; outline:none !important; box-shadow:none !important; background:transparent !important; color:#111111 !important; font:400 17px/1.3 "Archivo",sans-serif !important; }
+[data-lb-part="input-field"] > input::placeholder { color:#9A9A9A !important; }
+[data-lb-part="input-field"] > div { flex:0 0 auto !important; width:auto !important; max-width:none !important; }
+[data-lb-part="input-submit"] { width:48px !important; height:48px !important; min-width:48px; border-radius:0 !important; background:#111111 !important; color:#FFFFFF !important; border:none !important; }
+[data-lb-part="input-submit"]:disabled { background:#CFCFCF !important; }
+[data-lb-part="input-error"] { color:#B42318 !important; font:600 13px/1.4 "Archivo",sans-serif !important; margin-top:8px; }
+body[data-rt-screen="email"] [data-lb-part="input-error"] > p { display:none !important; }
+body[data-rt-screen="email"] [data-lb-part="input-error"]::after { content:"That email looks incomplete. Try name@example.com."; }
+
+/* FOOTER + BRANDING: footer takes the rest of the height, the pill sits at the bottom */
+[data-lb-part="window"] > .responsive-container:last-child { flex:1 0 auto; display:flex; flex-direction:column; padding:16px 20px 22px !important; }
+[data-lb-part="window"] > .responsive-container:last-child > div:last-child { margin-top:auto; padding-top:18px !important; display:flex; justify-content:center; }
+#rt-hint { margin-top:auto; padding-top:18px; text-align:center; font:600 11px/1.3 "Archivo",sans-serif; color:#9A9A9A; letter-spacing:.02em; }
+#rt-hint[hidden] { display:none; }
+#rt-hint:not([hidden]) + div { margin-top:0 !important; padding-top:8px !important; }
+[data-lb-part="branding"] { display:inline-flex !important; align-items:center; padding:6px 12px !important; border-radius:999px; background:#F1F1F1; color:#6B6B6B !important; font:600 11px/1.2 "Archivo",sans-serif !important; }
+[data-lb-part="branding"]::before { content:""; display:inline-block; width:8px; height:8px; margin-right:6px; border-radius:50%; background:currentColor; }
+[data-lb-part="branding"] a { color:#6B6B6B !important; font-weight:600 !important; margin-left:3px; }
+
+/* DESKTOP: one centred column, same layout as the phone */
+.responsive-container { max-width:440px !important; margin-left:auto !important; margin-right:auto !important; width:100%; }
+[data-lb-part="header"] > div { max-width:440px !important; margin-left:auto !important; margin-right:auto !important; }
+@media (min-width:700px) {
+  [data-lb-part="window"] { justify-content:flex-start !important; }
+  [data-lb-part="header"] > div { padding-top:max(44px, 7vh) !important; }
+  /* the Powered-by pill follows the content instead of sitting at the bottom of a tall window */
+  [data-lb-part="window"] > .responsive-container:last-child { flex:0 0 auto; }
+  [data-lb-part="window"] > .responsive-container:last-child > div:last-child, #rt-hint { margin-top:0; }
+  [data-lb-part="window"] > .responsive-container:last-child > div:last-child { padding-top:28px !important; }
+}
+
+/* SCROLLBARS */
+* { scrollbar-width:thin; scrollbar-color:#D6D6D6 transparent; }
+*::-webkit-scrollbar { width:8px; height:8px; }
+*::-webkit-scrollbar-thumb { background:#D6D6D6; border-radius:0; }
+[data-lb-part="option-button"][data-rt-role] span { text-align:center !important; flex-grow:1 !important; }
+/* summary fits a 390x844 phone without scrolling (polish round 3) */
+.rt-done { width:36px; height:36px; margin-bottom:10px; }
+.rt-done svg { width:22px; height:22px; }
+.rt-record { padding:10px 14px 12px; }
+.rt-record .rt-kick { font-size:11px; letter-spacing:.03em; margin-bottom:4px; }
+.rt-r-row { padding:6px 0; }
+.rt-r-total { padding-top:8px; }
+.rt-label { padding:12px; gap:12px; }
+.rt-qr { flex:0 0 72px; padding:4px; }
+.rt-qr svg { width:72px; height:72px; }
+.rt-l-b { font-size:13px; line-height:1.35; }
+.rt-l-t { gap:4px; }
+.rt-label .rt-kick { font-size:12px; }
+body[data-rt-screen="summary"] [aria-label="Conversation messages"] { gap:12px !important; }

@@ -1,0 +1,167 @@
+/* GOAL 5 · "Demo · Kestrel configurator" · channel 3514134 (bot 4069202), v4 3.1.0 · English copy since 2026-09-28
+   Configurator UI on the SAME flow as the form skin: step strip, hero car panel recoloured by the answers, option cards with radio dot /
+   colour swatch + subtitle, "Your configuration" bar with a Next CTA. Target: assets/mockup-configurator.dc.html.
+   Neutral invented marque "Kestrel". Hero = AI-generated studio photos of a fictional unbranded car, recoloured live (see the channel JS). No real brand assets, no prices.
+   Layers: THEME · ANCHORS · APP MODE [OFF-CATALOG] · BACK [OFF-CATALOG] · INJECTED UI · DESKTOP · INPUT FIXES · SCROLLBARS.
+   Patterns copied from assets/goal4-guia-3513599.css (hero, cards, bar, the three layout fixes). */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap');
+
+:root {
+  --background:#f5f5f7 !important;
+  --foreground:#111111 !important;
+  --muted:#6e6e73 !important;
+  --muted-foreground:#6e6e73 !important;
+  --border:rgba(17,17,17,0.10) !important;
+  --button-color-primary-default:#1d3557 !important;
+  --button-border-color-primary-default:#1d3557 !important;
+  --button-font-color-primary-default:#ffffff !important;
+  --chat-bubble-color-font-bot:#111111 !important;
+  --chat-bubble-surface-user:#1d3557 !important;
+  --chat-bubble-border-color-user:#1d3557 !important;
+  --chat-bubble-color-font-user:#ffffff !important;
+  --input-background-default:#ffffff !important;
+  --textarea-background-default:#ffffff !important;
+  --input-border-color-default:rgba(17,17,17,0.14) !important;
+  --textarea-border-color-default:rgba(17,17,17,0.14) !important;
+  --input-color-text-default:#111111 !important;
+  --textarea-color-text-default:#111111 !important;
+  --input-border-color-focus:#1d3557 !important;
+  --input-ring-color-focus:rgba(29,53,87,0.18) !important;
+  --font-family-sans:"Space Grotesk",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+  --font-size:16px !important;
+  --lb-strip-h:44px; --lb-hero-h:222px; --lb-bar-h:88px;
+}
+
+/* ANCHORS (plain) */
+[data-lb-part="message-text"] { font-family:"Space Grotesk",-apple-system,sans-serif; white-space:pre-line; line-height:1.3; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-text"] { font-size:23px; font-weight:700; letter-spacing:-0.3px; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-bubble"] { background:transparent; border:none; padding:2px 0; box-shadow:none; color:#111; }
+[data-lb-part="options-group"] { background:transparent; border:none; padding:0; box-shadow:none; }
+[data-lb-part="option-button"] {
+  display:flex; align-items:center; gap:14px; justify-content:flex-start; text-align:left; width:100%; height:auto; min-height:60px;
+  background:#fff; color:#111; border:2px solid transparent; border-radius:16px; padding:9px 16px;
+  font-size:16px; font-weight:700; box-shadow:0 1px 3px rgba(0,0,0,.06); transition:border-color .12s, box-shadow .12s;
+}
+[data-lb-part="option-button"]::before { content:""; flex:0 0 auto; width:22px; height:22px; border-radius:50%; border:2px solid #c7c7cc; background:#fff; box-sizing:border-box; }
+[data-lb-part="option-button"]:hover { border-color:rgba(29,53,87,.45); background:#fff; color:#111; }
+[data-lb-part="option-button"][data-lb-picked],[data-lb-part="option-button"][data-lb-state="selected"] { border-color:#1d3557; background:#fff; }
+[data-lb-part="option-button"][data-lb-picked]::before,[data-lb-part="option-button"][data-lb-state="selected"]::before { border-color:#1d3557; background:#1d3557; box-shadow:inset 0 0 0 4px #fff; }
+[data-lb-part="option-button"] span { white-space:normal !important; overflow:visible !important; text-overflow:clip !important; line-height:1.2; }
+[data-lb-part="option-button"] span[data-sub]::after { content:attr(data-sub); display:block; margin-top:3px; font-size:13px; font-weight:500; color:#6e6e73; }
+/* colour step: the radio dot becomes the paint swatch */
+[data-lb-part="option-button"][data-swatch]::before { width:26px; height:26px; border:3px solid #fff; box-shadow:0 0 0 1.5px #c7c7cc; }
+[data-lb-part="option-button"][data-swatch="blue"]::before { background:#1d3557; }
+[data-lb-part="option-button"][data-swatch="red"]::before { background:#d9503f; }
+[data-lb-part="option-button"][data-swatch="white"]::before { background:#f2f2ef; }
+[data-lb-part="option-button"][data-swatch="black"]::before { background:#2a2a2a; }
+[data-lb-part="option-button"][data-swatch][data-lb-picked]::before { box-shadow:0 0 0 2px #1d3557; border-color:#fff; }
+[data-lb-part="input-field"] { background:#fff; border:1px solid rgba(17,17,17,0.14); border-radius:14px; padding:8px 10px; }
+[data-lb-part="input-submit"] { background:#1d3557; color:#fff; border:none; border-radius:12px; font-weight:700; }
+[data-lb-part="input-error"] { color:#c0392b; font-size:13px; }
+[data-lb-part="message-timestamp"] { display:none; }
+[data-lb-part="branding"] { color:#6e6e73; font-size:11px; }
+
+/* APP MODE [OFF-CATALOG] — web-chat layout classes (.responsive-container, .grow) and :has() on wrapper divs; may break on a web-chat release.
+   Only what came after the visitor's last answer is on screen. The window is pinned between the hero and the bar, so no fixed bar can
+   cover the answer area (GOAL-4 fix 2026-09-17). width:auto is mandatory: the window is w-full, so with left:50% on desktop it ran 720 px past
+   the right edge and every card's centre was off screen (hit-test caught it at 1440 px, 2026-09-18; the click-through walk had passed). */
+[data-lb-part="header"],[data-lb-part="header"]+div { display:none !important; }
+[data-lb-part="message"][data-lb-author="bot"]>div:has([data-lb-part="message-avatar"]),
+[data-lb-part="message"][data-lb-author="bot"]>div:has(>[data-lb-part="message-timestamp"]) { display:none !important; }
+[aria-label="Conversation messages"]>div:has([data-lb-author="user"]) { display:none !important; }
+[aria-label="Conversation messages"]>div:has(~div [data-lb-author="user"]) { display:none !important; }
+[aria-label="Conversation messages"] { padding-top:10px !important; padding-bottom:4px !important; gap:8px !important; }
+[data-lb-part="window"] { position:fixed !important; top:calc(var(--lb-strip-h) + var(--lb-hero-h)); left:0; right:0; bottom:var(--lb-bar-h) !important; height:auto !important; width:auto !important; max-width:none !important; min-width:0 !important;
+  justify-content:flex-start; border:none !important; border-radius:0 !important; background:#f5f5f7; }
+[data-lb-part="window"]>.grow { flex:0 1 auto; min-height:0; }
+.responsive-container { max-width:560px; margin:0 auto; width:100%; }
+[data-lb-part="window"] > .responsive-container:last-child { padding-top:6px !important; padding-bottom:6px !important; }
+div:has(>[data-lb-part="options-group"]) { border:none; padding:0; background:transparent; box-shadow:none; }
+[data-lb-part="options-prompt"],div:has(>[data-lb-part="options-prompt"]) { display:none !important; }
+[data-lb-part="options-list"] { gap:8px; max-height:none !important; height:auto !important; overflow:visible !important; }
+[data-lb-part="options-group"] > div:has(> input) { display:none !important; }
+[data-lb-part="message"] { animation:lb-in .3s cubic-bezier(.2,.7,.2,1); }
+@keyframes lb-in { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+/* end screen: summary + goodbye as body copy; the thread scrolls inside the window */
+body.lb-done [data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-text"] { font-size:15px; font-weight:500; letter-spacing:0; line-height:1.45; }
+body.lb-done [data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-bubble"] { background:#fff; border-radius:16px; padding:12px 14px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+body.lb-welcome [data-lb-part="message-text"] { font-size:16px !important; font-weight:500 !important; color:#3a3a3c; line-height:1.4 !important; }
+body.lb-welcome [data-lb-part="message-text"]::first-line { font-size:28px; font-weight:700; color:#111; line-height:1.5; }
+/* single-button lists (Start / Start again): the bar's CTA drives them; keep the native one as a plain filled button */
+[data-lb-part="option-button"]:only-child { background:#1d3557; color:#fff; justify-content:center; border-color:#1d3557; min-height:52px; }
+[data-lb-part="option-button"]:only-child::before { display:none; }
+
+/* NATIVE BACK [OFF-CATALOG]: no anchor; hover-only by default (invisible on a phone) → forced visible, in flow above the question.
+   Not position:fixed: .responsive-container is a CSS container and traps fixed children inside the scroll area. */
+div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { opacity:1 !important; order:-1; }
+button[data-slot="button"][data-size="sm"][data-variant="ghost"] {
+  background:transparent !important; color:#1d3557 !important; border:none !important; font:700 13px/1 "Space Grotesk",sans-serif !important;
+  padding:6px 8px 6px 0 !important; height:auto !important; min-height:32px;
+}
+button[data-slot="button"][data-size="sm"][data-variant="ghost"]:hover { text-decoration:underline; }
+
+/* INJECTED UI (channel Custom JS): step strip, hero, summary bar */
+#lb-strip { position:fixed; top:0; left:0; right:0; height:var(--lb-strip-h); z-index:42; background:#f5f5f7; display:flex; align-items:center; }
+#lb-strip > div { width:100%; max-width:560px; margin:0 auto; padding:0 16px; display:flex; justify-content:space-between; gap:12px;
+  font:700 12px/1 "Space Grotesk",sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#6e6e73; white-space:nowrap; }
+#lb-strip .lb-step { color:#1d3557; }
+#lb-hero { position:fixed; top:var(--lb-strip-h); left:0; right:0; height:var(--lb-hero-h); z-index:40; background:#f5f5f7; }
+#lb-hero .lb-hero-in { height:100%; max-width:560px; margin:0 auto; padding:0 16px; box-sizing:border-box; }
+#lb-hero .lb-panel { height:100%; border-radius:24px; background:#e8e8ed; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:9px; position:relative; overflow:hidden; transition:background .3s; }
+/* photo hero: base photo + colour layer (multiply, clipped by the paint mask) + highlight map (screen). isolation keeps the blend inside the card */
+#lb-hero .lb-photo { position:relative; width:100%; aspect-ratio:1100/458; overflow:hidden; isolation:isolate; background:#cfd0d5; flex:0 0 auto; }
+#lb-hero .lb-base { display:block; width:100%; height:100%; object-fit:cover; }
+#lb-hero .lb-tint { position:absolute; inset:0; mix-blend-mode:multiply; transition:background-color .35s; -webkit-mask-size:100% 100%; mask-size:100% 100%; -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat; }
+#lb-hero .lb-spec { position:absolute; inset:0; mix-blend-mode:screen; transition:opacity .35s; background-size:100% 100%; background-repeat:no-repeat; pointer-events:none; }
+#lb-hero .lb-swatches { display:flex; gap:10px; }
+#lb-hero .lb-sw { width:20px; height:20px; border-radius:50%; border:3px solid #fff; padding:0; cursor:default; box-sizing:content-box; }
+#lb-hero .lb-sw[data-on] { box-shadow:0 0 0 2px #1d3557; }
+body[data-lb-step="colour"] #lb-hero .lb-sw { cursor:pointer; }
+#lb-hero .lb-cap { font:500 13px/1 "Space Grotesk",sans-serif; color:#6e6e73; }
+#lb-hero .lb-badge { position:absolute; top:12px; right:14px; font:700 10px/1 "Space Grotesk",sans-serif; letter-spacing:.1em; text-transform:uppercase; background:#111; color:#fff; border-radius:999px; padding:6px 9px; }
+#lb-hero .lb-badge:empty { display:none; }
+#lb-summary { position:fixed; left:0; right:0; bottom:0; z-index:41; background:#f5f5f7; padding:8px 0 calc(10px + env(safe-area-inset-bottom)); }
+#lb-summary .lb-sum-in { max-width:560px; margin:0 auto; padding:0 16px; box-sizing:border-box; }
+#lb-summary .lb-sum-card { background:#111; color:#fff; border-radius:16px; padding:12px 14px; display:flex; align-items:center; gap:12px; }
+#lb-summary .lb-sum-text { flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:4px; }
+#lb-summary .lb-sum-label { font:500 12px/1 "Space Grotesk",sans-serif; color:#a1a1a6; }
+#lb-summary .lb-sum-val { font:700 14px/1.3 "Space Grotesk",sans-serif; }
+#lb-next { flex:0 0 auto; min-height:44px; padding:0 16px; border:0; border-radius:999px; background:#fff; color:#111; font:700 14px/1 "Space Grotesk",sans-serif; cursor:pointer; white-space:nowrap; }
+#lb-next:disabled { background:rgba(255,255,255,.22); color:rgba(255,255,255,.6); cursor:default; }
+#lb-next[hidden] { display:none; }
+
+/* DESKTOP (≥ 900 px): two columns — car on the left half, steps on the right half. Fixed bars are scoped to the right column so nothing
+   spans a 1440 px window (GOAL-1 composer lesson). */
+@media (min-width:900px) {
+  :root { --lb-strip-h:56px; }
+  #lb-strip > div { max-width:none; padding:0 32px; font-size:13px; }
+  #lb-hero { right:50%; bottom:0; height:auto; }
+  #lb-hero .lb-hero-in { max-width:none; padding:0 16px 32px 32px; }
+  #lb-hero .lb-panel { gap:18px; }
+  #lb-hero .lb-panel { justify-content:center; }
+  #lb-hero .lb-photo { width:calc(100% - 48px); border-radius:18px; }
+  #lb-hero .lb-sw { width:26px; height:26px; }
+  #lb-hero .lb-cap { font-size:16px; }
+  [data-lb-part="window"] { left:50%; top:var(--lb-strip-h); justify-content:center; }
+  #lb-summary { left:50%; padding-bottom:32px; }
+  .responsive-container, #lb-summary .lb-sum-in { max-width:520px; }
+  [data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-text"] { font-size:28px; }
+  body.lb-done [data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-text"] { font-size:16px; }
+}
+
+/* INPUT FIXES (input-row guard: the submit wrapper is w-full and swallows the row) */
+[data-lb-part="input-field"] { display:flex !important; flex-direction:row !important; align-items:center !important; gap:8px !important; }
+[data-lb-part="input-field"] > input, [data-lb-part="text-input"] > div > input { flex:1 1 0% !important; width:auto !important; min-width:0 !important; height:auto !important; line-height:1.3 !important; }
+[data-lb-part="input-field"] > div, [data-lb-part="text-input"] > div > div { flex:0 0 auto !important; width:auto !important; max-width:none !important; }
+[data-lb-part="text-input"] > div:has(> input) { display:flex !important; flex-direction:row !important; flex-wrap:nowrap !important; align-items:center !important; gap:8px !important;
+  background:#fff !important; border:1px solid rgba(17,17,17,0.14) !important; border-radius:14px !important; padding:8px 10px !important; height:auto !important; }
+[data-lb-part="text-input"] input { color:#111 !important; font-family:"Space Grotesk",sans-serif !important; font-size:18px !important; text-align:left !important; }
+[data-lb-part="text-input"] input::placeholder { color:#a1a1a6 !important; }
+[data-lb-part="text-input"] button { border-radius:12px !important; background:#1d3557 !important; color:#fff !important; border:none !important; }
+[data-lb-part="text-input"] button svg { color:#fff !important; stroke:#fff !important; }
+
+/* SCROLLBARS */
+* { scrollbar-width:thin; scrollbar-color:#c7c7cc transparent; }
+*::-webkit-scrollbar { width:8px; height:8px; }
+*::-webkit-scrollbar-track { background:transparent; }
+*::-webkit-scrollbar-thumb { background:#c7c7cc; border-radius:8px; }

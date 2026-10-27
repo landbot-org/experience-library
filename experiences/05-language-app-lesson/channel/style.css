@@ -1,0 +1,242 @@
+/* Landbot v4 web chat · GOAL 2 · Kamaé "FOVI" micro-lesson · language-app look (generic; no Kamaé or Duolingo assets, logo or colours)
+   THEME (:root, !important) + ANCHORS (plain) + LESSON MODE [OFF-CATALOG] + INJECTED FURNITURE + SCROLLBARS + INPUT GUARD
+   Requires channel version 3.1.0. Screen state is set by the channel Custom JS on <body>:
+   .lb-welcome / .lb-question / .lb-feedback (+ .lb-correct | .lb-wrong) / .lb-summary / .lb-end,
+   and on message wrappers: .lb-hide .lb-scene .lb-question-text .lb-answer .lb-banner-src.
+   Palette: bg #FFFFFF · text #3C3C3C · primary #58CC02 (dark #58A700) · tile border #E5E5E5 · selected #DDF4FF / #84D8FF / #1899D6
+   · correct band #D7FFB8 + #58A700 · wrong band #FFDFE0 + #EA2B2B · hearts #FF4B4B. Font: Nunito 700/800/900 (Google Fonts). */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap');
+
+:root {
+  --background:#ffffff !important;
+  --foreground:#3c3c3c !important;
+  --muted:#afafaf !important;
+  --muted-foreground:#afafaf !important;
+  --border:#e5e5e5 !important;
+  --button-color-primary-default:#58cc02 !important;
+  --button-border-color-primary-default:#58cc02 !important;
+  --button-font-color-primary-default:#ffffff !important;
+  --chat-bubble-surface-bot:transparent !important;
+  --chat-bubble-color-font-bot:#3c3c3c !important;
+  --chat-bubble-surface-user:#ddf4ff !important;
+  --chat-bubble-border-color-user:#84d8ff !important;
+  --chat-bubble-color-font-user:#1899d6 !important;
+  --input-background-default:#ffffff !important;
+  --textarea-background-default:#ffffff !important;
+  --input-border-color-default:#e5e5e5 !important;
+  --textarea-border-color-default:#e5e5e5 !important;
+  --input-color-text-default:#3c3c3c !important;
+  --textarea-color-text-default:#3c3c3c !important;
+  --input-border-color-focus:#84d8ff !important;
+  --input-ring-color-focus:rgba(132,216,255,0.35) !important;
+  --web-chat-header-background:#ffffff !important;
+  --web-chat-header-text-color:#3c3c3c !important;
+  --select-item-background-default:#ffffff !important;
+  --select-item-color-default:#4b4b4b !important;
+  --select-item-background-hover:#f7f7f7 !important;
+  --select-item-background-selected:#ddf4ff !important;
+  --select-item-color-selected:#1899d6 !important;
+  --select-content-border:#e5e5e5 !important;
+  --font-family-sans:"Nunito",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+  --font-size:17px !important;
+}
+
+/* ANCHORS (plain) */
+[data-lb-part="message-text"] { font-family:"Nunito",-apple-system,sans-serif; white-space:pre-line; line-height:1.4; font-weight:700; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-bubble"] { background:transparent; border:none; padding:0; box-shadow:none; color:#3c3c3c; max-width:none; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-text"] { font-size:17px; color:#3c3c3c; }
+[data-lb-part="message"][data-lb-author="user"] [data-lb-part="message-bubble"] { background:#ddf4ff; color:#1899d6; border:2px solid #84d8ff; border-bottom-width:4px; border-radius:16px; padding:12px 16px; font-weight:700; }
+[data-lb-part="message-timestamp"] { display:none; }
+[data-lb-part="options-group"] { background:transparent; border:none; padding:0; box-shadow:none; }
+[data-lb-part="options-prompt"] { display:none; }
+[data-lb-part="options-group"],[data-lb-part="options-list"] { counter-reset:lb-opt; }
+[data-lb-part="options-list"] { gap:10px; max-height:none; height:auto; overflow:visible; }
+[data-lb-part="option-button"] {
+  display:flex; align-items:center; gap:14px; justify-content:flex-start; text-align:left; width:100%; min-height:60px; height:auto;
+  padding:10px 16px; margin:0; background:#ffffff; color:#4b4b4b; border:2px solid #e5e5e5; border-bottom-width:4px; border-radius:16px;
+  font-family:"Nunito",sans-serif; font-size:17px; font-weight:700; line-height:1.25; cursor:pointer;
+  transition:background .12s, border-color .12s, transform .06s;
+}
+[data-lb-part="option-button"]::before {
+  counter-increment:lb-opt; content:counter(lb-opt); display:inline-flex; align-items:center; justify-content:center; flex:0 0 auto;
+  width:30px; height:30px; border:2px solid #e5e5e5; border-radius:8px; font-size:14px; font-weight:700; color:#afafaf;
+}
+[data-lb-part="option-button"]:hover { background:#f7f7f7; border-color:#e5e5e5; color:#4b4b4b; }
+[data-lb-part="option-button"]:active { transform:translateY(2px); border-bottom-width:2px; margin-bottom:2px; }
+[data-lb-part="option-button"][data-lb-state="selected"],
+[data-lb-part="option-button"][data-lb-state="selected"]:hover { background:#ddf4ff; border-color:#84d8ff; color:#1899d6; }
+[data-lb-part="option-button"][data-lb-state="selected"]::before { border-color:#84d8ff; color:#1899d6; }
+[data-lb-part="option-button"]:focus-visible { outline:3px solid #84d8ff; outline-offset:2px; }
+[data-lb-part="option-button"] span { white-space:normal; overflow:visible; text-overflow:clip; }
+[data-lb-part="input-field"] { background:#ffffff; border:2px solid #e5e5e5; border-radius:14px; padding:8px 10px; }
+[data-lb-part="input-submit"] { background:#58cc02; color:#ffffff; border:none; border-radius:12px; font-weight:800; }
+[data-lb-part="input-error"] { color:#ea2b2b; font-size:13px; }
+[data-lb-part="branding"] { color:#afafaf; font-size:11px; }
+[data-lb-part="window"] { border:none; }
+
+/* CTA = the only single-button list in this flow (welcome, CONTINUE, Refaire): filled pill, no number badge */
+[data-lb-part="option-button"]:only-child {
+  justify-content:center; text-align:center; background:#58cc02; color:#ffffff; border:none; border-bottom:4px solid #58a700;
+  border-radius:16px; min-height:52px; font-size:16px; font-weight:900; letter-spacing:.02em; text-transform:none; padding:12px 20px;
+}
+[data-lb-part="option-button"]:only-child::before { display:none; }
+[data-lb-part="option-button"]:only-child:hover { background:#61e002; color:#ffffff; border-color:#58a700; }
+
+/* LESSON MODE [OFF-CATALOG]: web-chat layout classes (.responsive-container, .grow) and :has(); may break on a web-chat release.
+   Product gap: no anchors for header/avatar row/message history/options container, no "form" layout variant. */
+[data-lb-part="header"],[data-lb-part="header"]+div { display:none !important; }
+[data-lb-part="message"][data-lb-author="bot"]>div:has([data-lb-part="message-avatar"]) { display:none; }
+/* Native v4 Back (hover-only wrapper, no data-lb-part): forced visible and in flow, so phones (no hover) get it even without the JS.
+   With the lesson JS running (body.lb-backbar) the top-bar "‹ Back / ‹ Retour" clicks it instead, so the in-thread copy is kept out of view. */
+[data-lb-part="window"] > .grow .responsive-container>div>div>div:not([data-lb-part]) { opacity:1 !important; position:static !important; }
+[data-lb-part="window"] > .grow .responsive-container>div>div>div:not([data-lb-part]) button[data-variant="ghost"] { font-family:"Nunito",sans-serif; font-weight:800; color:#afafaf; }
+body.lb-backbar [data-lb-part="window"] > .grow .responsive-container>div>div>div:not([data-lb-part]) { position:absolute !important; width:1px !important; height:1px !important; overflow:hidden !important; clip:rect(0 0 0 0) !important; clip-path:inset(50%) !important; white-space:nowrap !important; }
+.responsive-container { max-width:600px; margin:0 auto; width:100%; }
+/* LAYOUT 2026-09-17 v2: the window scrolls, the lesson (messages + options) is one block centred vertically when short and top-aligned when long (flex auto margins). */
+[data-lb-part="window"] { position:fixed !important; top:0; left:0; right:0; bottom:0; height:auto !important; overflow-y:auto !important; padding-top:72px; box-sizing:border-box; }
+[data-lb-part="window"] > .grow { flex:0 0 auto !important; min-height:0 !important; overflow:visible !important; margin-top:auto; padding-top:8px !important; }
+[data-lb-part="window"] > .grow > .responsive-container { min-height:0; }
+[data-lb-part="window"] > .responsive-container { margin-bottom:auto; }
+div:has(>[data-lb-part="options-group"]) { background:transparent; box-shadow:none; border:none; padding:0; }
+[data-lb-part="options-group"] > div:has(> input) { display:none !important; }
+[data-lb-part="options-group"] > div:not([data-lb-part]):not(:has(button)) { display:none !important; }
+[data-lb-part="options-search"],div:has(>[data-lb-part="options-search"]) { display:none !important; }
+[data-lb-part="message"] { animation:lb-in .35s cubic-bezier(.2,.7,.2,1); }
+@keyframes lb-in { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:none; } }
+.responsive-container>div>div.lb-hide { display:none !important; }
+.lb-banner-src { display:none !important; }
+.lb-scene [data-lb-part="message-text"] { font-size:16px; font-weight:700; color:#4b4b4b; background:#f7f7f7; border-radius:12px; padding:12px 14px; }
+.lb-scene [data-lb-part="message-bubble"] { width:100%; }
+.lb-question-text [data-lb-part="message-text"] { font-size:24px; font-weight:800; line-height:1.25; color:#3c3c3c; }
+.lb-answer [data-lb-part="message"] > div { justify-content:flex-start !important; padding-left:0 !important; }
+.lb-answer [data-lb-part="message-bubble"] { display:flex; align-items:center; gap:14px; width:100%; min-height:60px; font-size:17px; }
+.lb-answer [data-lb-part="message-bubble"][data-lb-idx]::before {
+  content:attr(data-lb-idx); display:inline-flex; align-items:center; justify-content:center; flex:0 0 auto;
+  width:30px; height:30px; border:2px solid #84d8ff; border-radius:8px; font-size:14px; font-weight:700; color:#1899d6;
+}
+[data-lb-part="branding"] { position:fixed; left:50%; transform:translateX(-50%); bottom:2px; z-index:30; width:auto; background:rgba(255,255,255,.85); border-radius:32px; padding:2px 8px; }
+
+/* WELCOME (JS splits the text into .lb-title / .lb-meta; ?prenom= adds .lb-hello) */
+body.lb-welcome [data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-text"] { text-align:center; font-size:17px; color:#777777; line-height:1.45; }
+body.lb-welcome [data-lb-part="message-bubble"] { width:100%; display:flex; flex-direction:column; align-items:stretch; }
+.lb-hello { width:100%; flex:0 0 auto; }
+.lb-hello { text-align:center; font:800 14px/1.3 "Nunito",sans-serif; color:#58a700; letter-spacing:.06em; text-transform:uppercase; margin-bottom:12px; }
+.lb-title { display:block; font-size:28px; font-weight:900; line-height:1.2; color:#3c3c3c; margin-bottom:12px; }
+.lb-meta { display:block; margin-top:14px; font-size:13px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:#afafaf; }
+body.lb-welcome div:has(>[data-lb-part="options-group"]) { padding-bottom:28px; }
+
+/* SUMMARY */
+body.lb-summary .lb-question-text [data-lb-part="message-text"] { font-size:15px; font-weight:700; line-height:20px; color:#4b4b4b; }
+.lb-score { display:block; font-size:18px; font-weight:900; color:#58a700; margin-bottom:6px; line-height:24px; }
+.lb-retake { display:block; font-size:15px; font-weight:800; color:#ea2b2b; margin-bottom:6px; }
+.lb-rules { display:block; margin-top:14px; }
+body.lb-summary [data-lb-part="option-button"]::before { display:none; }
+body.lb-summary [data-lb-part="option-button"] { justify-content:center; text-align:center; font-size:16px; font-weight:900; letter-spacing:.02em; text-transform:none; min-height:52px; }
+body.lb-summary [data-lb-part="option-button"]:first-child { background:#58cc02; color:#ffffff; border:none; border-bottom:4px solid #58a700; }
+body.lb-summary [data-lb-part="option-button"]:first-child:hover { background:#61e002; color:#ffffff; }
+body.lb-summary [data-lb-part="option-button"]:last-child:not(:only-child) { background:#ffffff; color:#1cb0f6; border:2px solid #e5e5e5; border-bottom-width:4px; }
+
+/* END (goodbye) */
+body.lb-end [data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-text"] { font-size:20px; font-weight:800; text-align:center; }
+
+/* TOP BAR (injected by the channel JS: X, progress track + fill, three hearts) */
+#lb-top { position:fixed; top:0; left:0; right:0; height:72px; z-index:40; background:#ffffff; font-family:"Nunito",sans-serif; }
+#lb-top .lb-in { max-width:600px; margin:0 auto; height:100%; display:flex; align-items:center; gap:14px; padding:0 20px; box-sizing:border-box; }
+#lb-top .lb-x { color:#afafaf; display:inline-flex; }
+#lb-top .lb-track { flex:1 1 auto; height:16px; border-radius:8px; background:#e5e5e5; overflow:hidden; }
+#lb-top .lb-fill { height:100%; width:0; border-radius:8px; background:#58cc02; transition:width .4s; position:relative; }
+#lb-top .lb-fill::after { content:""; position:absolute; left:8px; right:8px; top:3px; height:4px; border-radius:2px; background:#7be335; }
+#lb-top .lb-hearts { display:inline-flex; align-items:center; gap:3px; }
+#lb-top .lb-heart { width:22px; height:22px; fill:#ff4b4b; transition:fill .3s, transform .3s; }
+#lb-top .lb-heart.lost { fill:#e5e5e5; transform:scale(.85); }
+
+/* FEEDBACK BANNER (injected; the real CONTINUE button is hidden and clicked by proxy) */
+#lb-banner { display:none; position:fixed; left:0; right:0; bottom:0; z-index:50; padding:20px 20px 28px; font-family:"Nunito",sans-serif; animation:lb-up .3s cubic-bezier(.2,.7,.2,1); }
+body.lb-feedback #lb-banner { display:block; }
+body.lb-correct #lb-banner { background:#d7ffb8; color:#58a700; }
+body.lb-wrong #lb-banner { background:#ffdfe0; color:#ea2b2b; }
+#lb-banner .lb-in { max-width:600px; margin:0 auto; display:flex; flex-direction:column; gap:16px; }
+#lb-banner .lb-head { display:flex; align-items:flex-start; gap:14px; }
+#lb-banner .lb-icon { flex:0 0 auto; width:56px; height:56px; border-radius:50%; background:#ffffff; display:flex; align-items:center; justify-content:center; }
+#lb-banner .lb-icon svg { width:30px; height:30px; }
+#lb-banner .lb-title { font-size:22px; font-weight:900; line-height:1.2; margin:0; color:inherit; }
+#lb-banner .lb-body { font-size:15px; font-weight:700; line-height:1.35; margin-top:4px; }
+#lb-banner .lb-xp { font-size:14px; font-weight:800; margin-top:6px; }
+body.lb-wrong #lb-banner .lb-xp { display:none; }
+#lb-banner .lb-cta { width:100%; min-height:52px; border:0; border-bottom:4px solid #58a700; border-radius:16px; background:#58cc02; color:#ffffff; font-family:"Nunito",sans-serif; font-size:16px; font-weight:900; letter-spacing:.08em; text-transform:uppercase; cursor:pointer; }
+#lb-banner .lb-cta:hover { background:#61e002; }
+body.lb-feedback div:has(>[data-lb-part="options-group"]) { display:none !important; }
+body.lb-feedback [data-lb-part="window"] { padding-bottom:230px; }
+@keyframes lb-up { from { transform:translateY(100%); } to { transform:none; } }
+
+/* SCROLLBARS */
+* { scrollbar-width:thin; scrollbar-color:#e5e5e5 transparent; }
+*::-webkit-scrollbar { width:8px; height:8px; }
+*::-webkit-scrollbar-track { background:transparent; }
+*::-webkit-scrollbar-thumb { background:#e5e5e5; border-radius:8px; }
+
+/* INPUT ROW GUARD (mandatory, reference CSS: the submit wrapper is w-full and swallows the row; no text input in this flow today) */
+[data-lb-part="input-field"] { display:flex !important; flex-direction:row !important; align-items:center !important; gap:8px !important; }
+[data-lb-part="input-field"] > input, [data-lb-part="text-input"] > div > input { flex:1 1 0% !important; width:auto !important; min-width:0 !important; height:auto !important; line-height:1.3 !important; }
+[data-lb-part="input-field"] > div, [data-lb-part="text-input"] > div > div { flex:0 0 auto !important; width:auto !important; max-width:none !important; }
+[data-lb-part="text-input"] input { color:#3c3c3c !important; font-family:"Nunito",sans-serif !important; text-align:left !important; }
+[data-lb-part="text-input"] input::placeholder { color:#afafaf !important; }
+
+/* GAME OVER (third wrong answer): same summary typography, red title, single Refaire CTA */
+body.lb-over .lb-title { color:#ea2b2b; }
+body.lb-over .lb-score { color:#4b4b4b; }
+
+/* ILLUSTRATIONS 2026-09-18 (Jiaqi): one flat SVG per screen, drawn in-house (no external assets, no Duolingo artwork). The channel JS
+   sets body[data-lb-art]; the art is a ::before on the message column's container, so nothing is injected into the widget's DOM. */
+[data-lb-part="window"] > .grow > .responsive-container::before { content:""; display:none; width:112px; height:112px; margin:0 auto 14px; background:center / contain no-repeat; }
+body[data-lb-art] [data-lb-part="window"] > .grow > .responsive-container::before { display:block; }
+body.lb-welcome [data-lb-part="window"] > .grow > .responsive-container::before, body.lb-summary [data-lb-part="window"] > .grow > .responsive-container::before, body.lb-end [data-lb-part="window"] > .grow > .responsive-container::before { width:128px; height:128px; }
+body[data-lb-art="welcome"] [data-lb-part="window"] > .grow > .responsive-container::before { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><path d='M60 10l40 14v30c0 26-17 44-40 56C37 98 20 80 20 54V24z' fill='%2358CC02'/><path d='M42 60l12 12 24-26' fill='none' stroke='%23fff' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/></svg>"); }
+body[data-lb-art="q1"] [data-lb-part="window"] > .grow > .responsive-container::before { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><rect x='14' y='30' width='92' height='64' rx='10' fill='%231CB0F6'/><path d='M14 40l46 30 46-30' fill='none' stroke='%23fff' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/><rect x='56' y='62' width='54' height='36' rx='6' fill='%23FFC800' stroke='%23fff' stroke-width='4'/><rect x='62' y='72' width='42' height='6' rx='3' fill='%234B4B4B'/><rect x='62' y='84' width='20' height='6' rx='3' fill='%23fff'/><circle cx='24' cy='26' r='14' fill='%23FF4B4B'/><path d='M24 18v9M24 33v1' stroke='%23fff' stroke-width='5' stroke-linecap='round'/></svg>"); }
+body[data-lb-art="q2"] [data-lb-part="window"] > .grow > .responsive-container::before { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><circle cx='50' cy='50' r='32' fill='%23fff' stroke='%231CB0F6' stroke-width='10'/><path d='M74 74l28 28' stroke='%231CB0F6' stroke-width='12' stroke-linecap='round'/><rect x='30' y='44' width='11' height='13' rx='2' fill='%234B4B4B'/><rect x='44' y='44' width='11' height='13' rx='2' fill='%23FF4B4B'/><rect x='58' y='44' width='11' height='13' rx='2' fill='%234B4B4B'/><path d='M44 64h11' stroke='%23FF4B4B' stroke-width='4' stroke-linecap='round'/></svg>"); }
+body[data-lb-art="q3"] [data-lb-part="window"] > .grow > .responsive-container::before { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><path d='M30 10h42l22 22v78H30z' fill='%23fff' stroke='%234B4B4B' stroke-width='6' stroke-linejoin='round'/><path d='M72 10v22h22' fill='none' stroke='%234B4B4B' stroke-width='6' stroke-linejoin='round'/><circle cx='48' cy='38' r='8' fill='%23FFC800'/><rect x='42' y='54' width='40' height='8' rx='4' fill='%23E5E5E5'/><rect x='42' y='70' width='40' height='8' rx='4' fill='%23E5E5E5'/><rect x='42' y='86' width='24' height='8' rx='4' fill='%23E5E5E5'/><circle cx='92' cy='92' r='18' fill='%23FF4B4B'/><path d='M84 84l16 16M100 84l-16 16' stroke='%23fff' stroke-width='6' stroke-linecap='round'/></svg>"); }
+body[data-lb-art="q4"] [data-lb-part="window"] > .grow > .responsive-container::before { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><circle cx='40' cy='40' r='16' fill='%231CB0F6'/><path d='M12 98c0-20 12-32 28-32s28 12 28 32z' fill='%231CB0F6'/><circle cx='82' cy='46' r='14' fill='%2358CC02'/><path d='M58 98c0-18 10-28 24-28s24 10 24 28z' fill='%2358CC02'/><circle cx='96' cy='22' r='17' fill='%23fff' stroke='%2358CC02' stroke-width='5'/><path d='M87 22l6 6 11-12' fill='none' stroke='%2358CC02' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/></svg>"); }
+body[data-lb-art="q5"] [data-lb-part="window"] > .grow > .responsive-container::before { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><path d='M26 62a34 34 0 1 0 10-24' fill='none' stroke='%231CB0F6' stroke-width='10' stroke-linecap='round'/><path d='M22 22v22h22' fill='none' stroke='%231CB0F6' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/><path d='M80 100h32c-4-4-6-10-6-18v-8a10 10 0 0 0-20 0v8c0 8-2 14-6 18z' fill='%23FFC800'/><circle cx='96' cy='106' r='5' fill='%23FFC800'/><circle cx='108' cy='66' r='8' fill='%23FF4B4B'/></svg>"); }
+body[data-lb-art="q6"] [data-lb-part="window"] > .grow > .responsive-container::before { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><rect x='24' y='18' width='72' height='92' rx='10' fill='%23fff' stroke='%234B4B4B' stroke-width='6'/><rect x='44' y='10' width='32' height='16' rx='6' fill='%234B4B4B'/><path d='M38 48l6 6 12-12M38 70l6 6 12-12M38 92l6 6 12-12' fill='none' stroke='%2358CC02' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/><rect x='62' y='44' width='24' height='6' rx='3' fill='%23E5E5E5'/><rect x='62' y='66' width='24' height='6' rx='3' fill='%23E5E5E5'/><rect x='62' y='88' width='24' height='6' rx='3' fill='%23E5E5E5'/></svg>"); }
+body[data-lb-art="summary"] [data-lb-part="window"] > .grow > .responsive-container::before { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><path d='M36 14h48v32a24 24 0 0 1-48 0z' fill='%23FFC800'/><path d='M36 24H20a16 16 0 0 0 16 22M84 24h16a16 16 0 0 1-16 22' fill='none' stroke='%23FFC800' stroke-width='7' stroke-linecap='round'/><rect x='52' y='70' width='16' height='14' fill='%23FFC800'/><rect x='36' y='84' width='48' height='14' rx='5' fill='%234B4B4B'/><path d='M60 26l4 9 10 1-7 7 2 10-9-5-9 5 2-10-7-7 10-1z' fill='%23fff'/></svg>"); }
+body[data-lb-art="gameover"] [data-lb-part="window"] > .grow > .responsive-container::before { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><path d='M60 106S12 76 12 44a24 24 0 0 1 48-8 24 24 0 0 1 48 8c0 32-48 62-48 62z' fill='%23FF4B4B'/><path d='M62 30l-10 18 14 12-12 14 8 18' fill='none' stroke='%23fff' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/></svg>"); }
+body[data-lb-art="end"] [data-lb-part="window"] > .grow > .responsive-container::before { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><path d='M60 8c17 14 24 38 19 64H41C36 46 43 22 60 8z' fill='%231CB0F6'/><circle cx='60' cy='44' r='9' fill='%23fff'/><path d='M41 66L24 86h18zM79 66l17 20H79z' fill='%23FF4B4B'/><path d='M50 76h20l-10 26z' fill='%23FFC800'/></svg>"); }
+
+/* SOUND TOGGLE in the top bar (tones are synthesised by the channel JS; no audio files, nothing from Duolingo) */
+#lb-top .lb-sound { display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border:0; background:transparent; color:#afafaf; cursor:pointer; border-radius:8px; padding:0; }
+#lb-top .lb-sound:hover { background:#f7f7f7; color:#4b4b4b; }
+#lb-top .lb-sound .on, #lb-top .lb-sound.off .off { display:block; }
+#lb-top .lb-sound .off, #lb-top .lb-sound.off .on { display:none; }
+
+/* TAP FEEDBACK 2026-09-18 (Cris): the tile takes the selected style the instant it is tapped; the JS sends the answer 220 ms later */
+[data-lb-part="option-button"].lb-tapped, [data-lb-part="option-button"].lb-tapped:hover { transition:none !important; background:#ddf4ff !important; border-color:#84d8ff !important; color:#1899d6 !important; transform:translateY(2px); border-bottom-width:2px; margin-bottom:2px; }
+[data-lb-part="option-button"].lb-tapped::before { border-color:#84d8ff !important; color:#1899d6 !important; background:#fff; }
+/* X = restart (fresh page) · end screen: a Refaire button so the goodbye is never a dead end */
+#lb-top .lb-x { cursor:pointer; padding:6px; margin:-6px; border-radius:8px; }
+#lb-top .lb-x:hover { background:#f7f7f7; color:#4b4b4b; }
+#lb-restart { display:none; position:fixed; left:50%; bottom:32px; transform:translateX(-50%); width:min(600px, calc(100% - 40px)); min-height:52px; border:0; border-bottom:4px solid #58a700; border-radius:16px; background:#58cc02; color:#fff; font:900 16px/1 "Nunito",sans-serif; letter-spacing:.02em; cursor:pointer; z-index:45; }
+#lb-restart:hover { background:#61e002; }
+body.lb-end #lb-restart { display:block; }
+body.lb-end [data-lb-part="window"] { padding-bottom:100px; }
+
+/* duplicate bot texts on one screen (flow re-sent a block after a stray input): keep the last copy only */
+.responsive-container>div>div.lb-dup { display:none !important; }
+
+/* WATCHDOG: a lost bot reply (widget race) shows the reload button instead of a dead screen */
+body.lb-stalled #lb-restart { display:block; background:#1cb0f6; border-bottom-color:#1899d6; }
+
+/* DOUBLE-TAP GESTURE OFF 2026-09-18 (Cris, IMG_9355). A fast double tap is recognised by iOS Safari as double-tap-to-zoom; when that gesture lands while the
+   widget is sending an answer, the bot's next messages intermittently never render (~1 in 25 double taps, 0 in 96 single taps, reproduced with no custom JS).
+   touch-action:manipulation disables the gesture (pan and pinch still work), so a second tap is an ordinary tap that the JS guard absorbs. */
+html, body, #lb-top, #lb-banner, #lb-restart, [data-lb-part="window"], [data-lb-part="window"] * { touch-action:manipulation; }
+
+#lb-veil { display:none; position:fixed; top:72px; left:0; right:0; bottom:0; z-index:60; background:transparent; touch-action:none; }
+
+/* lesson-back 1 (2026-09-26): top-bar Back */
+#lb-top .lb-back { display:inline-flex; align-items:center; gap:2px; flex:0 0 auto; height:32px; padding:0 8px 0 4px; margin:0 -6px; border:0; border-radius:8px; background:transparent; color:#afafaf; font-family:"Nunito",sans-serif; font-size:15px; font-weight:800; line-height:1; cursor:pointer; white-space:nowrap; transition:opacity .2s; }
+#lb-top .lb-back:hover { background:#f7f7f7; color:#4b4b4b; }
+#lb-top .lb-back:focus-visible { outline:2px solid #1cb0f6; outline-offset:1px; }
+#lb-top .lb-back.off { visibility:hidden; pointer-events:none; }
+#lb-top .lb-back.busy { opacity:.4; pointer-events:none; }
+.responsive-container>div>div.lb-undone { display:none !important; }
+@media (max-width:420px) { #lb-top .lb-in { gap:10px; padding:0 16px; } #lb-top .lb-back { font-size:14px; padding:0 6px 0 2px; } }

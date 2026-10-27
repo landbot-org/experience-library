@@ -1,0 +1,251 @@
+/* lb-style: kettlestow-order-17 2026-09-25 */
+/* [mockup 17] Order tracking · Kettlestow (invented) · v4 web chat 3.1.0
+   Target: assets/mockups-library-13-20/17-order-tracking.html (390×844): map tile with dotted route + "Order #" pill, cream sheet (24px top radius),
+   ARRIVING + 30px ETA, 4-step timeline, white courier bubble, 2 outline buttons, orange text link, pill branding. Urbanist 500/700/800.
+   Layers: THEME · FRAME [OFF-CATALOG] · HEADER MAP [OFF-CATALOG] · SHEET [OFF-CATALOG] · TRACK · BUBBLES · OPTIONS · INPUT · DONE · BOOT · DESKTOP · SCROLLBARS.
+   Without the script: the chat still reads top to bottom in the same colours and fonts (map, timeline and one-screen view need it). */
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@500;600;700;800&display=swap');
+
+:root {
+  --ot-ink:#221A14; --ot-or:#C2410C; --ot-cream:#FFF8F2; --ot-map:#F1E6DA; --ot-road:#E4D5C4; --ot-mut:#6F6258; --ot-peach:#FFD9C2; --ot-pill:#F3E9DF;
+  --background:#FFF8F2 !important; --foreground:#221A14 !important; --muted-foreground:#6F6258 !important; --border:#E4D5C4 !important;
+  --button-color-primary-default:#FFFFFF !important; --button-border-color-primary-default:#221A14 !important; --button-font-color-primary-default:#221A14 !important;
+  --chat-bubble-color-font-bot:#221A14 !important;
+  --chat-bubble-surface-user:#221A14 !important; --chat-bubble-border-color-user:#221A14 !important; --chat-bubble-color-font-user:#FFFFFF !important;
+  --input-background-default:#FFFFFF !important; --input-border-color-default:#221A14 !important; --input-color-text-default:#221A14 !important;
+  --input-border-color-focus:#221A14 !important; --input-ring-color-focus:transparent !important;
+  --web-chat-header-background:#F1E6DA !important; --web-chat-header-text-color:#221A14 !important;
+  --font-family-sans:"Urbanist",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+  --typography-font-family:"Urbanist",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+  --chat-bubble-font-family:"Urbanist",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+}
+html, body { background:#FFF8F2 !important; }
+[data-lb-part="window"] { background:#FFF8F2 !important; border:none !important; border-radius:0 !important; box-shadow:none !important; color:#221A14; }
+
+/* HEADER MAP [OFF-CATALOG]: native header row hidden; #ot-top (map + pill) parked by JS. Grid lines are the header's own background. */
+[data-lb-part="header"] { background-color:#F1E6DA !important; position:relative; z-index:0;
+  background-image:linear-gradient(90deg, transparent 83px, #E4D5C4 83px, #E4D5C4 97px, transparent 97px), linear-gradient(180deg, transparent 53px, #E4D5C4 53px, #E4D5C4 67px, transparent 67px) !important;
+  background-size:160px 100%, 100% 80px !important; background-repeat:repeat-x, repeat-y !important; background-position:0 0, 0 0 !important; border:none !important; }
+[data-lb-part="header"] > .responsive-container { padding:0 !important; display:block !important; height:210px; }
+[data-lb-part="header"] > .responsive-container > div:not(#ot-top) { display:none !important; }
+[data-lb-part="header"] + div { display:none !important; }
+#ot-top { position:relative; height:210px; }
+#ot-top .ot-map { position:relative; width:390px; height:210px; margin:0 auto; }
+#ot-top svg { position:absolute; inset:0; display:block; }
+#ot-top .ot-van { animation:ot-bob 2.4s ease-in-out infinite; transform-origin:180px 90px; }
+@keyframes ot-bob { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-2px); } }
+#ot-top .ot-pill { position:absolute; left:16px; top:16px; padding:8px 12px; border-radius:12px; background:#FFFFFF; font:800 13px/15px "Urbanist",sans-serif; color:#221A14; white-space:nowrap; }
+body:not(.ot-js) [data-lb-part="header"] { background-image:none !important; }
+
+/* SHEET [OFF-CATALOG]: cream sheet with 24px top corners over the map; one screen at a time (old turns hidden by JS) */
+[aria-label="Scrollable conversation area"] { position:relative; z-index:1; margin-top:-22px; background:#FFF8F2; border-radius:24px 24px 0 0;
+  flex:1 1 auto !important; min-height:0 !important; scrollbar-width:none; -webkit-mask-image:none !important; mask-image:none !important; }
+[aria-label="Scrollable conversation area"]::-webkit-scrollbar { display:none; }
+[aria-label="Conversation messages"] { padding:22px 20px 16px !important; gap:16px !important; }
+[aria-label="Conversation messages"] > div[data-ot-old] { display:none !important; }
+body:not(.ot-js) [aria-label="Conversation messages"] > div:has([data-lb-author="user"]) { display:none !important; }
+[aria-label="Conversation messages"] > span { display:none !important; }
+[data-lb-part="message"][data-lb-author="bot"] > div:has([data-lb-part="message-avatar"]) { display:none !important; }
+[data-lb-part="message-avatar"], [data-lb-part="message-timestamp"] { display:none !important; }
+[data-lb-part="message"] > div { align-items:stretch !important; }
+[data-ot-src] { display:none !important; }
+.ot-clone { width:100%; }
+[data-lb-part="message"][data-lb-author="bot"] { animation:ot-in .26s cubic-bezier(.2,.7,.2,1) backwards; }
+@keyframes ot-in { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+/* kicker per screen (the sub-steps) */
+[aria-label="Conversation messages"]::before { display:none; font:700 13px/15px "Urbanist",sans-serif; letter-spacing:.04em; text-transform:uppercase; color:#6F6258; margin-bottom:-4px; }
+body[data-ot-screen="nb1"] [aria-label="Conversation messages"]::before { content:"Leave with a neighbour · 1 of 3"; display:block; }
+body[data-ot-screen="nb2"] [aria-label="Conversation messages"]::before { content:"Leave with a neighbour · 2 of 3"; display:block; }
+body[data-ot-screen="nb3"] [aria-label="Conversation messages"]::before { content:"Leave with a neighbour · 3 of 3"; display:block; }
+body[data-ot-screen="tm"] [aria-label="Conversation messages"]::before { content:"Deliver tomorrow"; display:block; }
+body[data-ot-screen="hp1"] [aria-label="Conversation messages"]::before { content:"Talk to a person · 1 of 2"; display:block; }
+body[data-ot-screen="hp2"] [aria-label="Conversation messages"]::before { content:"Talk to a person · 2 of 2"; display:block; }
+
+/* BUBBLES: bot bubble = white card, 4/16/16/16 corners (the mockup's courier line) */
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-bubble"] { background:#FFFFFF !important; border:none !important; box-shadow:0 1px 2px rgba(34,26,20,.06) !important;
+  padding:12px 14px !important; border-radius:4px 16px 16px 16px !important; max-width:336px !important; width:auto; flex-direction:column !important; align-items:stretch !important; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-text"] { font:400 15px/21px "Urbanist",sans-serif; color:#221A14; white-space:pre-line; }
+[data-lb-part="message"][data-ot-role]:not([data-ot-role="bubble"]) [data-lb-part="message-bubble"] { background:transparent !important; box-shadow:none !important; padding:0 !important; border-radius:0 !important; max-width:100% !important; width:100%; }
+.ot-b1 { font:700 15px/21px "Urbanist",sans-serif; }
+.ot-b2 { font:400 14px/20px "Urbanist",sans-serif; color:#6F6258; margin-top:2px; }
+[data-lb-part="message"][data-lb-author="user"] [data-lb-part="message-bubble"] { border-radius:16px 16px 4px 16px !important; font-weight:700; }
+
+/* TRACK: ARRIVING + ETA + timeline */
+.ot-eta { display:flex; flex-direction:column; gap:2px; }
+.ot-k { font:700 13px/15px "Urbanist",sans-serif; letter-spacing:.04em; text-transform:uppercase; color:#6F6258; }
+.ot-when { font:800 30px/33px "Urbanist",sans-serif; color:#221A14; letter-spacing:-.01em; }
+.ot-tl { display:flex; flex-direction:column; margin-top:16px; }
+.ot-step { position:relative; display:flex; align-items:flex-start; gap:12px; min-height:40px; }
+.ot-step:last-child { min-height:22px; }
+.ot-dot { position:relative; flex:0 0 22px; width:22px; height:22px; border-radius:50%; box-sizing:border-box; display:flex; align-items:center; justify-content:center; }
+.ot-step:not(:last-child) .ot-dot::after { content:""; position:absolute; left:10px; top:22px; width:2px; height:18px; background:#221A14; }
+.ot-step[data-st="done"] .ot-dot { background:#221A14; color:#FFFFFF; }
+.ot-step[data-st="done"]:nth-child(2) .ot-dot::after { background:#C2410C; }
+.ot-step[data-st="now"] .ot-dot { background:#C2410C; border:4px solid #FFD9C2; }
+.ot-step[data-st="now"] .ot-dot::after { background:#E4D5C4 !important; left:6px !important; top:18px !important; }
+.ot-step[data-st="todo"] .ot-dot { border:2px solid #E4D5C4; background:transparent; }
+.ot-lab { font:700 15px/20px "Urbanist",sans-serif; color:#221A14; padding-top:1px; }
+.ot-step[data-st="now"] .ot-lab { font-weight:800; color:#C2410C; }
+.ot-step[data-st="todo"] .ot-lab { color:#6F6258; }
+.ot-tag { margin-top:12px; font:600 12px/16px "Urbanist",sans-serif; color:#6F6258; display:flex; align-items:center; gap:6px; }
+.ot-tag::before { content:""; width:6px; height:6px; border-radius:50%; background:#C2410C; }
+body[data-ot-screen="track"] [aria-label="Conversation messages"] { gap:18px !important; }
+
+/* OPTIONS: outline buttons, orange text link, filled primary */
+[data-lb-part="window"] > .responsive-container:last-child { padding:0 20px 16px !important; background:#FFF8F2; display:flex; flex-direction:column; gap:0; position:relative; z-index:1; }
+div:has(> [data-lb-part="options-group"]) { border:none !important; padding:0 !important; background:transparent !important; box-shadow:none !important; border-radius:0 !important; }
+[data-lb-part="options-group"] { background:transparent !important; border:none !important; padding:0 !important; box-shadow:none !important; }
+[data-lb-part="options-prompt"], div:has(> [data-lb-part="options-prompt"]) { display:none !important; }
+[data-lb-part="options-group"] > div[data-slot="input-group"], [data-lb-part="options-group"] > div:has(> [data-slot="separator"]) { display:none !important; }
+[data-lb-part="options-list"] { display:flex !important; flex-direction:column !important; gap:8px !important; max-height:none !important; overflow:visible !important; padding:0 !important; }
+[data-lb-part="option-button"] { justify-content:center !important; min-height:48px; height:auto !important; padding:0 16px !important; border:2px solid #221A14 !important; border-radius:12px !important;
+  background:#FFFFFF !important; color:#221A14 !important; font:800 15px/1.2 "Urbanist",sans-serif !important; box-shadow:none !important; cursor:pointer; -webkit-tap-highlight-color:transparent; transition:transform .08s, background .12s, color .12s; }
+[data-lb-part="option-button"] span { text-align:center !important; flex:0 1 auto !important; white-space:normal !important; overflow:visible !important; text-overflow:clip !important; }
+[data-lb-part="option-button"] svg { display:none !important; }
+@media (hover:hover) { [data-lb-part="option-button"][data-ot-role="outline"]:hover { background:#F3E9DF !important; } }
+[data-lb-part="option-button"]:active { transform:scale(.98); }
+[data-lb-part="option-button"][data-ot-pressed], [data-ot-part="option-button"][data-ot-pressed] { background:#221A14 !important; color:#FFFFFF !important; }
+[data-lb-part="option-button"]:focus-visible { outline:3px solid rgba(194,65,12,.45); outline-offset:2px; }
+[data-lb-part="option-button"][data-ot-role="link"], [data-ot-part="option-button"][data-ot-role="link"] { border-color:transparent !important; background:transparent !important; color:#C2410C !important; }
+body:not([data-ot-screen="track"]) [data-lb-part="option-button"][data-ot-role="link"] { color:#6F6258 !important; font-weight:700 !important; text-decoration:underline; text-underline-offset:3px; min-height:40px; }
+[data-lb-part="option-button"][data-ot-role="link"][data-ot-pressed] { background:transparent !important; color:#221A14 !important; }
+[data-lb-part="option-button"][data-ot-role="primary"], [data-ot-part="option-button"][data-ot-role="primary"] { background:#C2410C !important; border-color:#C2410C !important; color:#FFFFFF !important; }
+body[data-ot-screen="tm"] [data-lb-part="option-button"][data-ot-role="outline"] { justify-content:flex-start !important; }
+body[data-ot-screen="tm"] [data-lb-part="option-button"][data-ot-role="outline"] span { text-align:left !important; }
+/* ghost: the pressed screen stays until the bot answers */
+#ot-ghost { pointer-events:none; }
+#ot-ghost[hidden] { display:none !important; }
+#ot-ghost div:has(> [data-ot-part="options-prompt"]), #ot-ghost [data-ot-part="options-prompt"], #ot-ghost [data-slot="input-group"]:not([data-ot-part]) { display:none !important; }
+#ot-ghost [data-ot-part="options-group"], #ot-ghost div { border:none; background:transparent; box-shadow:none; padding:0; }
+#ot-ghost [data-ot-part="options-list"] { display:flex; flex-direction:column; gap:8px; }
+#ot-ghost [data-ot-part="option-button"] { display:flex; align-items:center; justify-content:center; width:100%; min-height:48px; padding:0 16px; border:2px solid #221A14; border-radius:12px; background:#FFFFFF; color:#221A14; font:800 15px/1.2 "Urbanist",sans-serif; opacity:.45; }
+#ot-ghost [data-ot-part="option-button"][data-ot-pressed] { opacity:1; }
+#ot-ghost [data-ot-part="option-button"] svg { display:none; }
+#ot-ghost [data-ot-part="input-field"] { display:flex; align-items:center; min-height:52px; padding:0 8px 0 16px; border:2px solid #221A14; border-radius:12px; background:#FFFFFF; opacity:.6; }
+#ot-ghost input { flex:1 1 0%; min-width:0; border:none; background:transparent; font:600 16px/1.3 "Urbanist",sans-serif; color:#221A14; }
+#ot-ghost [data-ot-part="input-submit"] { width:36px; height:36px; border-radius:10px; background:#C2410C; }
+body.ot-leaving [aria-label="Conversation messages"] { opacity:.55; transition:opacity .15s; }
+
+/* INPUT: white field, 2px ink border, orange square submit */
+[data-lb-part="text-input"] { padding:0 !important; }
+[data-lb-part="input-field"], [data-lb-part="text-input"] > div[data-slot="input-group"] { display:flex !important; flex-direction:row !important; flex-wrap:nowrap !important; align-items:center !important; gap:8px !important;
+  min-height:52px; height:auto !important; padding:0 8px 0 16px !important; border:2px solid #221A14 !important; border-radius:12px !important; background:#FFFFFF !important; box-shadow:none !important; }
+[data-lb-part="input-field"] > input, [data-lb-part="text-input"] > div[data-slot="input-group"] > input { flex:1 1 0% !important; width:auto !important; min-width:0 !important; height:auto !important; padding:12px 0 !important;
+  border:none !important; outline:none !important; box-shadow:none !important; background:transparent !important; color:#221A14 !important; font:600 16px/1.3 "Urbanist",sans-serif !important; }
+[data-lb-part="text-input"] input::placeholder { color:#A8998C !important; font-weight:500; }
+[data-lb-part="input-field"] > div, [data-lb-part="text-input"] > div[data-slot="input-group"] > div { flex:0 0 auto !important; width:auto !important; max-width:none !important; }
+[data-lb-part="input-submit"] { width:36px !important; height:36px !important; min-width:36px; border-radius:10px !important; background:#C2410C !important; color:#FFFFFF !important; border:none !important; }
+[data-lb-part="input-submit"] svg { color:#FFFFFF !important; stroke:#FFFFFF; }
+[data-lb-part="text-input"][data-lb-state="error"] [data-lb-part="input-field"], [data-lb-part="text-input"][data-lb-state="error"] > div[data-slot="input-group"] { border-color:#B42318 !important; }
+[data-lb-part="input-error"] { color:#B42318 !important; font:700 13px/1.4 "Urbanist",sans-serif !important; margin-top:8px; }
+#ot-skip { margin-top:10px; align-self:center; border:0; background:transparent; color:#6F6258; font:700 14px/1.2 "Urbanist",sans-serif; text-decoration:underline; text-underline-offset:3px; padding:8px; cursor:pointer; }
+#ot-skip[hidden] { display:none; }
+
+/* DONE: check, title, record card, fine print */
+.ot-done { display:flex; flex-direction:column; gap:6px; }
+.ot-ok { width:40px; height:40px; border-radius:50%; background:#221A14; color:#FFFFFF; display:flex; align-items:center; justify-content:center; margin-bottom:6px; }
+.ot-ok svg { width:20px; height:20px; }
+.ot-dt { font:800 30px/33px "Urbanist",sans-serif; color:#221A14; letter-spacing:-.01em; }
+.ot-ds { font:500 15px/21px "Urbanist",sans-serif; color:#221A14; }
+.ot-splash .ot-dt { font-size:26px; }
+.ot-rec { background:#FFFFFF; border-radius:16px; padding:14px 16px; box-shadow:0 1px 2px rgba(34,26,20,.06); }
+.ot-rt { font:800 11px/1.3 "Urbanist",sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#C2410C; margin-bottom:4px; }
+.ot-r { display:flex; justify-content:space-between; gap:14px; padding:7px 0; border-top:1px solid #F3E9DF; font:500 13px/1.35 "Urbanist",sans-serif; }
+.ot-r:first-of-type { border-top:none; }
+.ot-r span:first-child { color:#6F6258; white-space:nowrap; }
+.ot-r span:last-child { font-weight:700; text-align:right; overflow-wrap:anywhere; }
+.ot-fine { font:600 12px/1.4 "Urbanist",sans-serif; color:#6F6258; }
+
+/* BOOT: skeleton of the tracking screen while the splash button is pressed for the visitor */
+body.ot-boot [aria-label="Conversation messages"] > div, body.ot-boot [data-lb-part="window"] > .responsive-container:last-child > div:not(:last-child) { visibility:hidden; }
+body.ot-boot #ot-top .ot-pill { color:transparent; min-width:86px; background:linear-gradient(90deg,#FFFFFF 0%,#F7EEE6 50%,#FFFFFF 100%); }
+body.ot-boot [aria-label="Scrollable conversation area"]::after { content:""; position:absolute; left:20px; top:22px; width:230px; height:210px;
+  background:linear-gradient(#EDE2D7,#EDE2D7) 0 0 / 70px 13px no-repeat, linear-gradient(#EDE2D7,#EDE2D7) 0 20px / 200px 30px no-repeat,
+  radial-gradient(circle 11px at 11px 11px,#EDE2D7 10px,transparent 11px) 0 70px / 22px 22px no-repeat, linear-gradient(#EDE2D7,#EDE2D7) 34px 74px / 110px 14px no-repeat,
+  radial-gradient(circle 11px at 11px 11px,#EDE2D7 10px,transparent 11px) 0 110px / 22px 22px no-repeat, linear-gradient(#EDE2D7,#EDE2D7) 34px 114px / 100px 14px no-repeat,
+  radial-gradient(circle 11px at 11px 11px,#EDE2D7 10px,transparent 11px) 0 150px / 22px 22px no-repeat, linear-gradient(#EDE2D7,#EDE2D7) 34px 154px / 190px 14px no-repeat,
+  radial-gradient(circle 11px at 11px 11px,#EDE2D7 10px,transparent 11px) 0 190px / 22px 22px no-repeat, linear-gradient(#EDE2D7,#EDE2D7) 34px 194px / 80px 14px no-repeat;
+  animation:ot-pulse 1.1s ease-in-out infinite alternate; }
+@keyframes ot-pulse { from { opacity:.55; } to { opacity:1; } }
+
+/* BRANDING: pill */
+[data-lb-part="window"] > .responsive-container:last-child > div:last-child { padding-top:16px !important; display:flex; justify-content:center; }
+[data-lb-part="branding"] { display:inline-block !important; padding:6px 12px !important; border-radius:999px; background:#F3E9DF; color:#6F6258 !important; font:600 11px/13px "Urbanist",sans-serif !important; }
+[data-lb-part="branding"]::before { content:""; display:inline-block; vertical-align:0; width:8px; height:8px; margin-right:6px; border-radius:50%; background:#6F6258; }
+[data-lb-part="branding"] a { color:#6F6258 !important; font-weight:700 !important; }
+
+/* DESKTOP: a centred 440px column; the map grid runs full width, the route stays with the column */
+.responsive-container { max-width:440px !important; margin-left:auto !important; margin-right:auto !important; width:100%; }
+[data-lb-part="header"] > .responsive-container { max-width:none !important; }
+@media (min-width:700px) {
+  [data-lb-part="header"] { background-position:calc(50% - 5px) 0, 0 0 !important; }
+  #ot-top .ot-map { width:440px; }
+  #ot-top svg { left:25px; }
+  [aria-label="Scrollable conversation area"] { max-width:440px; width:100%; margin-left:auto !important; margin-right:auto !important; }
+}
+
+/* SCROLLBARS */
+* { scrollbar-width:thin; scrollbar-color:#E4D5C4 transparent; }
+*::-webkit-scrollbar { width:8px; height:8px; }
+*::-webkit-scrollbar-track { background:transparent; }
+*::-webkit-scrollbar-thumb { background:#E4D5C4; border-radius:8px; }
+*::-webkit-scrollbar-thumb:hover { background:#CDBBA8; }
+
+/* ROUND 1: answers follow the question (mockup), branding stays at the bottom */
+[aria-label="Scrollable conversation area"] { flex:0 1 auto !important; }
+[data-lb-part="window"] > .responsive-container:last-child { flex:1 0 auto; }
+[data-lb-part="window"] > .responsive-container:last-child > div:last-child { margin-top:auto; }
+
+/* ROUND 2: short phones (≤740px tall): a shorter map, tighter end card, so the record and its button fit */
+@media (max-height:740px) {
+  [data-lb-part="header"] > .responsive-container, #ot-top { height:150px; }
+  #ot-top svg { top:-36px; }
+  #ot-top .ot-pill { top:12px; }
+  [aria-label="Conversation messages"] { padding-top:18px !important; gap:12px !important; }
+  .ot-ok { width:32px; height:32px; margin-bottom:2px; }
+  .ot-dt { font-size:26px; line-height:29px; }
+  .ot-ds { font-size:14px; line-height:19px; }
+  .ot-r { padding:5px 0; }
+  .ot-tl { margin-top:12px; }
+  .ot-step { min-height:36px; }
+  .ot-step:not(:last-child) .ot-dot::after { height:14px; }
+  .ot-step[data-st="now"] .ot-dot::after { height:14px; }
+}
+
+/* ROUND 3 (cold review): the mockup's map ends in a flat edge (no rounded sheet); fixed gap between the last message and the answers */
+[aria-label="Scrollable conversation area"] { margin-top:0 !important; border-radius:0 !important; }
+[aria-label="Conversation messages"] { padding:8px 20px 4px !important; }
+[data-lb-part="window"] > .responsive-container:last-child { padding-top:12px !important; }
+body.ot-boot [aria-label="Scrollable conversation area"]::after { top:8px; }
+@media (max-height:740px) { #ot-top svg { top:-24px; } [aria-label="Conversation messages"] { padding-top:8px !important; } }
+/* ROUND 4: 390×667 — the whole tracking screen fits without scrolling */
+@media (max-height:740px) {
+  [data-lb-part="header"] > .responsive-container, #ot-top { height:124px; }
+  #ot-top svg { top:-46px; }
+  .ot-when { font-size:26px; line-height:29px; }
+  .ot-step { min-height:32px; }
+  .ot-step:not(:last-child) .ot-dot::after, .ot-step[data-st="now"] .ot-dot::after { height:10px; }
+  .ot-tag { margin-top:8px; }
+  [data-lb-part="option-button"] { min-height:44px; }
+  [data-lb-part="window"] > .responsive-container:last-child > div:last-child { padding-top:10px !important; }
+}
+
+/* NATIVE BACK (Jiaqi 09-25) [OFF-CATALOG]: design.back_button_visible = true. No anchor; hover-only by default (invisible on phones) → forced visible,
+   in flow (never position:fixed: .responsive-container traps it). Shown on the sub-steps; hidden on splash, tracking and end screens, where
+   "Back to my order" / the three actions are the way on. */
+div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { opacity:1 !important; order:-1; display:flex !important; justify-content:flex-start; margin:-8px 0 -10px; }
+button[data-slot="button"][data-size="sm"][data-variant="ghost"] { display:inline-flex !important; align-items:center; gap:4px; background:transparent !important; color:#6F6258 !important;
+  border:none !important; box-shadow:none !important; font:700 14px/1 "Urbanist",sans-serif !important; padding:8px 10px 8px 0 !important; height:auto !important; min-height:36px; cursor:pointer; }
+button[data-slot="button"][data-size="sm"][data-variant="ghost"]::before { content:""; width:16px; height:16px; background:currentColor;
+  -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M15 6l-6 6 6 6'/></svg>") center / 16px 16px no-repeat;
+  mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M15 6l-6 6 6 6'/></svg>") center / 16px 16px no-repeat; }
+button[data-slot="button"][data-size="sm"][data-variant="ghost"] svg { display:none !important; }
+@media (hover:hover) { button[data-slot="button"][data-size="sm"][data-variant="ghost"]:hover { color:#221A14 !important; text-decoration:underline; text-underline-offset:3px; } }
+button[data-slot="button"][data-size="sm"][data-variant="ghost"]:focus-visible { outline:3px solid rgba(194,65,12,.45); outline-offset:2px; border-radius:6px; }
+body[data-ot-screen="splash"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]),
+body[data-ot-screen="track"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]),
+body[data-ot-screen="done"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]),
+body.ot-boot div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { display:none !important; }
+#ot-ghost button[data-variant="ghost"] { color:#221A14 !important; }
+#ot-ghost [data-ot-part="option-button"] span { flex:0 1 auto; text-align:center; }
+#ot-ghost [data-ot-part="option-button"][data-ot-role="link"] { border-color:transparent; background:transparent; }

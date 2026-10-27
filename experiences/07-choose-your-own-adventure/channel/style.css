@@ -1,0 +1,123 @@
+/* [mockup 7] Choose-your-own adventure · Mossglen Tales (invented) · bot 4071710 / channel 3516220 · v4 web chat 3.1.0
+   Target: assets/mockups-canvas-20260917/Adventure.dc.html (390×844): chapter/time row + rule, Playfair title, Crimson narrative, outlined
+   choices with chevrons (side action dashed), "Carrying: …" line, chapter dots + pill branding. Palette switches per chapter (body[data-av-ch]).
+   Each chapter is one bot message: "CHAPTER n OF 5 · TIME / title / (event) / narrative / Carrying: …"; JS parses it.
+   Layers: THEME · CHAPTER PALETTES · HEADER [OFF-CATALOG] · SCREEN [OFF-CATALOG] · STORY TYPE · CHOICES · RECORD · FOOTER [OFF-CATALOG] · NATIVE BACK [OFF-CATALOG] · DESKTOP. */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root {
+  --av-bg:#0F2E24; --av-ink:#E8E1CF; --av-acc:#9DBFA8; --av-line:#2E5A48; --av-pill:#163A2E; --av-dash:#4F7A63; --av-mute:#7F9C8A;
+  --background:transparent !important; --foreground:#E8E1CF !important;
+  --web-chat-header-background:transparent !important; --web-chat-header-text-color:#E8E1CF !important;
+  --font-family-sans:"Crimson Pro",Georgia,serif !important; --typography-font-family:"Crimson Pro",Georgia,serif !important; --chat-bubble-font-family:"Crimson Pro",Georgia,serif !important;
+}
+/* CHAPTER PALETTES */
+body[data-av-ch="1"] { --av-bg:#2B1B3D; --av-acc:#BCA8D8; --av-line:#46325E; --av-pill:#3A2852; --av-dash:#7A6597; --av-mute:#9585AD; }
+body[data-av-ch="2"] { --av-bg:#3B2A17; --av-acc:#D8BF94; --av-line:#5A4428; --av-pill:#4A3620; --av-dash:#8F7650; --av-mute:#A8926C; }
+body[data-av-ch="3"] { --av-bg:#0F2E24; --av-acc:#9DBFA8; --av-line:#2E5A48; --av-pill:#163A2E; --av-dash:#4F7A63; --av-mute:#7F9C8A; }
+body[data-av-ch="4"] { --av-bg:#1B2440; --av-acc:#A9B8DF; --av-line:#34406A; --av-pill:#243056; --av-dash:#5A6A99; --av-mute:#8391BA; }
+body[data-av-ch="5"] { --av-bg:#4A2330; --av-acc:#E8B4A0; --av-line:#6E3A48; --av-pill:#5A2C3C; --av-dash:#9A6A70; --av-mute:#C08E86; }
+html, body { background:var(--av-bg) !important; transition:background-color .5s ease; }
+body, [data-lb-part="window"] { color:var(--av-ink); }
+[data-lb-part="window"] { background:transparent !important; border:none !important; border-radius:0 !important; box-shadow:none !important; }
+
+/* HEADER [OFF-CATALOG]: chapter / time row + rule (#av-top, parked by JS) */
+[data-lb-part="header"] { background:transparent !important; }
+[data-lb-part="header"] > .responsive-container { padding:30px 26px 0 !important; display:block !important; }
+[data-lb-part="header"] > .responsive-container > div:not(#av-top) { display:none !important; }
+[data-lb-part="header"] + div { display:none !important; }
+#av-top { display:flex; flex-direction:column; gap:22px; }
+#av-top .row { display:flex; align-items:center; justify-content:space-between; font:400 12px/1.2 "Crimson Pro",Georgia,serif; letter-spacing:.18em; text-transform:uppercase; color:var(--av-acc); min-height:15px; }
+#av-top .rule { height:1px; background:var(--av-line); }
+
+/* SCREEN [OFF-CATALOG]: story under the header, choices right after it, footer pinned to the bottom */
+[data-lb-part="window"] > .responsive-container, [data-lb-part="header"] > .responsive-container { max-width:560px !important; margin-left:auto !important; margin-right:auto !important; width:100%; }
+[aria-label="Scrollable conversation area"] { flex:0 1 auto !important; min-height:0 !important; scrollbar-width:none; -webkit-mask-image:none !important; mask-image:none !important; }
+[aria-label="Scrollable conversation area"]::-webkit-scrollbar { display:none; }
+[aria-label="Conversation messages"] { padding:22px 26px 0 !important; gap:18px !important; max-width:560px; margin:0 auto; width:100%; box-sizing:border-box; }
+[aria-label="Conversation messages"] > div[data-av-old] { display:none !important; }
+body:not(.av-js) [aria-label="Conversation messages"] > div:has([data-lb-author="user"]) { display:none !important; }
+body:not(.av-js) [aria-label="Conversation messages"] > div:has(~ div [data-lb-author="user"]) { display:none !important; }
+[aria-label="Conversation messages"] > span { display:none !important; }
+[data-lb-part="message"][data-lb-author="bot"] > div:has([data-lb-part="message-avatar"]) { display:none !important; }
+[data-lb-part="message-timestamp"] { display:none !important; }
+/* NATIVE BACK [OFF-CATALOG, no data-lb-part anchor]: Landbot's own Back (design.back_button_visible:true), a quiet serif "‹ Back" under the story,
+   just above the choices. Its wrapper is hover-only (opacity-0 group-hover), so it is forced to opacity 1 for phones, and kept in the flow
+   (position:fixed leaves it clipped inside the container). Hidden on chapter 1 (nothing to go back to) and while a screen is leaving. */
+[aria-label="Conversation messages"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { display:flex !important; opacity:1 !important; position:static !important; justify-content:flex-start; margin:-8px 0 0 -2px; }
+[aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"] { position:static !important; display:inline-flex !important; align-items:center; gap:6px; height:auto !important; min-height:40px; padding:4px 12px 4px 2px !important; border:none !important; border-radius:4px !important; background:transparent !important; box-shadow:none !important; color:var(--av-acc) !important; font:italic 400 17px/1.2 "Crimson Pro",Georgia,serif !important; letter-spacing:.02em; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+[aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"] svg { display:none !important; }
+[aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"]::before { content:"\2039"; font:normal 400 24px/1 "Crimson Pro",Georgia,serif; margin-top:-3px; }
+@media (hover:hover) { [aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"]:hover { color:var(--av-ink) !important; text-decoration:underline; text-underline-offset:3px; } }
+[aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"]:focus-visible { outline:2px solid var(--av-ink); outline-offset:2px; }
+body[data-av-ch="1"] [aria-label="Conversation messages"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]), body.av-leaving [aria-label="Conversation messages"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { display:none !important; }
+[data-lb-part="message"] > div { align-items:stretch !important; }
+[data-lb-part="message"] [data-lb-part="message-bubble"] { background:transparent !important; border:none !important; box-shadow:none !important; padding:0 !important; border-radius:0 !important; width:100%; max-width:100% !important; flex-direction:column !important; align-items:stretch !important; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-text"] { font:400 19px/1.5 "Crimson Pro",Georgia,serif; color:var(--av-ink); white-space:pre-line; }
+[data-av-src] { display:none !important; }
+.av-clone { width:100%; color:var(--av-ink); animation:av-in .35s ease both; }
+[data-lb-part="options-list"] { animation:av-in .35s ease .14s both; }
+@keyframes av-in { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+body.av-leaving [aria-label="Conversation messages"] { opacity:.35; transition:opacity .22s; }
+#av-ghost { pointer-events:none; }
+#av-ghost[hidden] { display:none !important; }
+#av-ghost div { border:none !important; padding:0 !important; background:transparent !important; box-shadow:none !important; }
+#av-ghost [data-av-part="options-list"] { display:flex; flex-direction:column; gap:12px; }
+#av-ghost [data-av-part="options-prompt"], #av-ghost [data-av-part="options-group"] > div:not([data-av-part="options-list"]):not(:has([data-av-part="options-list"])) { display:none !important; }
+#av-ghost [data-av-part="option-button"] { display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; min-height:60px; padding:10px 18px; border:1px solid var(--av-acc); border-radius:4px; background:transparent; color:var(--av-ink); font:600 19px/1.25 "Crimson Pro",Georgia,serif; text-align:left; opacity:.3; }
+#av-ghost [data-av-part="option-button"][data-av-side] { border-style:dashed; border-color:var(--av-dash); color:var(--av-acc); font-weight:400; }
+#av-ghost [data-av-part="option-button"][data-av-picked] { opacity:1; background:var(--av-acc); color:var(--av-bg); border-color:var(--av-acc); }
+[data-lb-part="window"] > .responsive-container:last-child > div:empty { display:none !important; }
+body.av-leaving [data-lb-part="option-button"]:not([data-av-picked]) { opacity:.3; transition:opacity .22s; }
+
+/* STORY TYPE */
+.av-ch { display:flex; flex-direction:column; gap:22px; }
+.av-end-k { font:400 12px/1.2 "Crimson Pro",Georgia,serif; letter-spacing:.18em; text-transform:uppercase; color:var(--av-acc); margin-bottom:-12px; }
+.av-title { font:700 36px/1.1 "Playfair Display",Georgia,serif; color:var(--av-ink); }
+.av-event { font:italic 400 18px/1.45 "Crimson Pro",Georgia,serif; color:var(--av-acc); margin-bottom:-8px; }
+.av-text { font:400 19px/1.5 "Crimson Pro",Georgia,serif; color:var(--av-ink); }
+
+/* CHOICES: outlined rows with a chevron; side actions dashed */
+[data-lb-part="window"] > .responsive-container:last-child { flex:1 1 auto; display:flex; flex-direction:column; padding:22px 26px 28px !important; }
+div:has(> [data-lb-part="options-group"]) { border:none !important; padding:0 0 22px !important; background:transparent !important; box-shadow:none !important; border-radius:0 !important; }
+[data-lb-part="options-group"] { background:transparent !important; border:none !important; padding:0 !important; box-shadow:none !important; }
+[data-lb-part="options-prompt"], div:has(> [data-lb-part="options-prompt"]) { display:none !important; }
+[data-lb-part="options-group"] > div[data-slot="input-group"], [data-lb-part="options-group"] > div:has(> [data-slot="separator"]), [data-lb-part="options-group"] > div:has(> input) { display:none !important; }
+[data-lb-part="options-list"] { display:flex !important; flex-direction:column !important; gap:12px !important; max-height:none !important; overflow:visible !important; padding:0 !important; }
+[data-lb-part="option-button"] { display:flex !important; align-items:center !important; justify-content:space-between !important; gap:12px; min-height:60px; height:auto !important; padding:10px 18px !important; border:1px solid var(--av-acc) !important; border-radius:4px !important; background:transparent !important; color:var(--av-ink) !important; font:600 19px/1.25 "Crimson Pro",Georgia,serif !important; text-align:left !important; box-shadow:none !important; cursor:pointer; -webkit-tap-highlight-color:transparent; transition:background-color .12s, color .12s; }
+[data-lb-part="option-button"] span { text-align:left !important; flex:1 1 auto !important; white-space:normal !important; overflow:visible !important; text-overflow:clip !important; }
+[data-lb-part="option-button"]::after { content:""; flex:0 0 20px; width:20px; height:20px; background:var(--av-acc); -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 6l6 6-6 6'/></svg>") center / 20px 20px no-repeat; mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 6l6 6-6 6'/></svg>") center / 20px 20px no-repeat; }
+[data-lb-part="option-button"][data-av-side] { border:1px dashed var(--av-dash) !important; color:var(--av-acc) !important; font-weight:400 !important; }
+@media (hover:hover) { [data-lb-part="option-button"]:hover { background:rgba(255,255,255,.05) !important; } }
+[data-lb-part="option-button"][data-av-picked] { background:var(--av-acc) !important; color:var(--av-bg) !important; border-color:var(--av-acc) !important; }
+[data-lb-part="option-button"][data-av-picked]::after { background:var(--av-bg); }
+[data-lb-part="option-button"]:focus-visible { outline:2px solid var(--av-ink); outline-offset:3px; }
+[data-lb-part="option-button"][data-av-cta] { justify-content:center !important; background:var(--av-acc) !important; color:var(--av-bg) !important; border-color:var(--av-acc) !important; }
+[data-lb-part="option-button"][data-av-cta] span { flex:0 1 auto !important; text-align:center !important; }
+[data-lb-part="option-button"][data-av-cta]::after { display:none; }
+
+/* RECORD (endings) */
+.av-rec { border:1px solid var(--av-line); border-radius:4px; padding:12px 16px; }
+.av-rec .t { font:400 11px/1.3 "Crimson Pro",Georgia,serif; letter-spacing:.16em; text-transform:uppercase; color:var(--av-acc); margin-bottom:4px; }
+.av-rec .r { display:flex; justify-content:space-between; gap:14px; padding:6px 0; border-top:1px solid var(--av-line); font:400 15px/1.35 "Crimson Pro",Georgia,serif; }
+.av-rec .r:first-of-type { border-top:none; }
+.av-rec .r span:first-child { color:var(--av-acc); white-space:nowrap; }
+.av-rec .r span:last-child { font-weight:600; text-align:right; }
+.av-fine { font:italic 400 14px/1.4 "Crimson Pro",Georgia,serif; color:var(--av-mute); }
+
+/* FOOTER [OFF-CATALOG]: carrying line (#av-foot) + chapter dots next to the branding pill */
+#av-foot { margin-top:auto; padding-top:18px; border-top:1px solid var(--av-line); font:400 14px/1.35 "Crimson Pro",Georgia,serif; color:var(--av-acc); }
+[data-lb-part="window"] > .responsive-container:last-child > div:has(> [data-lb-part="branding"]) { display:flex !important; align-items:flex-end; justify-content:space-between; gap:10px; padding-top:14px !important; }
+#av-dots { display:flex; gap:10px; }
+#av-dots .d { display:flex; flex-direction:column; align-items:center; gap:6px; font:400 11px/1 "Crimson Pro",Georgia,serif; letter-spacing:.06em; color:var(--av-mute); }
+#av-dots .d i { width:30px; height:30px; border-radius:50%; border:2px solid transparent; box-sizing:border-box; display:block; }
+#av-dots .d[data-on] { color:var(--av-ink); }
+#av-dots .d[data-on] i { background:transparent !important; border-color:var(--av-ink); }
+#av-dots .d[data-future] i { opacity:.45; }
+[data-lb-part="branding"] { align-self:center; display:inline-block !important; padding:6px 12px !important; border-radius:999px; background:var(--av-pill); color:var(--av-acc) !important; font:600 11px/1.2 "Crimson Pro",Georgia,serif !important; white-space:nowrap; }
+[data-lb-part="branding"]::before { content:""; display:inline-block; width:8px; height:8px; margin-right:6px; border-radius:50%; background:currentColor; }
+[data-lb-part="branding"] a { color:var(--av-acc) !important; font-weight:600 !important; }
+
+/* DESKTOP */
+@media (min-width:700px) { [data-lb-part="header"] > .responsive-container { padding-top:max(30px, 5vh) !important; } }
+@media (max-width:359px) { #av-dots { gap:6px; } #av-dots .d i { width:26px; height:26px; } }

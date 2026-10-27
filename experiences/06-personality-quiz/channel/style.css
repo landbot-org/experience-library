@@ -1,0 +1,204 @@
+/* lb-style: ottervane-quiz 2026-09-28 · [mockup 6] Personality quiz · Ottervane (invented workflow tool) · bot 4071609 / channel 3516146 · v4 web chat 3.1.0
+   Target: assets/mockups-canvas-20260917/QuizResult.dc.html (390×844): cream ground, "YOUR RESULT" + 8 dots, coral result card with an icon
+   circle, Fraunces italic type name, trait bars, navy Share / outlined playbook / Retake link. Question screens designed in the same system.
+   Channel JS adds: header row (kicker + dots), message kinds (card parts, question, record), bars + record clones, tap feedback, Share.
+   Layers: THEME · HEADER · SCREEN MODE [OFF-CATALOG] · MESSAGES · CARD · OPTIONS · INPUT · INJECTED UI · END · DESKTOP · SCROLLBARS.
+   Patterns from 11-insurance (arrival order, footer layout) and goal2-lesson (tap feedback, letter badges). */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500;600;700&display=swap');   /* same request as the mockup (no opsz axis) */
+
+:root {
+  --qz-bg:#F4EFE6; --qz-ink:#1F1A3D; --qz-card:#E9435A; --qz-muted:#7A6A4F; --qz-pill:#EAE2D3;
+  --background:#F4EFE6 !important;
+  --foreground:#1F1A3D !important;
+  --muted-foreground:#7A6A4F !important;
+  --border:rgba(31,26,61,0.14) !important;
+  --button-color-primary-default:#1F1A3D !important;
+  --button-border-color-primary-default:#1F1A3D !important;
+  --button-font-color-primary-default:#FFFFFF !important;
+  --chat-bubble-color-font-bot:#1F1A3D !important;
+  --input-background-default:#FFFFFF !important;
+  --input-border-color-default:rgba(31,26,61,0.25) !important;
+  --input-border-color-focus:#1F1A3D !important;
+  --input-ring-color-focus:transparent !important;
+  --input-color-text-default:#1F1A3D !important;
+  --web-chat-header-background:#F4EFE6 !important;
+  --web-chat-header-text-color:#1F1A3D !important;
+  --font-family-sans:"DM Sans",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+  --typography-font-family:"DM Sans",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+  --chat-bubble-font-family:"DM Sans",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+}
+html, body { background:#F4EFE6 !important; }
+body[data-qz-type="gardener"] { --qz-card:#2F8A5F; }
+body[data-qz-type="explorer"] { --qz-card:#5B4FD1; }
+[data-lb-part="window"] { background:#F4EFE6 !important; border:none !important; border-radius:0 !important; box-shadow:none !important; }
+
+/* HEADER [OFF-CATALOG]: the native header row is replaced by #qz-top (kicker + 8 dots), parked in the header container by JS */
+[data-lb-part="header"] { background:#F4EFE6 !important; }
+[data-lb-part="header"] > .responsive-container { padding:26px 22px 0 !important; }
+[data-lb-part="header"] > .responsive-container > div:not(#qz-top) { display:none !important; }
+[data-lb-part="header"] + div { display:none !important; }
+#qz-top { width:100%; display:flex; justify-content:space-between; align-items:center; font:700 12px/1 "DM Sans",sans-serif; letter-spacing:.12em; color:#7A6A4F; text-transform:uppercase; }
+#qz-top .qz-dots { display:inline-flex; gap:5px; }
+#qz-top .qz-dot { width:8px; height:8px; border-radius:50%; box-sizing:border-box; border:1.5px solid #1F1A3D; background:transparent; transition:background .2s; }
+#qz-top .qz-dot[data-on] { background:#1F1A3D; }
+
+/* SCREEN MODE [OFF-CATALOG]: current turn only (JS arrival order), thread at its content height, footer takes the rest */
+[aria-label="Scrollable conversation area"] { flex:0 1 auto !important; min-height:0 !important; scrollbar-width:none; }
+[aria-label="Scrollable conversation area"]::-webkit-scrollbar { display:none; }
+[data-lb-part="window"] > .responsive-container:last-child { flex:1 0 auto; display:flex; flex-direction:column; padding:20px 22px 28px !important; }
+[aria-label="Conversation messages"] { padding:20px 22px 0 !important; gap:0 !important; }
+[aria-label="Conversation messages"] > div[data-qz-old] { display:none !important; }
+body:not(.qz-js) [aria-label="Conversation messages"] > div:has([data-lb-author="user"]) { display:none !important; }
+body:not(.qz-js) [aria-label="Conversation messages"] > div:has(~ div [data-lb-author="user"]) { display:none !important; }
+[aria-label="Conversation messages"] > span { display:none !important; }
+[data-lb-part="message"][data-lb-author="bot"] > div:has([data-lb-part="message-avatar"]) { display:none !important; }
+[data-lb-part="message-timestamp"] { display:none !important; }
+/* NATIVE BACK [OFF-CATALOG, no data-lb-part anchor] (channel design.back_button_visible:true, text.back "Back"): shown on every question after the
+   first (Q2–Q8), on the result (back to Q8: the scores are recomputed from the stored answers) and on the email step. Hidden on welcome, Q1, done and
+   the scoring fallback (JS sets body[data-qz-back]). The wrapper is hover-only by default → forced opacity:1 for phones; kept in the page flow
+   (position:fixed breaks it: goal5 finding) and moved above the question (under the card on the result) as a quiet "‹ Back" link. Without JS it stays visible. */
+[aria-label="Conversation messages"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { opacity:1 !important; position:static !important; display:flex !important; justify-content:flex-start; order:-1; margin:0 0 14px; }
+body.qz-js:not([data-qz-back]) [aria-label="Conversation messages"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { display:none !important; }
+/* the wrapper sits in the LAST message's row (the card note). On the result the card and the footer fill a phone, so a Back under the card was
+   clipped by the scroll area and untappable (QA 2026-09-28 row 5). There it leaves the flow and sits in the header row, left of the kicker: its
+   containing block is the window, so the scroll area no longer clips it, and it stays put while the card scrolls. */
+body[data-qz-screen="result"] [aria-label="Conversation messages"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { position:absolute !important; top:16px; left:max(22px, calc((100% - 480px) / 2 + 22px)); margin:0 !important; z-index:5; }
+body[data-qz-screen="result"] #qz-top { box-sizing:border-box; padding-left:72px; }
+/* v4's scroll area carries a mask (class scroll-fade); a mask clips every descendant, the out-of-flow Back too, and stacks the area under the
+   header. The result screen drops it (its stops are at 0px, so no visible fade is lost). */
+body[data-qz-screen="result"] [aria-label="Scrollable conversation area"] { -webkit-mask-image:none !important; mask-image:none !important; }
+body.qz-leaving [aria-label="Conversation messages"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { pointer-events:none; }
+button[data-slot="button"][data-size="sm"][data-variant="ghost"] { position:static !important; background:transparent !important; border:none !important; box-shadow:none !important; color:#7A6A4F !important;
+  font:600 14px/1 "DM Sans",sans-serif !important; letter-spacing:.02em; padding:6px 10px 6px 0 !important; min-height:32px; height:auto !important; gap:0 !important; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+button[data-slot="button"][data-size="sm"][data-variant="ghost"] svg { display:none !important; }
+button[data-slot="button"][data-size="sm"][data-variant="ghost"]::before { content:"\2039"; font:500 20px/1 "DM Sans",sans-serif; margin:-2px 6px 0 0; }
+@media (hover:hover) { button[data-slot="button"][data-size="sm"][data-variant="ghost"]:hover { color:#1F1A3D !important; background:transparent !important; } }
+button[data-slot="button"][data-size="sm"][data-variant="ghost"]:focus-visible { outline:3px solid rgba(233,67,90,.45); outline-offset:2px; border-radius:6px; }
+button[data-slot="button"][data-size="sm"][data-variant="ghost"].qz-pressed { color:#1F1A3D !important; }
+[data-lb-part="message"] { animation:qz-in .3s cubic-bezier(.2,.7,.2,1); }
+@keyframes qz-in { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+/* MESSAGES: no bubbles; default = the question in Fraunces italic */
+[data-lb-part="message"][data-lb-author="bot"] > div { align-items:stretch !important; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-bubble"] { background:transparent !important; border:none !important; box-shadow:none !important; padding:0 !important; border-radius:0 !important; max-width:100% !important; width:100%; flex-direction:column !important; align-items:stretch !important; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-text"] { font:italic 700 32px/1.12 "Fraunces",Georgia,serif; color:#1F1A3D; white-space:pre-line; letter-spacing:-0.3px; }
+[data-lb-part="message"][data-qz-kind="kicker"] { display:none !important; }
+[data-lb-part="message"][data-qz-kind="lead"] [data-lb-part="message-text"] { font:500 20px/1.4 "DM Sans",sans-serif; letter-spacing:0; }
+[data-lb-part="message"][data-qz-kind="fine"] [data-lb-part="message-text"] { font:500 13px/1.5 "DM Sans",sans-serif; color:#7A6A4F; letter-spacing:0; }
+[aria-label="Conversation messages"] > div:has(> [data-qz-kind="record"]), [aria-label="Conversation messages"] > div:has(> [data-qz-kind="fine"]) { margin-top:18px; }
+[data-qz-src] { display:none !important; }
+.qz-clone { width:100%; flex:1 1 auto; align-self:stretch; margin-top:0 !important; }
+
+/* CARD: consecutive card-* messages read as one coral card (welcome: title + sub; result: title, sub, bars, note) */
+[data-lb-part="message"][data-qz-kind^="card"] { background:var(--qz-card); color:#FFFFFF; padding:0 24px; }
+[data-lb-part="message"][data-qz-kind^="card"] [data-lb-part="message-text"] { color:#FFFFFF; }
+[data-lb-part="message"][data-qz-kind="card-title"] { border-radius:24px 24px 0 0; padding-top:28px; }
+[data-lb-part="message"][data-qz-kind="card-title"] [data-lb-part="message-text"] { font:italic 700 42px/1 "Fraunces",Georgia,serif; letter-spacing:0; padding-bottom:6px; overflow:visible; }
+[data-lb-part="message"][data-qz-kind="card-title"]::before { content:""; display:block; width:88px; height:88px; margin-bottom:18px; border-radius:50%; background:#FFFFFF no-repeat center / 52px 52px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23E9435A'><path d='M13 2L4 14h7l-1 8 9-12h-7l1-8z'/></svg>"); }
+body[data-qz-type="gardener"] [data-lb-part="message"][data-qz-kind="card-title"]::before { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232F8A5F' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 21V11'/><path d='M12 11C12 6 8 4 4 4c0 5 3 7 8 7z' fill='%232F8A5F'/><path d='M12 14c0-4 3-6 8-6 0 4-3 6-8 6z' fill='%232F8A5F'/></svg>"); }
+body[data-qz-type="explorer"] [data-lb-part="message"][data-qz-kind="card-title"]::before { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235B4FD1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M15.5 8.5l-2 5-5 2 2-5z' fill='%235B4FD1'/></svg>"); }
+body[data-qz-screen="welcome"] [data-lb-part="message"][data-qz-kind="card-title"]::before { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E9435A' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M9.2 9a3 3 0 0 1 5.6 1.2c0 2-3 2.6-3 4.3'/><circle cx='11.8' cy='18' r='.6' fill='%23E9435A'/></svg>"); }
+[data-lb-part="message"][data-qz-kind="card-sub"] { padding-top:2px; }
+[data-lb-part="message"][data-qz-kind="card-sub"] [data-lb-part="message-text"] { font:400 17px/1.4 "DM Sans",sans-serif; letter-spacing:0; }
+[data-lb-part="message"][data-qz-kind="card-bars"] { padding-top:18px; }
+[data-lb-part="message"][data-qz-kind="card-note"] { padding-top:18px; }
+[data-lb-part="message"][data-qz-kind="card-note"] [data-lb-part="message-text"] { font:400 13px/1.4 "DM Sans",sans-serif; opacity:.9; letter-spacing:0; }
+[data-lb-part="message"][data-qz-last] { border-radius:0 0 24px 24px; padding-bottom:28px; }
+[data-lb-part="message"][data-qz-kind="card-title"][data-qz-last] { border-radius:24px; }
+.qz-bars { display:flex; flex-direction:column; gap:12px; }
+.qz-bar-h { display:flex; justify-content:space-between; font:600 13px/1.2 "DM Sans",sans-serif; color:#FFFFFF; margin-bottom:6px; }
+.qz-bar-t { height:8px; border-radius:4px; background:rgba(255,255,255,0.28); overflow:hidden; }
+.qz-bar-f { height:100%; border-radius:4px; background:#FFFFFF; width:0; transition:width .7s cubic-bezier(.2,.7,.2,1); }
+
+/* OPTIONS: lettered pills; tap = instant navy fill (JS), then the answer is sent */
+div:has(> [data-lb-part="options-group"]) { border:none !important; padding:0 !important; background:transparent !important; box-shadow:none !important; border-radius:0 !important; }
+[data-lb-part="options-group"] { background:transparent !important; border:none !important; padding:0 !important; box-shadow:none !important; }
+[data-lb-part="options-prompt"], div:has(> [data-lb-part="options-prompt"]) { display:none !important; }
+[data-lb-part="options-group"] > div:has(> input) { display:none !important; }
+[data-lb-part="options-list"] { display:flex !important; flex-direction:column !important; gap:10px !important; max-height:none !important; height:auto !important; overflow:visible !important; padding:0 !important; counter-reset:qz; }
+[data-lb-part="option-button"] {
+  counter-increment:qz; display:flex !important; align-items:center !important; justify-content:flex-start !important; gap:14px !important;
+  height:auto !important; min-height:60px; width:100%; padding:12px 18px 12px 12px !important; text-align:left;
+  background:#FFFFFF !important; color:#1F1A3D !important; border:2px solid #1F1A3D !important; border-radius:18px !important; box-shadow:none !important;
+  font:700 16px/1.3 "DM Sans",sans-serif !important; cursor:pointer; -webkit-tap-highlight-color:transparent;
+}
+[data-lb-part="option-button"]::before { content:counter(qz, upper-alpha); flex:0 0 auto; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:#F4EFE6; color:#1F1A3D; font:700 14px/1 "DM Sans",sans-serif; }
+[data-lb-part="option-button"] span { white-space:normal !important; overflow:visible !important; text-overflow:clip !important; text-align:left !important; }
+@media (hover:hover) { [data-lb-part="option-button"]:hover { background:#FBF8F3 !important; } }
+[data-lb-part="option-button"][data-qz-tap] { background:#1F1A3D !important; color:#FFFFFF !important; transition:none !important; }
+[data-lb-part="option-button"][data-qz-tap]::before { background:#FFFFFF; color:#1F1A3D; }
+[data-lb-part="option-button"]:focus-visible { outline:3px solid rgba(233,67,90,.45); outline-offset:2px; }
+[data-lb-part="option-button"]:active { transform:scale(.985); }
+/* single-button screens (welcome Start, done Retake): navy filled CTA */
+[data-lb-part="option-button"]:only-child { justify-content:center !important; min-height:54px; border-radius:999px !important; background:#1F1A3D !important; color:#FFFFFF !important; padding:12px 18px !important; }
+[data-lb-part="option-button"]:only-child::before { display:none; }
+[data-lb-part="option-button"]:only-child span, body[data-qz-screen="result"] [data-lb-part="option-button"] span { flex-grow:0 !important; text-align:center !important; }
+/* result screen: playbook = outlined pill, retake = text link */
+body[data-qz-screen="result"] [data-lb-part="option-button"] { justify-content:center !important; border-radius:999px !important; min-height:48px; padding:10px 18px !important; font-size:15px !important; background:transparent !important; }
+body[data-qz-screen="result"] [data-lb-part="option-button"]::before { display:none; }
+body[data-qz-screen="result"] [data-lb-part="option-button"]:nth-child(2) { border:none !important; background:transparent !important; color:#7A6A4F !important; min-height:44px; font-size:14px !important; font-weight:600 !important; text-decoration:underline; text-underline-offset:3px; }
+body[data-qz-screen="result"] [data-lb-part="option-button"] span { text-align:center !important; }
+body[data-qz-screen="result"] [data-lb-part="options-list"] { gap:10px !important; }
+
+/* TEXT INPUT (playbook email): white pill + navy round submit. Input-row guard (REFERENCE §9). */
+[data-lb-part="text-input"] { padding:0 !important; }
+[data-lb-part="input-field"] { display:flex !important; flex-direction:row !important; flex-wrap:nowrap !important; align-items:center !important; gap:8px !important;
+  background:#FFFFFF !important; border:2px solid rgba(31,26,61,.25) !important; border-radius:999px !important; box-shadow:none !important; padding:6px 6px 6px 20px !important; min-height:58px; }
+[data-lb-part="input-field"]:focus-within { border-color:#1F1A3D !important; }
+[data-lb-part="text-input"][data-lb-state="error"] [data-lb-part="input-field"] { border-color:#C62839 !important; }
+[data-lb-part="input-field"] > input, [data-lb-part="input-field"] > textarea { flex:1 1 0% !important; width:auto !important; min-width:0 !important; height:auto !important; padding:8px 0 !important;
+  border:none !important; outline:none !important; box-shadow:none !important; background:transparent !important; color:#1F1A3D !important; font:600 17px/1.3 "DM Sans",sans-serif !important; }
+[data-lb-part="input-field"] > input::placeholder { color:#A89C86 !important; }
+[data-lb-part="input-field"] > div { flex:0 0 auto !important; width:auto !important; max-width:none !important; }
+[data-lb-part="input-submit"] { background:#1F1A3D !important; color:#FFFFFF !important; border:none !important; border-radius:999px !important; min-width:46px; min-height:46px; }
+[data-lb-part="input-submit"] svg { color:#FFFFFF !important; stroke:#FFFFFF !important; }
+[data-lb-part="input-submit"]:disabled { background:rgba(31,26,61,.35) !important; }
+[data-lb-part="input-error"] { color:#C62839 !important; font:600 13px/1.4 "DM Sans",sans-serif !important; margin-top:8px; }
+body[data-qz-screen="email"] [data-lb-part="input-error"] > p { display:none !important; }
+body[data-qz-screen="email"] [data-lb-part="input-error"]::after { content:"That email looks incomplete. Try name@example.com."; }
+body[data-qz-screen="email"] [data-lb-part="text-input"]::after { content:"Demo: nothing is actually sent."; display:block; margin:10px 4px 0; font:500 13px/1.4 "DM Sans",sans-serif; color:#7A6A4F; }
+#qz-share[data-done]::before { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12l5 5L20 7'/></svg>"); }
+
+/* INJECTED: Share (result screen only), toast */
+#qz-share { display:none; min-height:54px; border:0; border-radius:999px; background:#1F1A3D; color:#FFFFFF; font:700 16px/1 "DM Sans",sans-serif; align-items:center; justify-content:center; gap:10px; cursor:pointer; margin-bottom:2px; width:100%; -webkit-tap-highlight-color:transparent; }
+body[data-qz-screen="result"] #qz-share { display:flex; }
+#qz-share::before { content:""; width:18px; height:18px; background:no-repeat center / 18px 18px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 12v8h16v-8M12 3v13M8 7l4-4 4 4'/></svg>"); }
+#qz-share:active, #qz-share.qz-pressed { transform:scale(.98); background:#2C2654; }
+#qz-toast { position:fixed; left:50%; bottom:28px; max-width:calc(100% - 32px); box-sizing:border-box; text-align:center; line-height:1.35 !important; overflow-wrap:anywhere; transform:translate(-50%, 12px); opacity:0; pointer-events:none; background:#1F1A3D; color:#FFFFFF; font:600 13px/1 "DM Sans",sans-serif; padding:10px 16px; border-radius:999px; transition:opacity .2s, transform .2s; z-index:50; }
+#qz-toast[data-on] { opacity:1; transform:translate(-50%, 0); }
+
+/* END: record card on the done screen */
+.qz-record { background:#EAE2D3; border-radius:18px; padding:16px 18px; }
+.qz-record .qz-r-t { font:700 12px/1.2 "DM Sans",sans-serif; letter-spacing:.12em; text-transform:uppercase; color:#7A6A4F; margin-bottom:8px; }
+.qz-record .qz-r-row { display:flex; justify-content:space-between; gap:12px; padding:7px 0; border-top:1px solid rgba(31,26,61,.08); font:500 14px/1.35 "DM Sans",sans-serif; color:#1F1A3D; }
+.qz-record .qz-r-row:first-of-type { border-top:none; }
+.qz-record .qz-r-k { color:#7A6A4F; }
+.qz-record .qz-r-v { font-weight:700; text-align:right; overflow-wrap:anywhere; }
+
+/* BRANDING: "Powered by Landbot" pill at the bottom */
+[data-lb-part="window"] > .responsive-container:last-child > div:last-child { margin-top:auto; padding-top:24px !important; display:flex; justify-content:center; }
+[data-lb-part="branding"] { display:inline-block !important; padding:6px 12px !important; border-radius:999px; background:#EAE2D3; color:#7A6A4F !important; font:600 11px/1.2 "DM Sans",sans-serif !important; }
+[data-lb-part="branding"]::before { content:""; display:inline-block; vertical-align:1px; width:8px; height:8px; margin-right:6px; border-radius:50%; background:currentColor; }
+[data-lb-part="branding"] a { color:#7A6A4F !important; font-weight:600 !important; }
+
+/* SCREEN CHANGE: fade on send (JS body.qz-leaving), so nothing jumps */
+[aria-label="Conversation messages"], [data-lb-part="window"] > .responsive-container:last-child > div:first-child, #qz-share { transition:opacity .16s ease; }
+body.qz-leaving [aria-label="Conversation messages"], body.qz-leaving [data-lb-part="window"] > .responsive-container:last-child > div:first-child, body.qz-leaving #qz-share { opacity:0; transition:opacity .12s ease .1s; }
+
+/* DESKTOP: centred column, fixed top offset */
+.responsive-container { max-width:480px !important; margin-left:auto !important; margin-right:auto !important; width:100%; }
+@media (min-width:700px) {
+  [data-lb-part="window"] { justify-content:flex-start !important; }
+  [data-lb-part="header"] > .responsive-container { padding-top:max(40px, 7vh) !important; }
+  [data-lb-part="window"] > .responsive-container:last-child { flex:0 0 auto; }
+  [data-lb-part="window"] > .responsive-container:last-child > div:last-child { margin-top:0; }
+  body[data-qz-screen="result"] [aria-label="Conversation messages"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { top:calc(max(40px, 7vh) - 10px); }
+}
+
+/* SCROLLBARS */
+* { scrollbar-width:thin; scrollbar-color:#D8CDB8 transparent; }
+*::-webkit-scrollbar { width:8px; height:8px; }
+*::-webkit-scrollbar-thumb { background:#D8CDB8; border-radius:8px; }

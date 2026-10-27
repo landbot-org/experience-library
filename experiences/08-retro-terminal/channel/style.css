@@ -1,0 +1,123 @@
+/* [mockup 8] Retro terminal · Pellowin (invented) · bot 4071721 / channel 3516229 · v4 web chat 3.1.0
+   Target: assets/mockups-canvas-20260917/RetroTerminal.dc.html (390×844): VT323 green-on-black log with "> " lines, OS/score/lives header,
+   bordered [A]/[B]/[C] rows (picked = filled), "press A, B or C. enter confirms.", "> " input with a block cursor, footer [ESC] restart ·
+   [?] help · powered by …, scanlines. Score and lives come from the flow ("score:N lives:N" line, parsed by JS).
+   Layers: THEME · HEADER [OFF-CATALOG] · LOG [OFF-CATALOG] · BACK [OFF-CATALOG] · OPTIONS · INPUT · FOOTER [OFF-CATALOG] · HELP · DESKTOP. */
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+:root {
+  --rt-bg:#050805; --rt-fg:#33FF33; --rt-dim:#1E9E1E; --rt-err:#FFB000;
+  --background:#050805 !important; --foreground:#33FF33 !important;
+  --web-chat-header-background:#050805 !important; --web-chat-header-text-color:#33FF33 !important;
+  --input-background-default:transparent !important; --input-border-color-default:transparent !important; --input-border-color-focus:transparent !important; --input-ring-color-focus:transparent !important; --input-color-text-default:#33FF33 !important;
+  --font-family-sans:"VT323",ui-monospace,monospace !important; --typography-font-family:"VT323",ui-monospace,monospace !important; --chat-bubble-font-family:"VT323",ui-monospace,monospace !important;
+}
+html, body { background:#050805 !important; }
+body, [data-lb-part="window"] { color:#33FF33; }
+[data-lb-part="window"] { background:#050805 !important; border:none !important; border-radius:0 !important; box-shadow:none !important; }
+body::after { content:""; position:fixed; inset:0; pointer-events:none; z-index:50; background:repeating-linear-gradient(0deg, rgba(0,0,0,.28) 0 2px, transparent 2px 4px); }
+
+/* HEADER [OFF-CATALOG] */
+[data-lb-part="header"] { background:#050805 !important; }
+[data-lb-part="header"] > .responsive-container { padding:26px 22px 0 !important; display:block !important; }
+[data-lb-part="header"] > .responsive-container > div:not(#rt-top) { display:none !important; }
+[data-lb-part="header"] + div { display:none !important; }
+#rt-top { display:flex; justify-content:space-between; gap:12px; padding-bottom:8px; border-bottom:1px solid #1E9E1E; font:400 18px/1.25 "VT323",monospace; color:#1E9E1E; }
+#rt-top .s[data-low] .l { color:#FFB000; }
+#rt-top .s[data-low="1"] .lv { animation:rt-blink 1s steps(1) infinite; }
+
+/* LOG [OFF-CATALOG]: every bot line is a "> " line; user bubbles hidden (the flow echoes the answer) */
+[data-lb-part="window"] > .responsive-container, [data-lb-part="header"] > .responsive-container { max-width:620px !important; margin-left:auto !important; margin-right:auto !important; width:100%; }
+[aria-label="Scrollable conversation area"] { flex:0 1 auto !important; min-height:0 !important; scrollbar-width:thin; scrollbar-color:#1E9E1E transparent; -webkit-mask-image:none !important; mask-image:none !important; }
+[aria-label="Conversation messages"] { display:flex !important; flex-direction:column; padding:10px 22px 0 !important; gap:10px !important; max-width:620px; margin:0 auto; width:100%; box-sizing:border-box; }
+[aria-label="Conversation messages"] > span { display:none !important; }
+[aria-label="Conversation messages"] > div:has([data-lb-author="user"]) { display:none !important; }
+[data-lb-part="message"][data-lb-author="bot"] > div:has([data-lb-part="message-avatar"]) { display:none !important; }
+[data-lb-part="message-timestamp"] { display:none !important; }
+[data-lb-part="message"] > div { align-items:stretch !important; }
+[data-lb-part="message"] [data-lb-part="message-bubble"] { background:transparent !important; border:none !important; box-shadow:none !important; padding:0 !important; border-radius:0 !important; width:100%; max-width:100% !important; flex-direction:column !important; align-items:stretch !important; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-text"] { font:400 22px/1.25 "VT323",monospace; color:#33FF33; white-space:pre-line; }
+[data-rt-src] { display:none !important; }
+.rt-clone { display:flex; flex-direction:column; gap:10px; width:100%; }
+.rt-line { position:relative; padding-left:18px; font:400 22px/1.25 "VT323",monospace; color:#33FF33; overflow-wrap:anywhere; animation:rt-type .32s steps(16) both; animation-delay:var(--d, 0s); }
+.rt-line::before { content:">"; position:absolute; left:0; }
+.rt-line.err { color:#FFB000; }
+.rt-gap { height:10px; }
+@keyframes rt-type { from { clip-path:inset(0 100% 0 0); } to { clip-path:inset(0 0 0 0); } }
+@keyframes rt-blink { 0%, 49% { opacity:1; } 50%, 100% { opacity:0; } }
+.rt-rec { margin:4px 0 0 18px; border:1px solid #1E9E1E; padding:8px 12px; font:400 20px/1.3 "VT323",monospace; color:#33FF33; animation:rt-type .4s steps(12) both; animation-delay:var(--d, 0s); }
+.rt-rec .t { color:#1E9E1E; margin-bottom:4px; }
+.rt-rec .r { display:flex; justify-content:space-between; gap:12px; }
+.rt-rec .r span:first-child { color:#1E9E1E; }
+.rt-rec .r span:last-child { text-align:right; overflow-wrap:anywhere; }
+
+/* BACK [OFF-CATALOG] (2026-09-25): the chat's own Back stays visible (library rule: a visitor can always go back and change the
+   previous answer). It has no data-lb-part anchor; it sits under the latest question inside the log. Its wrapper is hover-only
+   (opacity-0 group-hover), so opacity is forced for phones; it stays in the page flow (position:fixed breaks it). Hidden on the
+   result and GAME OVER screens (JS sets body[data-rt-end]). Reads "[BKSP] back" (Backspace / left arrow click it, see JS). */
+[aria-label="Conversation messages"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { opacity:1 !important; position:static !important; display:flex !important; justify-content:flex-start !important; margin:0 0 0 18px !important; padding:0 !important; animation:rt-show .01s linear .55s both; }
+body[data-rt-end] [aria-label="Conversation messages"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { display:none !important; }
+[aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"] { position:static !important; display:inline-flex !important; align-items:center !important; width:auto !important; height:auto !important; min-height:32px; padding:4px 10px 4px 0 !important; gap:0 !important; border:none !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; color:#1E9E1E !important; font-family:"VT323",monospace !important; font-size:0 !important; line-height:1 !important; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+[aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"] svg { display:none !important; }
+[aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"]::before { content:"[BKSP] back"; font:400 18px/1 "VT323",monospace; }
+@media (pointer:coarse) { [aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"] { min-height:40px; } [aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"]::before { content:"< back"; font-size:20px; } }
+[aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"]:hover, [aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"]:focus-visible { color:#33FF33 !important; background:transparent !important; outline:none !important; text-decoration:underline; }
+
+/* OPTIONS: [A]/[B]/[C] rows, pick then Enter (or tap again) */
+[data-lb-part="window"] > .responsive-container:last-child { flex:1 0 auto; padding:10px 22px 26px !important; display:flex; flex-direction:column; gap:10px; }
+div:has(> [data-lb-part="options-group"]) { border:none !important; padding:0 !important; background:transparent !important; box-shadow:none !important; border-radius:0 !important; }
+[data-lb-part="options-group"] { background:transparent !important; border:none !important; padding:0 0 0 18px !important; box-shadow:none !important; }
+[data-lb-part="options-prompt"], div:has(> [data-lb-part="options-prompt"]) { display:none !important; }
+[data-lb-part="options-group"] > div[data-slot="input-group"], [data-lb-part="options-group"] > div:has(> [data-slot="separator"]), [data-lb-part="options-group"] > div:has(> input) { display:none !important; }
+[data-lb-part="options-list"] { display:flex !important; flex-direction:column !important; gap:8px !important; max-height:none !important; overflow:visible !important; padding:0 !important; }
+[data-lb-part="option-button"] { display:flex !important; justify-content:flex-start !important; align-items:center !important; gap:12px !important; min-height:44px; height:auto !important; padding:0 12px !important; border:1px solid #33FF33 !important; border-radius:0 !important; background:transparent !important; color:#33FF33 !important; font:400 22px/1.2 "VT323",monospace !important; text-align:left !important; box-shadow:none !important; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+[data-lb-part="option-button"]::before { content:attr(data-rt-key); flex:0 0 auto; }
+[data-lb-part="option-button"] span { flex:1 1 auto !important; text-align:left !important; white-space:normal !important; overflow:visible !important; text-overflow:clip !important; }
+[data-lb-part="option-button"][data-lb-picked] { background:#33FF33 !important; color:#050805 !important; }
+[data-lb-part="option-button"]:focus-visible { outline:2px dashed #33FF33; outline-offset:3px; }
+[aria-label="Conversation messages"] > div[data-rt-old] { display:none !important; }
+[data-lb-part="options-group"], [data-lb-part="text-input"] { animation:rt-show .01s linear .55s both; }
+@keyframes rt-show { from { visibility:hidden; } to { visibility:visible; } }
+.rt-optlog { display:flex; flex-direction:column; gap:8px; margin:2px 0 0 18px; }
+.rt-optlog .row { min-height:40px; display:flex; align-items:center; padding:0 12px; border:1px solid #1E9E1E; color:#1E9E1E; font:400 22px/1.2 "VT323",monospace; }
+.rt-optlog .row.on { background:#33FF33; border-color:#33FF33; color:#050805; }
+#rt-hint { padding-left:18px; font:400 18px/1.25 "VT323",monospace; color:#1E9E1E; }
+#rt-hint[hidden] { display:none; }
+body.rt-nudge #rt-hint { color:#FFB000; }
+
+/* INPUT: "> " prompt, text, block cursor, [ENTER] */
+[data-lb-part="text-input"] { padding:0 !important; }
+[data-lb-part="text-input"] { flex-direction:row !important; }
+[data-lb-part="input-field"], [data-lb-part="text-input"] > div[data-slot="input-group"] { position:relative; display:flex !important; flex-direction:row !important; align-items:center !important; gap:8px !important; background:transparent !important; border:none !important; border-radius:0 !important; box-shadow:none !important; padding:0 !important; min-height:40px; height:auto !important; }
+[data-lb-part="input-field"]::before, [data-lb-part="text-input"] > div[data-slot="input-group"]::before { content:">"; font:400 22px/1 "VT323",monospace; color:#33FF33; }
+[data-lb-part="input-field"] > input, [data-lb-part="text-input"] > div[data-slot="input-group"] > input { flex:1 1 0% !important; min-width:0 !important; width:auto !important; height:auto !important; padding:4px 0 !important; border:none !important; outline:none !important; box-shadow:none !important; background:transparent !important; color:#33FF33 !important; caret-color:transparent; font:400 22px/1.2 "VT323",monospace !important; }
+[data-lb-part="input-field"] > input::placeholder { color:#1E9E1E; opacity:1; }
+#rt-cursor { position:absolute; top:50%; width:12px; height:22px; margin-top:-11px; background:#33FF33; animation:rt-blink 1s steps(1) infinite; pointer-events:none; }
+[data-lb-part="input-field"] > div, [data-lb-part="text-input"] > div[data-slot="input-group"] > div { flex:0 0 auto !important; width:auto !important; }
+[data-lb-part="input-submit"] { min-width:72px; min-height:36px; padding:0 8px !important; border:1px solid #1E9E1E !important; border-radius:0 !important; background:transparent !important; color:#1E9E1E !important; font:400 18px/1 "VT323",monospace !important; }
+[data-lb-part="input-submit"] svg { display:none !important; }
+[data-lb-part="input-submit"]::after { content:"[ENTER]"; }
+[data-lb-part="input-submit"]:disabled { visibility:hidden; }
+[data-lb-part="input-submit"]:not(:disabled):hover { color:#33FF33 !important; border-color:#33FF33 !important; }
+[data-lb-part="input-error"] { color:#FFB000 !important; font:400 18px/1.2 "VT323",monospace !important; padding-left:18px; }
+
+/* FOOTER [OFF-CATALOG]: [ESC] restart · [?] help · powered by … */
+[data-lb-part="window"] > .responsive-container:last-child > div:has(> [data-lb-part="branding"]) { display:flex !important; align-items:center; justify-content:space-between; gap:8px; margin-top:auto; padding-top:8px !important; border-top:1px solid #1E9E1E; }
+#rt-keys { display:contents; }
+#rt-keys button { padding:4px 0; border:0; background:transparent; color:#1E9E1E; font:400 16px/1 "VT323",monospace; cursor:pointer; }
+#rt-keys button:hover, #rt-keys button:focus-visible { color:#33FF33; outline:none; text-decoration:underline; }
+[data-lb-part="branding"] { display:inline-block !important; padding:0 !important; background:transparent !important; color:#1E9E1E !important; font:400 16px/1 "VT323",monospace !important; text-transform:lowercase; }
+[data-lb-part="branding"] a { color:#1E9E1E !important; font-weight:400 !important; }
+
+/* HELP */
+#rt-help { position:fixed; inset:0; z-index:40; display:flex; align-items:center; justify-content:center; background:rgba(5,8,5,.92); padding:22px; }
+#rt-help[hidden] { display:none; }
+#rt-help .box { width:100%; max-width:420px; border:1px solid #33FF33; padding:14px 16px; font:400 20px/1.35 "VT323",monospace; color:#33FF33; }
+#rt-help .box div { display:flex; justify-content:space-between; gap:12px; }
+#rt-help .box div span:first-child { color:#1E9E1E; }
+#rt-help .t { justify-content:flex-start !important; margin-bottom:6px; }
+#rt-help .x { margin-top:10px; color:#1E9E1E; }
+
+@media (min-width:700px) { [data-lb-part="header"] > .responsive-container { padding-top:max(26px, 4vh) !important; } }
+/* 2026-09-28: native Back is off on this demo; hide the help overlay line "BKSP / <- back one question" (5th row of #rt-help .box, built by the page script) */
+#rt-help .box > div:nth-child(5){display:none}

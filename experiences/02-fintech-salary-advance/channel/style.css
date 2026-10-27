@@ -1,0 +1,159 @@
+/* [mockup 2] Adelanto de nómina (ES) · Ondalia (marca inventada) · bot 4071666 / channel 3516185 · v4 web chat 3.1.0
+   Target: assets/mockups-canvas-20260917/Fintech.dc.html (390×844): fondo #0E0B1F, cabecera "‹ Adelanto de nómina · Paso n de 4", tarjeta
+   "Disponible este mes", importe grande con subrayado lima, chips 100/250/500 €, tarjeta de condiciones, CTA lima, puntos de paso. Manrope.
+   Channel JS: cabecera, tarjeta (clon del mensaje del flujo), chips (rellenan el campo), condiciones, CTA con el importe, puntos, Back nativo.
+   Layers: THEME · HEADER · SCREEN [OFF-CATALOG] · MESSAGES · ROWS · AMOUNT · INJECTED · END · DESKTOP. */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap');
+
+:root {
+  --fn-bg:#0E0B1F; --fn-card:#1B1638; --fn-muted:#9A94C2; --fn-lime:#B8FF5B; --fn-track:#2A244F; --fn-chip:#3A3466; --fn-fee:#15112B;
+  --background:#0E0B1F !important; --foreground:#FFFFFF !important; --muted-foreground:#9A94C2 !important; --border:#3A3466 !important;
+  --button-color-primary-default:#B8FF5B !important; --button-border-color-primary-default:#B8FF5B !important; --button-font-color-primary-default:#0E0B1F !important;
+  --chat-bubble-color-font-bot:#FFFFFF !important;
+  --input-background-default:transparent !important; --input-border-color-default:transparent !important; --input-border-color-focus:transparent !important;
+  --input-ring-color-focus:transparent !important; --input-color-text-default:#FFFFFF !important;
+  --web-chat-header-background:#0E0B1F !important; --web-chat-header-text-color:#FFFFFF !important;
+  --font-family-sans:"Manrope",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+  --typography-font-family:"Manrope",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+  --chat-bubble-font-family:"Manrope",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+}
+html, body { background:#0E0B1F !important; color-scheme:dark; }
+[data-lb-part="window"] { background:#0E0B1F !important; border:none !important; border-radius:0 !important; box-shadow:none !important; }
+
+/* HEADER [OFF-CATALOG] */
+[data-lb-part="header"] { background:#0E0B1F !important; }
+[data-lb-part="header"] > .responsive-container { padding:24px 22px 0 !important; display:block !important; }
+[data-lb-part="header"] > .responsive-container > div:not(#fn-top) { display:none !important; }
+[data-lb-part="header"] + div { display:none !important; }
+#fn-top { display:flex; align-items:center; justify-content:space-between; font:700 14px/1.2 "Manrope",sans-serif; color:#9A94C2; }
+#fn-top .fn-t { display:inline-flex; align-items:center; gap:6px; }
+#fn-top .fn-back { border:0; background:transparent; padding:4px 2px 4px 0; cursor:pointer; display:inline-flex; color:#9A94C2; }
+#fn-top .fn-back[hidden] { display:none; }
+#fn-top .fn-back::before { content:""; width:18px; height:18px; background:no-repeat center / 18px 18px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239A94C2' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M15 18l-6-6 6-6'/></svg>"); }
+#fn-top .fn-back:hover::before { filter:brightness(1.6); }
+
+/* SCREEN [OFF-CATALOG]: current turn only; thread at content height; footer takes the rest */
+[aria-label="Scrollable conversation area"] { flex:0 1 auto !important; min-height:0 !important; scrollbar-width:none; -webkit-mask-image:none !important; mask-image:none !important; }
+[aria-label="Scrollable conversation area"]::-webkit-scrollbar { display:none; }
+[aria-label="Conversation messages"] { padding:22px 22px 0 !important; gap:22px !important; }
+[data-lb-part="window"] > .responsive-container:last-child { flex:1 0 auto; display:flex; flex-direction:column; padding:14px 22px 28px !important; }
+[aria-label="Conversation messages"] > div[data-fn-old] { display:none !important; }
+body:not(.fn-js) [aria-label="Conversation messages"] > div:has([data-lb-author="user"]) { display:none !important; }
+body:not(.fn-js) [aria-label="Conversation messages"] > div:has(~ div [data-lb-author="user"]) { display:none !important; }
+[aria-label="Conversation messages"] > span { display:none !important; }
+[data-lb-part="message"][data-lb-author="bot"] > div:has([data-lb-part="message-avatar"]) { display:none !important; }
+[data-lb-part="message-timestamp"] { display:none !important; }
+body.fn-js div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { display:none !important; }
+[data-lb-part="message"] { animation:fn-in .28s cubic-bezier(.2,.7,.2,1); }
+@keyframes fn-in { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+/* MESSAGES */
+[data-lb-part="message"][data-lb-author="bot"] > div { align-items:stretch !important; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-bubble"] { background:transparent !important; border:none !important; box-shadow:none !important; padding:0 !important; border-radius:0 !important; max-width:100% !important; width:100%; flex-direction:column !important; align-items:stretch !important; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-text"] { font:800 22px/1.2 "Manrope",sans-serif; color:#FFFFFF; white-space:pre-line; }
+[data-fn-src] { display:none !important; }
+.fn-clone { width:100%; margin-top:0 !important; }
+.fn-q { font:800 22px/1.2 "Manrope",sans-serif; color:#FFFFFF; }
+.fn-qs { font:500 14px/1.45 "Manrope",sans-serif; color:#9A94C2; margin-top:8px; }
+.fn-avail { padding:20px; border-radius:20px; background:#1B1638; display:flex; flex-direction:column; gap:10px; }
+.fn-avail .k { font:700 13px/1.2 "Manrope",sans-serif; color:#9A94C2; letter-spacing:.04em; text-transform:uppercase; }
+.fn-avail .v { font:800 40px/1 "Manrope",sans-serif; color:#FFFFFF; }
+.fn-avail .bar { height:8px; border-radius:4px; background:#2A244F; overflow:hidden; }
+.fn-avail .bar i { display:block; height:100%; border-radius:4px; background:#B8FF5B; }
+.fn-avail .n { font:500 12px/1.4 "Manrope",sans-serif; color:#9A94C2; }
+[data-lb-part="message"][data-fn-kind="fine"] [data-lb-part="message-text"] { font:500 13px/1.5 "Manrope",sans-serif; color:#9A94C2; }
+
+/* ROWS (Paso 1 accounts): tap = elegir, CTA envía */
+div:has(> [data-lb-part="options-group"]) { border:none !important; padding:0 !important; background:transparent !important; box-shadow:none !important; border-radius:0 !important; }
+[data-lb-part="options-group"] { background:transparent !important; border:none !important; padding:0 !important; box-shadow:none !important; }
+[data-lb-part="options-prompt"], div:has(> [data-lb-part="options-prompt"]) { display:none !important; }
+[data-lb-part="options-group"] > div:has(> input) { display:none !important; }
+[data-lb-part="options-list"] { display:flex !important; flex-direction:column !important; gap:10px !important; max-height:none !important; height:auto !important; overflow:visible !important; padding:0 !important; }
+[data-lb-part="option-button"] { display:flex !important; align-items:center !important; justify-content:flex-start !important; gap:14px !important; height:auto !important; min-height:64px; width:100%;
+  padding:14px 18px !important; text-align:left; background:#1B1638 !important; color:#FFFFFF !important; border:1px solid #3A3466 !important; border-radius:16px !important; box-shadow:none !important;
+  font:700 16px/1.3 "Manrope",sans-serif !important; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+[data-lb-part="option-button"]::before { content:""; flex:0 0 auto; width:20px; height:20px; border-radius:50%; box-sizing:border-box; border:2px solid #9A94C2; }
+[data-lb-part="option-button"] span { white-space:normal !important; overflow:visible !important; text-overflow:clip !important; text-align:left !important; }
+@media (hover:hover) { [data-lb-part="option-button"]:hover { border-color:#9A94C2 !important; } }
+[data-lb-part="option-button"][data-lb-picked] { border-color:#B8FF5B !important; background:#231D47 !important; transition:none !important; }
+[data-lb-part="option-button"][data-lb-picked]::before { border-color:#B8FF5B; background:#B8FF5B; box-shadow:inset 0 0 0 4px #1B1638; }
+[data-lb-part="option-button"]:focus-visible { outline:3px solid rgba(184,255,91,.5); outline-offset:2px; }
+body.fn-nudge [data-lb-part="options-list"] { animation:fn-nudge .36s ease; }
+@keyframes fn-nudge { 25% { transform:translateX(-4px); } 75% { transform:translateX(4px); } }
+[data-lb-part="option-button"][data-fn-role="primary"] { display:none !important; }
+[data-lb-part="option-button"][data-fn-role="link"] { min-height:0 !important; border:none !important; background:transparent !important; justify-content:center !important; color:#9A94C2 !important; font:700 14px/1.2 "Manrope",sans-serif !important; text-decoration:underline; text-underline-offset:3px; padding:6px !important; align-self:center; width:auto !important; }
+[data-lb-part="option-button"][data-fn-role]::before { display:none; }
+
+/* AMOUNT + EMAIL: underline field (lime); big figure + € on the amount screen. Native submit hidden (CTA submits). */
+[data-lb-part="text-input"] { padding:0 !important; }
+[data-lb-part="input-field"], [data-lb-part="text-input"] > div[data-slot="input-group"] { display:flex !important; flex-direction:row !important; align-items:baseline !important; gap:8px !important; background:transparent !important;
+  border:none !important; border-bottom:2px solid #B8FF5B !important; border-radius:0 !important; box-shadow:none !important; padding:8px 0 !important; height:auto !important; min-height:0 !important; }
+[data-lb-part="input-field"] > input, [data-lb-part="text-input"] > div[data-slot="input-group"] > input { flex:1 1 0% !important; width:auto !important; min-width:0 !important; height:auto !important; padding:0 !important;
+  border:none !important; outline:none !important; box-shadow:none !important; background:transparent !important; color:#FFFFFF !important; font:700 20px/1.3 "Manrope",sans-serif !important; }
+[data-lb-part="text-input"] input::placeholder { color:#4E4880 !important; }
+[data-lb-part="text-input"][data-lb-variant="number"] > div[data-slot="input-group"] > input { font:800 60px/1 "Manrope",sans-serif !important; min-width:3.4ch; flex:0 0 auto !important; -moz-appearance:textfield; }   /* beats the generic input-group rule (0,2,2) */
+[data-lb-part="text-input"] input::-webkit-outer-spin-button, [data-lb-part="text-input"] input::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
+[data-lb-part="text-input"][data-lb-variant="number"] [data-lb-part="input-field"]::after { content:"€"; font:700 32px/1 "Manrope",sans-serif; color:#9A94C2; order:2; margin-right:auto; }
+[data-lb-part="text-input"][data-lb-variant="number"] [data-lb-part="input-field"] > div { order:3; }
+[data-lb-part="input-field"] > div, [data-lb-part="text-input"] > div[data-slot="input-group"] > div { flex:0 0 auto !important; width:auto !important; max-width:none !important; }
+[data-lb-part="input-submit"], [data-lb-part="text-input"] button { display:none !important; }
+[data-lb-part="text-input"][data-lb-state="error"] [data-lb-part="input-field"] { border-bottom-color:#FF6B6B !important; }
+[data-lb-part="input-error"] { color:#FF8A8A !important; font:700 13px/1.4 "Manrope",sans-serif !important; margin-top:8px; }
+body[data-fn-screen="email"] [data-lb-part="input-error"] > p { display:none !important; }
+body[data-fn-screen="email"] [data-lb-part="input-error"]::after { content:"Ese email parece incompleto. Prueba con nombre@ejemplo.com."; }
+
+/* INJECTED: chips, condiciones, CTA, dots */
+#fn-chips { display:none; gap:8px; margin-top:14px; }
+body[data-fn-screen="importe"] #fn-chips { display:flex; }
+#fn-chips button { flex:1 1 0; min-height:44px; border:1px solid #3A3466; border-radius:999px; background:#1B1638; color:#FFFFFF; font:700 15px/1 "Manrope",sans-serif; cursor:pointer; transition:transform .08s; }
+#fn-chips button[data-on] { border-color:#B8FF5B; color:#B8FF5B; }
+#fn-chips button:active { transform:scale(.97); }
+#fn-fee { display:none; margin-top:22px; flex-direction:column; gap:8px; padding:16px; border-radius:14px; background:#15112B; font:500 14px/1.3 "Manrope",sans-serif; }
+body[data-fn-screen="importe"] #fn-fee { display:flex; }
+#fn-fee .r { display:flex; justify-content:space-between; gap:12px; }
+#fn-fee .r span:first-child { color:#9A94C2; }
+#fn-fee .r span:last-child { font-weight:700; color:#FFFFFF; }
+#fn-fee .d { font:700 10px/1 "Manrope",sans-serif; letter-spacing:.08em; text-transform:uppercase; color:#6F68A0; margin-bottom:2px; }
+#fn-cta-wrap { margin-top:auto; padding-top:22px; display:flex; flex-direction:column; gap:14px; }
+#fn-cta { min-height:56px; border:0; border-radius:16px; background:#B8FF5B; color:#0E0B1F; font:800 17px/1 "Manrope",sans-serif; cursor:pointer; transition:transform .08s, filter .12s; }
+#fn-cta:hover { filter:brightness(.95); } #fn-cta:active, #fn-cta.fn-pressed { transform:scale(.98); }
+#fn-cta:focus-visible { outline:3px solid rgba(184,255,91,.5); outline-offset:3px; }
+#fn-hint { text-align:center; font:700 13px/1.3 "Manrope",sans-serif; color:#FF8A8A; }
+#fn-hint[hidden] { display:none; }
+#fn-dots { display:flex; justify-content:center; gap:6px; }
+#fn-dots i { width:24px; height:6px; border-radius:3px; background:#2A244F; }
+#fn-dots i[data-on] { background:#B8FF5B; }
+body.fn-leaving #fn-cta { color:transparent; position:relative; }
+body.fn-leaving #fn-cta::after { content:""; position:absolute; left:50%; top:50%; width:20px; height:20px; margin:-10px 0 0 -10px; border-radius:50%; border:3px solid rgba(14,11,31,.3); border-top-color:#0E0B1F; animation:fn-spin .7s linear infinite; }
+@keyframes fn-spin { to { transform:rotate(360deg); } }
+[aria-label="Conversation messages"], [data-lb-part="window"] > .responsive-container:last-child > div:first-child, #fn-chips, #fn-fee { transition:opacity .16s ease; }
+body.fn-leaving [aria-label="Conversation messages"], body.fn-leaving [data-lb-part="window"] > .responsive-container:last-child > div:first-child, body.fn-leaving #fn-chips, body.fn-leaving #fn-fee { opacity:0; transition:opacity .1s ease; }
+[data-lb-part="window"] > .responsive-container:last-child > div:last-child { padding-top:14px !important; display:flex; justify-content:center; }
+[data-lb-part="branding"] { display:inline-block !important; padding:5px 11px !important; border-radius:999px; background:#15112B; color:#6F68A0 !important; font:600 11px/1.2 "Manrope",sans-serif !important; }
+[data-lb-part="branding"]::before { content:""; display:inline-block; vertical-align:1px; width:7px; height:7px; margin-right:6px; border-radius:50%; background:currentColor; }
+[data-lb-part="branding"] a { color:#6F68A0 !important; font-weight:600 !important; }
+
+/* END: registro */
+.fn-rec { background:#1B1638; border-radius:18px; padding:16px 18px; }
+.fn-rec .t { font:700 12px/1.2 "Manrope",sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#9A94C2; margin-bottom:8px; }
+.fn-rec .r { display:flex; justify-content:space-between; gap:12px; padding:7px 0; border-top:1px solid #2A244F; font:500 14px/1.35 "Manrope",sans-serif; }
+.fn-rec .r:first-of-type { border-top:none; }
+.fn-rec .r span:first-child { color:#9A94C2; flex:0 1 auto; min-width:0; }   /* 2026-09-28: the label may wrap, so a value such as the email is not broken mid-word */
+.fn-rec .r span:last-child { font-weight:700; color:#FFFFFF; text-align:right; overflow-wrap:anywhere; flex:0 0 auto; max-width:65%; }
+[data-lb-part="message"][data-fn-kind="lead"] [data-lb-part="message-text"] { font:800 22px/1.25 "Manrope",sans-serif; color:#B8FF5B; }
+
+/* DESKTOP */
+.responsive-container { max-width:480px !important; margin-left:auto !important; margin-right:auto !important; width:100%; }
+@media (min-width:700px) {
+  [data-lb-part="header"] > .responsive-container { padding-top:max(36px, 5vh) !important; }
+  [data-lb-part="window"] > .responsive-container:last-child { flex:0 0 auto; }
+  #fn-cta-wrap { margin-top:0; padding-top:28px; }
+}
+* { scrollbar-width:thin; scrollbar-color:#3A3466 transparent; }
+
+/* ROUND 2: v4 prints the number limits in English and ignores text.input_number_help_* → Spanish line via the catalog anchor */
+body[data-fn-screen="importe"] [data-lb-part="input-error"] > p { display:none !important; }
+body[data-fn-screen="importe"] [data-lb-part="input-error"]::after { content:"Este mes puedes adelantar entre 50 € y 840 €."; }
+#fn-cta-wrap { position:relative; }
+#fn-hint { position:absolute; left:0; right:0; top:0; transform:translateY(-4px); }

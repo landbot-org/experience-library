@@ -1,0 +1,235 @@
+/* lb-style: quillmarsh-exit-intent 2026-09-25 */
+/* [mockup 16] Exit-intent lead magnet · Quillmarsh (invented brand) · v4 web chat 3.1.0
+   Target: assets/mockups-library-13-20/16-exit-intent.html (390×844). Bricolage Grotesque; cream sheet #FFF6E5 over a dimmed
+   skeleton page; black chips, orange CTA #FF5A36. Channel JS adds: the host page, dim layer, trigger, sheet top (pill, X,
+   headline), step prefix, email buffer field, CTA, No thanks link, still copy of the chips, record card.
+   Layers: THEME · PAGE + SHEET [OFF-CATALOG] · TOP · CARD (messages + chips) · EMAIL · INJECTED UI · END SCREENS · DESKTOP · SCROLLBARS.
+   Everything marked OFF-CATALOG uses web-chat internals (fragile). The chat stays usable without the script (body:not(.ei-js)). */
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&display=swap');
+
+:root {
+  --ei-ink:#17140F; --ei-body:#4A4439; --ei-cream:#FFF6E5; --ei-line:#E3DCCD; --ei-orange:#FF5A36; --ei-gold:#FFD66B; --ei-pill:#F3EAD6; --ei-mute:#6A6152; --ei-err:#B42318;
+  --background:#FFF6E5 !important;
+  --foreground:#17140F !important;
+  --muted-foreground:#6A6152 !important;
+  --border:#E3DCCD !important;
+  --button-color-primary-default:#FF5A36 !important;
+  --button-border-color-primary-default:#FF5A36 !important;
+  --button-font-color-primary-default:#FFFFFF !important;
+  --chat-bubble-color-font-bot:#17140F !important;
+  --input-background-default:#FFFFFF !important;
+  --input-border-color-default:#E3DCCD !important;
+  --input-border-color-focus:#17140F !important;
+  --input-ring-color-focus:transparent !important;
+  --input-color-text-default:#17140F !important;
+  --web-chat-header-background:#FFF6E5 !important;
+  --web-chat-header-text-color:#17140F !important;
+  --font-family-sans:"Bricolage Grotesque",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+  --typography-font-family:"Bricolage Grotesque",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+  --chat-bubble-font-family:"Bricolage Grotesque",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+}
+html, body { background:#FFFFFF !important; }
+#landbot-loader-root { display:none !important; }
+
+/* PAGE + SHEET [OFF-CATALOG: the root wrappers]. The widget window becomes the sheet; JS draws the page behind it. */
+body.ei-js > div:not([id]), body.ei-js > div:not([id]) > div { background:transparent !important; }
+body.ei-js [data-lb-part="window"] {
+  position:fixed !important; z-index:30; left:16px; right:16px; bottom:24px; top:auto; width:auto !important; height:auto !important;
+  max-height:calc(100dvh - 40px); overflow-y:auto; overscroll-behavior:contain; scrollbar-width:none;
+  background:var(--ei-cream) !important; border:none !important; border-radius:22px !important; box-shadow:0 18px 50px rgba(23,20,15,.28) !important;
+  padding:22px 20px 18px !important; font-family:"Bricolage Grotesque",sans-serif;
+  transform:translateY(calc(100% + 40px)); visibility:hidden; transition:transform .42s cubic-bezier(.2,.8,.2,1), visibility 0s linear .42s;
+}
+body.ei-js [data-lb-part="window"]::-webkit-scrollbar { display:none; }
+body.ei-open [data-lb-part="window"] { transform:none; visibility:visible; transition:transform .42s cubic-bezier(.2,.8,.2,1), visibility 0s; }
+body.ei-leaving [data-lb-part="window"] { min-height:var(--ei-hold, 0px); }
+[data-lb-part="header"] + div { display:none !important; }                                          /* divider */
+body.ei-js [data-lb-part="header"] { background:transparent !important; padding:0 !important; }
+body.ei-js [data-lb-part="header"] > .responsive-container { display:none !important; }             /* avatar + title */
+.responsive-container { max-width:none !important; }
+
+/* TOP (JS #ei-top inside the header): FREE REPORT pill, X, headline, sub */
+#ei-top { display:flex; flex-direction:column; gap:14px; }
+#ei-top .ei-row { display:flex; justify-content:space-between; align-items:flex-start; }
+#ei-top .ei-tags { display:flex; align-items:center; gap:8px; }
+#ei-top .ei-demo { padding:4px 8px; border-radius:999px; border:1.5px solid var(--ei-line); color:var(--ei-mute); font:700 11px/1.2 "Bricolage Grotesque",sans-serif; letter-spacing:.06em; }
+#ei-top .ei-badge { padding:5px 10px; border-radius:999px; background:var(--ei-ink); color:var(--ei-gold); font:800 12px/1.2 "Bricolage Grotesque",sans-serif; letter-spacing:.08em; }
+#ei-x { width:44px; height:44px; margin:-10px -10px 0 0; border:0; border-radius:50%; background:transparent; color:var(--ei-ink); display:flex; align-items:center; justify-content:center; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+#ei-x:hover { background:rgba(23,20,15,.06); } #ei-x:active { background:rgba(23,20,15,.12); }
+#ei-x:focus-visible { outline:3px solid rgba(23,20,15,.3); outline-offset:-3px; }
+#ei-top .ei-h { font:800 28px/1.08 "Bricolage Grotesque",sans-serif; color:var(--ei-ink); letter-spacing:-.01em; }
+#ei-top .ei-s { font:500 15px/1.45 "Bricolage Grotesque",sans-serif; color:var(--ei-body); }
+#ei-sum { display:none; }
+body[data-ei-screen="email"] #ei-sum, body[data-ei-screen="retry"] #ei-sum { display:flex; flex-wrap:nowrap; overflow:hidden; gap:6px; align-items:center; padding:10px 12px; border-radius:14px; background:#FFFFFF; font:700 13px/1.3 "Bricolage Grotesque",sans-serif; color:var(--ei-body); }
+#ei-sum .ei-sum-k { color:#1F7A3D; }
+#ei-sum .ei-sum-k { flex:0 0 auto; }
+#ei-sum .ei-sum-v { flex:0 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--ei-ink); }
+body[data-ei-screen="done"] #ei-top .ei-s, body[data-ei-screen="decline"] #ei-top .ei-s, body[data-ei-screen="done"] #ei-top .ei-h, body[data-ei-screen="decline"] #ei-top .ei-h { display:none; }
+
+/* CARD: the current question (scroll area) + its chips (footer first child) form one white card [OFF-CATALOG containers] */
+body.ei-js [aria-label="Scrollable conversation area"] { flex:0 0 auto !important; min-height:0 !important; overflow:visible !important; margin-top:14px; background:#FFFFFF; border-radius:14px 14px 0 0; padding:12px 12px 8px; mask-image:none !important; -webkit-mask-image:none !important; scrollbar-width:none; }
+body.ei-js [aria-label="Scrollable conversation area"]::-webkit-scrollbar { display:none; }
+body.ei-js [aria-label="Conversation messages"] { padding:0 !important; gap:6px !important; }
+[aria-label="Conversation messages"] > div[data-ei-old] { display:none !important; }
+body.ei-leaving [aria-label="Conversation messages"] > div[data-ei-keep] { display:block !important; }
+body.ei-leaving [aria-label="Conversation messages"] > div:not([data-ei-keep]) { display:none !important; }
+[aria-label="Conversation messages"] > div:has([data-lb-author="user"]) { display:none !important; }
+body:not(.ei-js) [aria-label="Conversation messages"] > div:has(~ div [data-lb-author="user"]) { display:none !important; }   /* no-JS fallback */
+[aria-label="Conversation messages"] > span { display:none !important; }                                     /* typing indicator */
+[data-lb-part="message"][data-ei-kind="head"], [data-lb-part="message"][data-ei-kind="sub"] { display:none !important; }
+body.ei-js [aria-label="Conversation messages"] > div:has([data-ei-kind="head"]), body.ei-js [aria-label="Conversation messages"] > div:has([data-ei-kind="sub"]) { display:none !important; }
+[data-lb-part="message"][data-lb-author="bot"] > div:has([data-lb-part="message-avatar"]) { display:none !important; }
+[data-lb-part="message-timestamp"] { display:none !important; }
+/* native Back (channel design.back_button_visible:true): kept in flow on the question row, "‹ Back" beside "n of 3 · …".
+   The v4 wrapper is opacity-0 group-hover:opacity-100 → forced visible for phones. Never position:fixed (untappable). [OFF-CATALOG] */
+body.ei-js [aria-label="Conversation messages"] > div:has(> div > button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { display:flex !important; flex-direction:row !important; align-items:center; justify-content:space-between; gap:10px !important; }
+div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { opacity:1 !important; flex:0 0 auto; order:2; }
+button[data-slot="button"][data-size="sm"][data-variant="ghost"] { min-height:32px; padding:4px 10px 4px 8px !important; border:1.5px solid var(--ei-line) !important; border-radius:999px !important; background:#FFFFFF !important;
+  color:var(--ei-body) !important; font:700 13px/1 "Bricolage Grotesque",sans-serif !important; gap:4px; cursor:pointer; }
+button[data-slot="button"][data-size="sm"][data-variant="ghost"]:hover { border-color:#B5AC98 !important; color:var(--ei-ink) !important; }
+button[data-slot="button"][data-size="sm"][data-variant="ghost"]:active { background:var(--ei-pill) !important; }
+body[data-ei-screen="done"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]),
+body[data-ei-screen="decline"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]),
+body.ei-leaving div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { display:none !important; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-bubble"] { background:transparent !important; border:none !important; box-shadow:none !important; padding:0 !important; border-radius:0 !important; max-width:100% !important; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-text"] { font:700 13px/1.35 "Bricolage Grotesque",sans-serif; color:var(--ei-body); white-space:pre-line; }
+[data-lb-part="message-text"][data-ei-step]::before { content:attr(data-ei-step); }
+[data-ei-src] { display:none !important; }
+.ei-clone { width:100%; }
+
+/* chips: native option buttons in one row; "No thanks" stays in the DOM (the footer link proxies it) */
+body.ei-js [data-lb-part="window"] > .responsive-container:last-child { position:relative; padding:0 !important; display:flex; flex-direction:column; }
+body.ei-js [data-lb-part="window"] > .responsive-container:last-child > div:first-child { background:#FFFFFF; border-radius:0 0 14px 14px; padding:0 12px 12px; gap:0 !important; }
+body.ei-js [data-lb-part="window"] > .responsive-container:last-child > div:first-child:empty { min-height:44px; }
+div:has(> [data-lb-part="options-group"]) { border:none !important; padding:0 !important; background:transparent !important; box-shadow:none !important; border-radius:0 !important; }
+[data-lb-part="options-group"] { background:transparent !important; border:none !important; padding:0 !important; box-shadow:none !important; }
+[data-lb-part="options-prompt"], div:has(> [data-lb-part="options-prompt"]) { display:none !important; }
+[data-lb-part="options-list"], #ei-still { display:flex !important; flex-direction:row !important; flex-wrap:nowrap; gap:6px !important; max-height:none !important; overflow:visible !important; padding:0 !important; }
+[data-lb-part="option-button"], #ei-still .ei-chip {
+  flex:1 1 auto; min-width:0; min-height:44px; height:auto !important; padding:6px 8px !important; justify-content:center !important; text-align:center;
+  background:#FFFFFF !important; color:var(--ei-ink) !important; border:2px solid var(--ei-line) !important; border-radius:10px !important; box-shadow:none !important;
+  font:700 14px/1.15 "Bricolage Grotesque",sans-serif !important; cursor:pointer; -webkit-tap-highlight-color:transparent; transition:background .08s, border-color .08s, color .08s;
+}
+[data-lb-part="option-button"] span, #ei-still .ei-chip span { flex-grow:0 !important; text-align:center !important; white-space:normal !important; overflow:visible !important; text-overflow:clip !important; }
+@media (hover:hover) { [data-lb-part="option-button"]:hover { border-color:#B5AC98 !important; background:#FFFCF5 !important; } }
+[data-lb-part="option-button"]:active, [data-lb-part="option-button"][data-ei-picked], #ei-still .ei-chip[data-ei-picked] { background:var(--ei-ink) !important; border-color:var(--ei-ink) !important; color:#FFFFFF !important; transition:none; }
+[data-lb-part="option-button"]:focus-visible { outline:3px solid rgba(23,20,15,.3); outline-offset:2px; }
+[data-lb-part="option-button"][data-ei-no] { display:none !important; }
+#ei-still { display:none !important; }
+body.ei-leaving.ei-still-on [data-lb-part="window"] > .responsive-container:last-child > div:first-child { display:none !important; }
+body.ei-leaving.ei-still-on #ei-still { display:flex !important; background:#FFFFFF; border-radius:0 0 14px 14px; padding:0 12px 12px !important; }
+body.ei-nudge [aria-label="Scrollable conversation area"], body.ei-nudge [data-lb-part="window"] > .responsive-container:last-child > div:first-child { animation:ei-nudge .38s ease; }
+@keyframes ei-nudge { 25% { transform:translateX(-4px); } 75% { transform:translateX(4px); } }
+
+/* EMAIL step (native ask_question): the question is the field label; the field looks like the mockup's */
+body[data-ei-screen="email"] [aria-label="Scrollable conversation area"], body[data-ei-screen="retry"] [aria-label="Scrollable conversation area"],
+body[data-ei-screen="done"] [aria-label="Scrollable conversation area"], body[data-ei-screen="decline"] [aria-label="Scrollable conversation area"] { background:transparent; padding:0; border-radius:0; }
+body[data-ei-screen="email"] [data-lb-part="window"] > .responsive-container:last-child > div:first-child,
+body[data-ei-screen="retry"] [data-lb-part="window"] > .responsive-container:last-child > div:first-child,
+body[data-ei-screen="done"] [data-lb-part="window"] > .responsive-container:last-child > div:first-child,
+body[data-ei-screen="decline"] [data-lb-part="window"] > .responsive-container:last-child > div:first-child { background:transparent; padding:6px 0 0; border-radius:0; }
+[data-lb-part="message"][data-ei-kind="retry"] [data-lb-part="message-text"]::before { content:"Work email"; display:block; color:var(--ei-body); margin-bottom:0; }
+[data-lb-part="message"][data-ei-kind="retry"] [data-lb-part="message-text"] { color:transparent; font-size:0; line-height:0; }
+[data-lb-part="message"][data-ei-kind="retry"] [data-lb-part="message-text"]::before { font:700 13px/1.35 "Bricolage Grotesque",sans-serif; color:var(--ei-body); }
+[data-lb-part="text-input"] { padding:0 !important; }
+[data-lb-part="input-field"], #ei-buf-wrap {
+  display:flex !important; flex-direction:row !important; flex-wrap:nowrap !important; align-items:center !important; gap:8px !important;
+  background:#FFFFFF !important; border:2px solid var(--ei-line) !important; border-radius:12px !important; box-shadow:none !important; padding:0 14px !important; min-height:48px;
+}
+[data-lb-part="input-field"]:focus-within, #ei-buf-wrap:focus-within { border-color:var(--ei-ink) !important; }
+[data-lb-part="input-field"] > input, [data-lb-part="input-field"] > textarea, #ei-buf {
+  flex:1 1 0% !important; width:auto !important; min-width:0 !important; height:auto !important; padding:12px 0 !important; border:none !important; outline:none !important; box-shadow:none !important;
+  background:transparent !important; color:var(--ei-ink) !important; font:500 16px/1.25 "Bricolage Grotesque",sans-serif !important; }
+[data-lb-part="input-field"] > input::placeholder, #ei-buf::placeholder { color:#8A8272 !important; opacity:1; }
+[data-lb-part="input-field"] > div { flex:0 0 auto !important; width:auto !important; max-width:none !important; }
+body.ei-js [data-lb-part="input-submit"] { display:none !important; }
+[data-lb-part="input-error"] { color:var(--ei-err) !important; font:600 13px/1.4 "Bricolage Grotesque",sans-serif !important; margin-top:6px; }
+
+/* INJECTED UI (JS, parked in the footer after the chips): buffer email field, hint, CTA, No thanks + Powered by row */
+#ei-after { display:flex; flex-direction:column; gap:14px; margin-top:14px; }
+#ei-buf-block { display:flex; flex-direction:column; gap:6px; }
+#ei-buf-block label { font:700 13px/1.35 "Bricolage Grotesque",sans-serif; color:var(--ei-body); }
+#ei-buf-block { display:none; }   /* 2026-09-28: no email field on the three questions; the email is asked once, after question 3, in the flow's own field */
+#ei-err { font:600 13px/1.4 "Bricolage Grotesque",sans-serif; color:var(--ei-err); margin:-6px 0 -4px; }
+#ei-err[hidden] { display:none; }
+#ei-cta { min-height:52px; border:0; border-radius:12px; background:var(--ei-orange); color:#FFFFFF; font:800 16px/1 "Bricolage Grotesque",sans-serif; cursor:pointer; -webkit-tap-highlight-color:transparent; transition:transform .08s, background .12s; }
+#ei-cta:hover { background:#F24A25; }
+#ei-cta:active, #ei-cta.ei-pressed { transform:scale(.985); background:#E0421F; }
+#ei-cta:focus-visible { outline:3px solid rgba(255,90,54,.4); outline-offset:3px; }
+body:not([data-ei-screen="email"]):not([data-ei-screen="retry"]) #ei-cta { display:none; }   /* 2026-09-28: CTA only on the email step (was on q1-q3 too) */
+#ei-foot { display:flex; justify-content:space-between; align-items:center; min-height:44px; }
+#ei-no { min-height:44px; padding:0; border:0; background:transparent; color:var(--ei-body); font:500 14px/1 "Bricolage Grotesque",sans-serif; text-decoration:underline; text-underline-offset:3px; cursor:pointer; }
+#ei-no:hover { color:var(--ei-ink); } #ei-no:active { color:#000; }
+body[data-ei-screen="done"] #ei-no, body[data-ei-screen="decline"] #ei-no { visibility:hidden; }
+body.ei-leaving #ei-cta { color:transparent; position:relative; }
+body.ei-leaving #ei-cta::after { content:""; position:absolute; left:50%; top:50%; width:20px; height:20px; margin:-10px 0 0 -10px; border-radius:50%; border:3px solid rgba(255,255,255,.45); border-top-color:#FFFFFF; animation:ei-spin .7s linear infinite; }
+@keyframes ei-spin { to { transform:rotate(360deg); } }
+body.ei-leaving[data-ei-screen="done"] #ei-cta, body.ei-leaving[data-ei-screen="decline"] #ei-cta { display:none; }
+
+/* BRANDING: native "Powered by Landbot" as the pill at the bottom right, on the No thanks line */
+body.ei-js [data-lb-part="window"] > .responsive-container:last-child > div:has([data-lb-part="branding"]) { position:absolute; right:0; bottom:8px; padding:0 !important; }
+[data-lb-part="branding"] { display:inline-block !important; padding:6px 12px !important; border-radius:999px; background:var(--ei-pill); color:var(--ei-mute) !important; font:600 11px/1.2 "Bricolage Grotesque",sans-serif !important; white-space:nowrap; }
+[data-lb-part="branding"]::before { content:""; display:inline-block; vertical-align:0; width:8px; height:8px; margin-right:6px; border-radius:50%; background:currentColor; }
+[data-lb-part="branding"] a { color:var(--ei-mute) !important; font-weight:600 !important; margin-left:0; }
+
+/* END SCREENS: lead line, record card (JS clone of the flow's own text), fine print, Start over = orange CTA */
+[data-lb-part="message"][data-ei-kind="lead"] [data-lb-part="message-text"] { font:800 28px/1.08 "Bricolage Grotesque",sans-serif; color:var(--ei-ink); }
+[data-lb-part="message"][data-ei-kind="fine"] [data-lb-part="message-text"] { font:600 13px/1.4 "Bricolage Grotesque",sans-serif; color:var(--ei-mute); }
+body[data-ei-screen="done"] [aria-label="Conversation messages"], body[data-ei-screen="decline"] [aria-label="Conversation messages"] { gap:12px !important; }
+.ei-record { background:#FFFFFF; border-radius:14px; padding:12px 14px; }
+.ei-record .ei-r-t { font:800 11px/1.2 "Bricolage Grotesque",sans-serif; letter-spacing:.08em; text-transform:uppercase; color:var(--ei-orange); margin-bottom:6px; }
+.ei-record .ei-r-row { display:flex; justify-content:space-between; gap:12px; padding:6px 0; border-top:1px solid #F3EDE0; font:500 14px/1.3 "Bricolage Grotesque",sans-serif; color:var(--ei-ink); }
+.ei-record .ei-r-t + .ei-r-row { border-top:none; }
+[data-lb-part="message"][data-ei-kind="record"] > div, [data-lb-part="message"][data-ei-kind="record"] [data-lb-part="message-bubble"] { align-items:stretch !important; width:100% !important; max-width:100% !important; }
+.ei-record .ei-r-k { color:var(--ei-mute); flex:0 0 auto; }
+.ei-record .ei-r-v { font-weight:700; text-align:right; min-width:0; overflow-wrap:anywhere; }
+body[data-ei-screen="done"] [data-lb-part="option-button"], body[data-ei-screen="decline"] [data-lb-part="option-button"] {
+  min-height:52px; border:0 !important; border-radius:12px !important; background:var(--ei-orange) !important; color:#FFFFFF !important; font:800 16px/1 "Bricolage Grotesque",sans-serif !important; }
+body[data-ei-screen="done"] [data-lb-part="option-button"]:active, body[data-ei-screen="decline"] [data-lb-part="option-button"]:active { background:#E0421F !important; }
+
+/* HOST PAGE + DIM (JS). Skeleton of an ordinary content page; not interactive. */
+#ei-host { position:fixed; inset:0; z-index:1; background:#FFFFFF; overflow:hidden; font-family:"Bricolage Grotesque",sans-serif; }
+#ei-host .ei-page { display:flex; flex-direction:column; gap:18px; padding:22px 20px; max-width:1080px; margin:0 auto; }
+#ei-host .ei-nav { display:flex; justify-content:space-between; align-items:center; }
+#ei-host .ei-sk { display:block; border-radius:4px; background:#E6E3DC; }
+#ei-host .ei-logo { width:90px; height:16px; background:#D9D6CF; } #ei-host .ei-menu { width:28px; height:16px; background:#D9D6CF; }
+#ei-host .ei-navlinks { display:none; gap:22px; }
+#ei-host .ei-title { width:70%; height:30px; border-radius:6px; background:#CFCBC2; }
+#ei-host .ei-l1 { width:90%; height:12px; } #ei-host .ei-l2 { width:80%; height:12px; } #ei-host .ei-l3 { width:60%; height:12px; }
+#ei-host .ei-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px; }
+#ei-host .ei-card { height:180px; border-radius:12px; background:#EEEBE5; }
+#ei-host .ei-card:nth-child(3) { display:none; }
+#ei-dim { position:fixed; inset:0; z-index:10; background:rgba(23,20,15,.62); opacity:0; pointer-events:none; transition:opacity .35s ease; }
+body.ei-open #ei-dim { opacity:1; pointer-events:auto; }
+#ei-bar { position:fixed; z-index:12; left:50%; bottom:28px; transform:translateX(-50%); display:flex; align-items:center; gap:10px; max-width:calc(100% - 32px);
+  padding:10px 16px; border-radius:999px; background:var(--ei-ink); color:#FFFFFF; font:600 13px/1.3 "Bricolage Grotesque",sans-serif; box-shadow:0 8px 24px rgba(23,20,15,.25); transition:opacity .25s; }
+#ei-bar .ei-dot { width:8px; height:8px; flex:0 0 8px; border-radius:50%; background:var(--ei-gold); }
+#ei-bar button { border:0; border-radius:999px; padding:8px 14px; margin:-4px -8px -4px 0; background:var(--ei-orange); color:#FFFFFF; font:800 13px/1 "Bricolage Grotesque",sans-serif; cursor:pointer; white-space:nowrap; min-height:32px; }
+#ei-bar button:active { background:#E0421F; }
+#ei-bar button[hidden] { display:none; }
+body.ei-open #ei-bar { opacity:0; pointer-events:none; }
+
+/* DESKTOP: the sheet becomes a centred modal over a wider page */
+@media (min-width:700px) {
+  body.ei-js [data-lb-part="window"] { left:50%; right:auto; top:50%; bottom:auto; width:440px !important; max-height:calc(100dvh - 48px);
+    transform:translate(-50%, calc(-50% + 36px)); opacity:0; transition:transform .35s cubic-bezier(.2,.8,.2,1), opacity .25s, visibility 0s linear .35s; }
+  body.ei-open [data-lb-part="window"] { transform:translate(-50%, -50%); opacity:1; transition:transform .35s cubic-bezier(.2,.8,.2,1), opacity .25s, visibility 0s; }
+  #ei-host .ei-page { padding:28px 40px; gap:26px; }
+  #ei-host .ei-navlinks { display:flex; } #ei-host .ei-navlinks .ei-sk { width:64px; height:12px; background:#E6E3DC; }
+  #ei-host .ei-logo { width:120px; height:20px; }
+  #ei-host .ei-title { width:52%; height:44px; margin-top:28px; } #ei-host .ei-l1 { width:64%; } #ei-host .ei-l2 { width:56%; } #ei-host .ei-l3 { width:40%; }
+  #ei-host .ei-grid { grid-template-columns:repeat(3, minmax(0,1fr)); gap:20px; margin-top:16px; } #ei-host .ei-card { height:240px; } #ei-host .ei-card:nth-child(3) { display:block; }
+}
+
+/* SCROLLBARS */
+* { scrollbar-width:thin; scrollbar-color:#D9D1C0 transparent; }
+*::-webkit-scrollbar { width:8px; height:8px; }
+*::-webkit-scrollbar-thumb { background:#D9D1C0; border-radius:8px; }
+*::-webkit-scrollbar-thumb:hover { background:#BDB39E; }
+
+/* hint bar at phone width: full-width strip, text wraps next to the button */
+@media (max-width:699px) {
+  #ei-bar { left:16px; right:16px; bottom:20px; transform:none; max-width:none; border-radius:16px; padding:10px 12px 10px 14px; }
+  #ei-bar .ei-bar-t { flex:1 1 auto; min-width:0; }
+  #ei-bar button { margin:0; flex:0 0 auto; }
+}

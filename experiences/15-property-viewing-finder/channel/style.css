@@ -1,0 +1,209 @@
+/* lb-style: pv15-balcovell 2026-09-25 · [mockup 15] Property viewing finder · Balcovell (invented) · v4 web chat 3.1.0
+   Target: assets/mockups-library-13-20/15-property.html (390×844): sand ground, green wordmark + "Rent · Barcelona", filter chips
+   (green = set, white = soft extra), white bot bubble, listing cards (photo tile, price, % match, address, yellow Book + heart),
+   outlined "Widen my search", "Powered by" pill. Plus Jakarta Sans.
+   Layers: THEME · HEADER [OFF-CATALOG] · SCREEN [OFF-CATALOG] · MESSAGES · OPTIONS · CARDS (JS clones) · INPUT · INJECTED · BRANDING · DESKTOP. */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --pv-bg:#F6F3EC; --pv-ink:#1E2A24; --pv-green:#0E6B57; --pv-muted:#5F6B64; --pv-body:#3C4842; --pv-line:#D6D0C2; --pv-yellow:#FFC43D; --pv-pill:#ECE7DB;
+  --background:#F6F3EC !important; --foreground:#1E2A24 !important; --muted-foreground:#5F6B64 !important; --border:#D6D0C2 !important;
+  --button-color-primary-default:#0E6B57 !important; --button-border-color-primary-default:#0E6B57 !important; --button-font-color-primary-default:#FFFFFF !important;
+  --chat-bubble-color-font-bot:#1E2A24 !important;
+  --chat-bubble-surface-user:#0E6B57 !important; --chat-bubble-border-color-user:#0E6B57 !important; --chat-bubble-color-font-user:#FFFFFF !important;
+  --input-background-default:#FFFFFF !important; --input-border-color-default:#D6D0C2 !important; --input-border-color-focus:#0E6B57 !important;
+  --input-ring-color-focus:transparent !important; --input-color-text-default:#1E2A24 !important;
+  --web-chat-header-background:#F6F3EC !important; --web-chat-header-text-color:#1E2A24 !important;
+  --font-family-sans:"Plus Jakarta Sans",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+  --typography-font-family:"Plus Jakarta Sans",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+  --chat-bubble-font-family:"Plus Jakarta Sans",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+}
+html, body { background:#F6F3EC !important; }
+[data-lb-part="window"] { background:#F6F3EC !important; border:none !important; border-radius:0 !important; box-shadow:none !important; }
+
+/* HEADER [OFF-CATALOG]: native avatar/title hidden, #pv-top (wordmark, "Rent · Barcelona", filter chips) parked by JS */
+[data-lb-part="header"] { background:#F6F3EC !important; }
+[data-lb-part="header"] > .responsive-container { padding:22px 18px 0 !important; display:block !important; }
+[data-lb-part="header"] > .responsive-container > div:not(#pv-top) { display:none !important; }
+[data-lb-part="header"] + div { display:none !important; }
+#pv-top { display:flex; flex-direction:column; gap:14px; font-family:"Plus Jakarta Sans",sans-serif; }
+#pv-top .pv-hd { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+#pv-top .pv-brand { font:800 20px/1.2 "Plus Jakarta Sans",sans-serif; color:#0E6B57; letter-spacing:-.01em; }
+#pv-top .pv-where { font:600 13px/1.2 "Plus Jakarta Sans",sans-serif; color:#5F6B64; }
+#pv-top .pv-chips { display:flex; flex-wrap:wrap; gap:6px; }
+#pv-top .pv-chip { display:inline-flex; align-items:center; padding:6px 10px; border-radius:999px; background:#0E6B57; color:#FFFFFF; font:600 13px/1.2 "Plus Jakarta Sans",sans-serif; border:1px solid #0E6B57; }
+#pv-top .pv-chip[data-soft] { background:#FFFFFF; border-color:#D6D0C2; color:#1E2A24; }
+#pv-top .pv-chip[data-todo] { background:transparent; border:1px dashed #D6D0C2; color:#5F6B64; font-weight:500; }
+#pv-top .pv-chip[data-todo][data-now] { border-color:#0E6B57; color:#0E6B57; font-weight:600; }
+#pv-top .pv-chip[data-new] { animation:pv-pop .32s cubic-bezier(.2,.8,.2,1.2); }
+@keyframes pv-pop { from { transform:scale(.8); opacity:.2; } to { transform:none; opacity:1; } }
+body[data-pv-screen="done"] #pv-top .pv-chips, body[data-pv-screen="name"] #pv-top .pv-chips, body[data-pv-screen="phone"] #pv-top .pv-chips, body[data-pv-screen="slot"] #pv-top .pv-chips { display:none; }
+
+/* SCREEN [OFF-CATALOG]: one screen at a time (JS marks earlier turns data-pv-old), no avatars, timestamps, typing, native Back */
+[aria-label="Scrollable conversation area"] { flex:0 1 auto !important; min-height:0 !important; scrollbar-width:none; -webkit-mask-image:none !important; mask-image:none !important; }
+[aria-label="Scrollable conversation area"]::-webkit-scrollbar { display:none; }
+[aria-label="Conversation messages"] { padding:14px 18px 2px !important; gap:14px !important; }
+[data-lb-part="window"] > .responsive-container:last-child { flex:1 0 auto; display:flex; flex-direction:column; padding:14px 18px 22px !important; }
+[data-lb-part="window"] > .responsive-container:last-child > div:empty { display:none !important; }
+[aria-label="Conversation messages"] > div[data-pv-old] { display:none !important; }
+body:not(.pv-js) [aria-label="Conversation messages"] > div:has([data-lb-author="user"]) { display:none !important; }
+body:not(.pv-js) [aria-label="Conversation messages"] > div:has(~ div [data-lb-author="user"]) { display:none !important; }
+[aria-label="Conversation messages"] > span { display:none !important; }
+[data-lb-part="message"][data-lb-author="bot"] > div:has([data-lb-part="message-avatar"]) { display:none !important; }
+[data-lb-part="message-timestamp"] { display:none !important; }
+/* NATIVE BACK [OFF-CATALOG] (channel design.back_button_visible:true): no anchor; the wrapper is hover-only by default (invisible on a phone)
+   → forced visible, kept in flow above the latest bot message (never position:fixed: the container traps it). */
+div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { opacity:1 !important; order:-1; }
+button[data-slot="button"][data-size="sm"][data-variant="ghost"] { display:inline-flex !important; align-items:center; gap:4px; background:transparent !important; border:none !important; box-shadow:none !important;
+  color:#0E6B57 !important; font:700 14px/1 "Plus Jakarta Sans",sans-serif !important; padding:6px 10px 6px 0 !important; height:auto !important; min-height:36px; cursor:pointer; }
+button[data-slot="button"][data-size="sm"][data-variant="ghost"]::before { content:"‹"; font-size:20px; line-height:14px; margin-top:-2px; }
+button[data-slot="button"][data-size="sm"][data-variant="ghost"] svg { display:none; }
+@media (hover:hover) { button[data-slot="button"][data-size="sm"][data-variant="ghost"]:hover { text-decoration:underline; text-underline-offset:3px; } }
+button[data-slot="button"][data-size="sm"][data-variant="ghost"]:active { opacity:.6; }
+button[data-slot="button"][data-size="sm"][data-variant="ghost"]:focus-visible { outline:3px solid rgba(14,107,87,.35) !important; outline-offset:2px; border-radius:8px; }
+body.pv-leaving div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { opacity:.4 !important; pointer-events:none; }
+[data-lb-part="message"] { animation:pv-in .24s cubic-bezier(.2,.7,.2,1); }
+@keyframes pv-in { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+
+/* MESSAGES: white bubble 4/16/16/16 like the mockup; kinds set by JS */
+[data-lb-part="message"][data-lb-author="bot"] > div { align-items:flex-start !important; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-bubble"] { background:#FFFFFF !important; border:none !important; border-radius:4px 16px 16px 16px !important; box-shadow:none !important; padding:12px 14px !important; max-width:88% !important; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-text"] { font:400 15px/21px "Plus Jakarta Sans",sans-serif; color:#1E2A24; white-space:pre-line; }
+[data-pv-src] { display:none !important; }
+.pv-clone { width:100%; }
+[data-lb-part="message"][data-pv-kind] > div { align-items:stretch !important; }
+[data-lb-part="message"][data-pv-kind] [data-lb-part="message-bubble"] { background:transparent !important; box-shadow:none !important; padding:0 !important; border-radius:0 !important; width:100%; max-width:100% !important; flex-direction:column !important; align-items:stretch !important; }
+[data-lb-part="message"][data-pv-kind="hide"] { display:none !important; }
+[data-lb-part="message"][data-pv-kind="note"] [data-lb-part="message-text"] { font:500 14px/1.45 "Plus Jakarta Sans",sans-serif; color:#5F6B64; }
+[data-lb-part="message"][data-pv-kind="lead"] [data-lb-part="message-text"] { font:800 22px/1.25 "Plus Jakarta Sans",sans-serif; color:#1E2A24; }
+[data-lb-part="message"][data-pv-kind="fine"] [data-lb-part="message-text"] { font:500 13px/1.45 "Plus Jakarta Sans",sans-serif; color:#5F6B64; }
+body:not(.pv-js) [data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-bubble"] { margin-bottom:0; }
+
+/* OPTIONS: native list, search/prompt hidden. Question screens = pill chips; results = outlined full-width; done = yellow */
+div:has(> [data-lb-part="options-group"]) { border:none !important; padding:0 !important; background:transparent !important; box-shadow:none !important; border-radius:0 !important; }
+[data-lb-part="options-group"] { background:transparent !important; border:none !important; padding:0 !important; box-shadow:none !important; }
+[data-lb-part="options-prompt"], div:has(> [data-lb-part="options-prompt"]) { display:none !important; }
+[data-lb-part="options-group"] > div[data-slot="input-group"], [data-lb-part="options-group"] > div:has(> [data-slot="separator"]), [data-lb-part="options-group"] > div:has(> input) { display:none !important; }
+[data-lb-part="options-list"] { display:flex !important; flex-wrap:wrap !important; flex-direction:row !important; gap:8px !important; max-height:none !important; height:auto !important; overflow:visible !important; padding:2px 0 !important; justify-content:flex-start !important; }
+[data-lb-part="option-button"] { flex:0 0 auto !important; width:auto !important; min-height:46px; height:auto !important; padding:0 18px !important; border-radius:999px !important; background:#FFFFFF !important; color:#1E2A24 !important; border:1px solid #D6D0C2 !important;
+  box-shadow:none !important; font:600 15px/1.2 "Plus Jakarta Sans",sans-serif !important; cursor:pointer; -webkit-tap-highlight-color:transparent; transition:transform .08s, background .08s, border-color .08s; }
+[data-lb-part="option-button"] span { white-space:nowrap !important; overflow:visible !important; text-overflow:clip !important; }
+@media (hover:hover) { [data-lb-part="option-button"]:hover { border-color:#0E6B57 !important; } }
+[data-lb-part="option-button"]:active, [data-lb-part="option-button"][data-pv-picked] { background:#0E6B57 !important; border-color:#0E6B57 !important; color:#FFFFFF !important; transform:scale(.97); }
+[data-lb-part="option-button"]:focus-visible { outline:3px solid rgba(14,107,87,.35) !important; outline-offset:2px; }
+[data-lb-part="option-button"] kbd { display:none; }
+body.pv-js [data-lb-part="option-button"][data-pv-kind="book"] { display:none !important; }
+/* results + nothing-new: outlined, full width, pinned to the bottom */
+body[data-pv-screen="results"] [data-lb-part="options-list"] { flex-direction:column !important; flex-wrap:nowrap !important; }
+body[data-pv-screen="results"] [data-lb-part="option-button"] { width:100% !important; min-height:48px; justify-content:center !important; border-radius:12px !important; background:transparent !important; border:1px solid #0E6B57 !important; color:#0E6B57 !important; font:800 15px/1 "Plus Jakarta Sans",sans-serif !important; }
+body[data-pv-screen="results"] [data-lb-part="option-button"]:active, body[data-pv-screen="results"] [data-lb-part="option-button"][data-pv-picked] { background:#0E6B57 !important; color:#FFFFFF !important; }
+body[data-pv-screen="results"] [data-lb-part="option-button"] span { text-align:center !important; flex:0 0 auto !important; }
+body[data-pv-screen="results"] [data-lb-part="options-group"], body[data-pv-screen="done"] [data-lb-part="options-group"] { margin-top:auto; }
+body[data-pv-screen="results"] [data-lb-part="window"] > .responsive-container:last-child { flex:0 0 auto; }
+body[data-pv-screen="results"] [aria-label="Scrollable conversation area"] { flex:1 1 auto !important; }
+body[data-pv-screen="results"][data-pv-more] [aria-label="Scrollable conversation area"] { -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - 36px), transparent) !important; mask-image:linear-gradient(to bottom, #000 calc(100% - 36px), transparent) !important; }
+/* slot: rows with the real date on the right; "Back to the list" = link */
+body[data-pv-screen="slot"] [data-lb-part="options-list"] { flex-direction:column !important; flex-wrap:nowrap !important; }
+body[data-pv-screen="slot"] [data-lb-part="option-button"] { width:100% !important; justify-content:space-between !important; border-radius:12px !important; min-height:54px; padding:0 16px !important; }
+body[data-pv-screen="slot"] [data-lb-part="option-button"] span[data-sub]::after { content:attr(data-sub); margin-left:12px; font:500 13px/1 "Plus Jakarta Sans",sans-serif; color:#5F6B64; }
+body[data-pv-screen="slot"] [data-lb-part="option-button"] span[data-sub] { display:flex !important; width:100%; justify-content:space-between; align-items:center; }
+body[data-pv-screen="slot"] [data-lb-part="option-button"][data-pv-picked] span[data-sub]::after, body[data-pv-screen="slot"] [data-lb-part="option-button"]:active span[data-sub]::after { color:#D9E4DC; }
+body [data-lb-part="option-button"][data-pv-kind="link"], body[data-pv-screen="results"] [data-lb-part="option-button"][data-pv-kind="link"] { width:auto !important; align-self:center; min-height:44px; background:transparent !important; border-color:transparent !important; color:#5F6B64 !important; text-decoration:underline; text-underline-offset:3px; font-size:14px !important; }
+[data-lb-part="option-button"][data-pv-kind="link"][data-pv-picked] { background:transparent !important; color:#0E6B57 !important; }
+/* done: yellow primary */
+body[data-pv-screen="done"] [data-lb-part="option-button"] { width:100% !important; justify-content:center !important; border-radius:12px !important; min-height:48px; background:#FFC43D !important; border-color:#FFC43D !important; color:#1E2A24 !important; font:800 15px/1 "Plus Jakarta Sans",sans-serif !important; }
+body[data-pv-screen="done"] [data-lb-part="option-button"] span { text-align:center !important; flex:0 0 auto !important; }
+
+/* LISTING CARDS (JS clone of the flow's listing lines) */
+.pv-cards { display:flex; flex-direction:column; gap:14px; }
+.pv-card { display:flex; flex-direction:column; border-radius:16px; background:#FFFFFF; overflow:hidden; font-family:"Plus Jakarta Sans",sans-serif; }
+.pv-photo { box-shadow:inset 0 -8px 0 rgba(14,107,87,.08); position:relative; height:96px; background:var(--tone, #E3DED2); display:flex; align-items:flex-end; justify-content:center; overflow:hidden; }
+.pv-card:first-child .pv-photo { height:128px; }
+.pv-photo svg { display:block; width:100%; height:100%; }
+.pv-tag { position:absolute; left:10px; top:10px; padding:4px 8px; border-radius:999px; background:rgba(255,255,255,.82); color:#5F6B64; font:700 10px/1.2 "Plus Jakarta Sans",sans-serif; letter-spacing:.04em; text-transform:uppercase; }
+.pv-body { display:flex; flex-direction:column; gap:6px; padding:12px 14px 14px; }
+.pv-row { display:flex; justify-content:space-between; align-items:baseline; gap:10px; }
+.pv-price { font:800 20px/1.2 "Plus Jakarta Sans",sans-serif; color:#1E2A24; }
+.pv-price small { font:600 13px/1 "Plus Jakarta Sans",sans-serif; color:#5F6B64; }
+.pv-match { font:800 12px/1 "Plus Jakarta Sans",sans-serif; color:#0E6B57; letter-spacing:.02em; text-transform:uppercase; white-space:nowrap; }
+.pv-line { font:400 14px/1.4 "Plus Jakarta Sans",sans-serif; color:#3C4842; }
+.pv-acts { display:flex; gap:8px; padding-top:4px; }
+.pv-book { flex:1 1 auto; min-height:44px; border:0; border-radius:10px; background:#FFC43D; color:#1E2A24; font:800 14px/1 "Plus Jakarta Sans",sans-serif; cursor:pointer; -webkit-tap-highlight-color:transparent; transition:transform .08s, filter .08s; }
+.pv-book:hover { filter:brightness(.97); }
+.pv-book:active, .pv-book[data-on] { transform:scale(.98); filter:brightness(.92); }
+.pv-save { flex:0 0 44px; width:44px; min-height:44px; border:1px solid #D6D0C2; border-radius:10px; background:#FFFFFF; color:#1E2A24; display:flex; align-items:center; justify-content:center; cursor:pointer; -webkit-tap-highlight-color:transparent; transition:transform .08s; }
+.pv-save:active { transform:scale(.94); }
+.pv-save[aria-pressed="true"] { color:#0E6B57; border-color:#0E6B57; }
+.pv-save[aria-pressed="true"] svg path { fill:#0E6B57; }
+.pv-book:focus-visible, .pv-save:focus-visible { outline:3px solid rgba(14,107,87,.35); outline-offset:2px; }
+.pv-flat { display:flex; gap:12px; align-items:center; background:#FFFFFF; border-radius:16px; padding:10px; font-family:"Plus Jakarta Sans",sans-serif; }
+.pv-flat .pv-thumb { flex:0 0 64px; height:64px; border-radius:10px; overflow:hidden; background:var(--tone, #D9E4DC); }
+.pv-flat .pv-thumb svg { width:100%; height:100%; display:block; }
+.pv-flat .pv-fl { display:flex; flex-direction:column; gap:4px; min-width:0; }
+.pv-flat .pv-price { font-size:17px; }
+.pv-flat .pv-line { font-size:13px; }
+.pv-rec { background:#FFFFFF; border-radius:16px; padding:14px 16px; font-family:"Plus Jakarta Sans",sans-serif; }
+.pv-rec .t { font:800 11px/1.3 "Plus Jakarta Sans",sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#0E6B57; margin-bottom:6px; }
+.pv-rec .r { display:flex; justify-content:space-between; gap:14px; padding:8px 0; border-top:1px solid #EFEBE2; font:500 14px/1.35 "Plus Jakarta Sans",sans-serif; color:#1E2A24; }
+.pv-rec .r:first-of-type { border-top:none; }
+.pv-rec .r span:first-child { color:#5F6B64; flex:0 0 auto; }
+.pv-rec .r span:last-child { font-weight:700; text-align:right; overflow-wrap:anywhere; }
+.pv-none { font:400 15px/21px "Plus Jakarta Sans",sans-serif; color:#1E2A24; }
+
+/* INPUT (name, phone) */
+[data-lb-part="text-input"] { padding:0 !important; }
+[data-lb-part="input-field"], [data-lb-part="text-input"] > div[data-slot="input-group"] { display:flex !important; flex-direction:row !important; align-items:center !important; gap:8px !important; background:#FFFFFF !important; border:1px solid #D6D0C2 !important; border-radius:12px !important; box-shadow:none !important; padding:6px 6px 6px 16px !important; min-height:56px; height:auto !important; }
+[data-lb-part="input-field"]:focus-within { border-color:#0E6B57 !important; }
+[data-lb-part="input-field"] > input, [data-lb-part="input-field"] > textarea, [data-lb-part="text-input"] > div[data-slot="input-group"] > input { flex:1 1 0% !important; width:auto !important; min-width:0 !important; height:auto !important; min-height:0 !important; padding:8px 0 !important; border:none !important; outline:none !important; box-shadow:none !important; background:transparent !important; color:#1E2A24 !important; font:500 17px/1.3 "Plus Jakarta Sans",sans-serif !important; resize:none !important; }
+[data-lb-part="input-field"] > div, [data-lb-part="text-input"] > div[data-slot="input-group"] > div { flex:0 0 auto !important; width:auto !important; max-width:none !important; }
+[data-lb-part="input-submit"] { background:#0E6B57 !important; color:#FFFFFF !important; border:none !important; border-radius:10px !important; min-width:44px; min-height:44px; }
+[data-lb-part="input-submit"] svg { color:#FFFFFF !important; stroke:#FFFFFF !important; }
+[data-lb-part="input-submit"]:disabled { opacity:.35; }
+[data-lb-part="input-field"] > div { pointer-events:none; }
+[data-lb-part="input-field"] > div > *, [data-lb-part="input-submit"] { pointer-events:auto; }
+[data-lb-part="input-error"] { color:#A1402A !important; font:600 13px/1.4 "Plus Jakarta Sans",sans-serif !important; margin-top:8px; }
+
+/* INJECTED: ghost (still copy of the tapped options), toast, hint, leaving fade */
+#pv-ghost[hidden] { display:none !important; }
+#pv-ghost { pointer-events:none; }
+body.pv-leaving [aria-label="Conversation messages"], body.pv-leaving [data-lb-part="text-input"] { opacity:.4; transition:opacity .12s; }
+body.pv-leaving.pv-booking [aria-label="Conversation messages"] { opacity:1; }
+body.pv-booking .pv-card:not(:has(.pv-book[data-on])) { opacity:.45; transition:opacity .12s; }
+#pv-toast { position:fixed; left:50%; bottom:64px; transform:translate(-50%, 8px); opacity:0; pointer-events:none; background:#1E2A24; color:#FFFFFF; font:600 13px/1.2 "Plus Jakarta Sans",sans-serif; padding:10px 14px; border-radius:999px; transition:opacity .18s, transform .18s; z-index:60; white-space:nowrap; }
+#pv-toast[data-on] { opacity:1; transform:translate(-50%, 0); }
+#pv-say { font:600 13px/1.4 "Plus Jakarta Sans",sans-serif; color:#A1402A; padding-top:8px; }
+#pv-say:empty { display:none; }
+
+/* BRANDING */
+[data-lb-part="window"] > .responsive-container:last-child > div:last-child { padding-top:14px !important; display:flex; justify-content:center; margin-top:auto; }
+body[data-pv-screen="results"] [data-lb-part="window"] > .responsive-container:last-child > div:last-child { margin-top:0; }
+[data-lb-part="branding"] { display:inline-flex !important; align-items:center; gap:6px; padding:6px 12px !important; border-radius:999px; background:#ECE7DB; color:#5F6B64 !important; font:600 11px/1.2 "Plus Jakarta Sans",sans-serif !important; }
+[data-lb-part="branding"]::before { content:""; display:inline-block; width:8px; height:8px; border-radius:50%; background:currentColor; }
+[data-lb-part="branding"] a, [data-lb-part="branding"] * { color:#5F6B64 !important; font-weight:600 !important; }
+
+/* DESKTOP: centred phone-width column */
+.responsive-container { max-width:480px !important; margin-left:auto !important; margin-right:auto !important; width:100%; }
+@media (min-width:700px) { [data-lb-part="header"] > .responsive-container { padding-top:max(32px, 5vh) !important; } }
+
+/* SCROLLBARS */
+* { scrollbar-width:thin; scrollbar-color:#D6D0C2 transparent; }
+*::-webkit-scrollbar { width:8px; height:8px; }
+*::-webkit-scrollbar-track { background:transparent; }
+*::-webkit-scrollbar-thumb { background:#D6D0C2; border-radius:8px; }
+*::-webkit-scrollbar-thumb:hover { background:#B9B2A2; }
+
+/* round 4 (cold review): secondary cards follow the mockup (no action row: whole card + small "Book"), header "Change" chip replaces the native New search, phone hint, submit ring */
+.pv-mini { cursor:pointer; transition:box-shadow .12s; }
+@media (hover:hover) { .pv-mini:hover { box-shadow:0 0 0 1px #0E6B57; } }
+.pv-lrow { display:flex; justify-content:space-between; align-items:baseline; gap:12px; }
+.pv-book-mini { flex:0 0 auto; min-height:32px; padding:0 14px; border-radius:999px; font-size:13px; }
+#pv-top .pv-edit { background:transparent; border:1px solid #0E6B57; color:#0E6B57; cursor:pointer; font:700 13px/1.2 "Plus Jakarta Sans",sans-serif; }
+#pv-top .pv-edit::before { content:""; width:12px; height:12px; margin-right:5px; background:no-repeat center/12px 12px url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230E6B57' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M4 20h4L19 9l-4-4L4 16z'/></svg>"); }
+#pv-top .pv-edit:active { transform:scale(.96); background:#0E6B57; color:#FFFFFF; }
+#pv-top .pv-edit:focus-visible { outline:3px solid rgba(14,107,87,.35); outline-offset:2px; }
+body.pv-js [data-lb-part="option-button"][data-pv-kind="link"]:is([aria-label="New search"]) { display:none !important; }
+body.pv-js[data-pv-screen="results"] [data-lb-part="option-button"][data-pv-newsearch] { display:none !important; }
+[data-lb-part="input-submit"] { outline:none !important; box-shadow:none !important; }
+[data-lb-part="input-submit"]:focus-visible { outline:3px solid rgba(14,107,87,.35) !important; outline-offset:2px; }
+body[data-pv-screen="phone"] [data-lb-part="input-error"]::after { content:" (with country code, e.g. +34 612 345 678)"; font-weight:500; }
+#pv-say { padding:0 0 8px; }

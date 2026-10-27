@@ -1,0 +1,127 @@
+{
+  "version": "3.1.0",
+  "design": {
+    "avatar_url": "https://storage.googleapis.com/media.landbot.io/1831/channels/9Q52N3FLYI8U0CSNS3JA3FCX8CKNFMOQ.png",
+    "design_mode": "advanced",
+    "background_type": "solid",
+    "background_color_gradient_from": "rgba(255, 255, 255, 1)",
+    "background_color_gradient_to": "rgba(249, 250, 251, 1)",
+    "launcher_image": null,
+    "launcher_background": "rgba(229, 231, 235, 1)",
+    "top_bar_separator": true,
+    "launcher_type": "only_icon",
+    "border_radius": 8,
+    "avatar_scale": 1,
+    "avatar_enabled": true,
+    "launcher_custom": true,
+    "avatar_shape": "rounded",
+    "background_color": "#F9F8F6",
+    "font_family": "Open Sans",
+    "font_size": 16,
+    "form_buttons_background_color": "#4543D2",
+    "form_buttons_border_color": "#4543D2",
+    "form_buttons_color": "#ffffff",
+    "form_help_color": "#6B6871",
+    "form_inputs_background_color": "#ffffff",
+    "form_inputs_border_color": "#DBD7D2",
+    "form_inputs_color": "#131119",
+    "header_background_color": "#F9F8F6",
+    "header_text": "#131119",
+    "top_bar_separator_color": "#DBD7D2",
+    "message_background_color_user": "#EAE7E3",
+    "message_background_color_bot": "#ffffff",
+    "message_color_bot": "#131119",
+    "message_color_user": "#131119",
+    "message_shape": "semirounded",
+    "llm_scroll_behavior": false,
+    "back_button_visible": true
+  },
+  "welcome": [
+    {
+      "extra": {
+        "id": "welcome_0",
+        "hide_textbox": true,
+        "welcome": true
+      },
+      "type": "text",
+      "message": "Hi there. Let’s get your home covered in about 90 seconds.",
+      "samurai": -1
+    },
+    {
+      "buttons": [
+        "A flat",
+        "A house"
+      ],
+      "payloads": [
+        "$flat",
+        "$house"
+      ],
+      "urls": [
+        null,
+        null
+      ],
+      "extra": {
+        "id": "welcome_1",
+        "buttons": {},
+        "welcome": true
+      },
+      "type": "dialog",
+      "title": "First, is your place a flat or a house?",
+      "samurai": -1
+    }
+  ],
+  "text": {
+    "inline_input_placeholder": "Type your @field here...",
+    "text_input_placeholder": "Type here",
+    "fields": [
+      "name",
+      "phone",
+      "email",
+      "postal code",
+      "address",
+      "country",
+      "birthdate"
+    ],
+    "autocomplete_input_placeholder": "Type to search options...",
+    "input_menu_help": "Choose an option",
+    "input_multi_help": "Choose at least one",
+    "input_multi_range_help": "Choose at least @min_options and up to @max_options",
+    "input_instant_search_help": "Filter the options",
+    "input_text_help": "Press enter to send",
+    "input_autocomplete_help": "Press enter to select",
+    "input_rating_help": "Click on the icons",
+    "input_file_help": "Drop a file here",
+    "input_files_help": "Drop your files here",
+    "input_file_instructions_help": "Max @maxfilesize",
+    "input_files_instructions_help": "Up to @maxfiles | Max @maxfilesize each",
+    "input_file_max_help": "You can only upload one file",
+    "input_files_max_help": "You can only upload up to @maxfiles files",
+    "input_number_help_min": "Minimum value is @field",
+    "input_number_help_max": "Maximum value is @field",
+    "send": "Send",
+    "back": "Back",
+    "search": "Search",
+    "select_file": "Select a file",
+    "select_files": "Select files",
+    "next": "Next",
+    "select": "Select",
+    "hto_assignation_message": "@agent just joined the conversation!",
+    "hto_agent_profile_text": "A human at @brand",
+    "stripe_pay_button_label": "Pay @amount",
+    "error_input_date": "Please enter a valid date (@format)",
+    "error_input_email": "That email does not look right. Try name@example.com.",
+    "error_input_phone": "Please introduce a valid phone number",
+    "error": "⚠️  It seems there is a technical problem. Please reload this page",
+    "thinking_message": ""
+  },
+  "launcher": {
+    "hidden": false
+  },
+  "keywords": {
+    "#back": "back",
+    "#init": "init"
+  },
+  "typing_options": {
+    "state": false
+  }
+}

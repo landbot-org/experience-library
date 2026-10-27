@@ -1,0 +1,216 @@
+/* [mockup 11] Home insurance quote · Hearthmoor (invented brand) · bot 4071581 / channel 3516133 · v4 web chat 3.1.0
+   Target: assets/mockups-canvas-20260917/Insurance.dc.html (390×844). Manrope, pink #FF3D7F, one question per screen,
+   avatar header "Nora · Your cover assistant", icon cards with subtitles, price card, pinned pill CTA, "Takes about 90 seconds".
+   Channel JS adds: card subtitles/icons (attributes), pick-then-CTA, price card, CTA, step line, text splits (clones).
+   Layers: THEME · HEADER · SCREEN MODE [OFF-CATALOG] · MESSAGES · CARDS · TEXT INPUT · INJECTED UI · END SCREENS · DESKTOP · SCROLLBARS.
+   Patterns from assets/goal5-config-3514134.css (pick-then-CTA, app mode) and clubfibre-form-3515393.css (text split, form mode). */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap');
+
+:root {
+  --ins-pink:#FF3D7F; --ins-ink:#1A1A1A; --ins-grey:#7A7A7A; --ins-line:#ECECEC; --ins-tint:#FFF0F5;
+  --background:#FFFFFF !important;
+  --foreground:#1A1A1A !important;
+  --muted-foreground:#7A7A7A !important;
+  --border:#ECECEC !important;
+  --button-color-primary-default:#FF3D7F !important;
+  --button-border-color-primary-default:#FF3D7F !important;
+  --button-font-color-primary-default:#FFFFFF !important;
+  --chat-bubble-color-font-bot:#1A1A1A !important;
+  --input-background-default:#FFFFFF !important;
+  --input-border-color-default:#ECECEC !important;
+  --input-border-color-focus:#FF3D7F !important;
+  --input-ring-color-focus:transparent !important;
+  --input-color-text-default:#1A1A1A !important;
+  --web-chat-header-background:#FFFFFF !important;
+  --web-chat-header-text-color:#1A1A1A !important;
+  --font-family-sans:"Manrope",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+  --typography-font-family:"Manrope",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+  --chat-bubble-font-family:"Manrope",-apple-system,"Segoe UI",Roboto,sans-serif !important;
+}
+html, body { background:#FFFFFF !important; }
+[data-lb-part="window"] { background:#FFFFFF !important; border:none !important; border-radius:0 !important; box-shadow:none !important; }
+
+/* HEADER: native avatar + title (channel tagline "Nora"); subtitle and the pink smiley avatar are CSS. [OFF-CATALOG: header internals] */
+[data-lb-part="header"] { background:#FFFFFF !important; }
+[data-lb-part="header"] > .responsive-container { padding:34px 26px 0 !important; }
+[data-lb-part="header"] > .responsive-container > div:last-child { display:none !important; }   /* header actions */
+[data-lb-part="header"] + div { display:none !important; }                                          /* divider */
+[data-lb-part="header"] [data-slot="avatar"] {
+  width:52px !important; height:52px !important; border-radius:50% !important; background:#FF3D7F no-repeat center / 34px 34px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='9' cy='10' r='1.3' fill='%23FFFFFF'/><circle cx='15' cy='10' r='1.3' fill='%23FFFFFF'/><path d='M8 15c1.5 2 6.5 2 8 0'/></svg>");
+}
+[data-lb-part="header"] [data-slot="avatar"] img { opacity:0 !important; }
+[data-lb-part="header"] h4 { font:800 15px/1.35 "Manrope",sans-serif !important; color:#1A1A1A !important; }
+[data-lb-part="header"] h4::after { content:"Your Hearthmoor cover assistant"; display:block; font:500 13px/1.35 "Manrope",sans-serif; color:#7A7A7A; }
+[data-lb-part="header"] > .responsive-container > div:first-child { gap:12px !important; }
+
+/* SCREEN MODE [OFF-CATALOG]: only the turn after the visitor's last answer; thread takes its content height, the footer takes the rest,
+   so the CTA group sits at the bottom and the cards sit right under the question (mockup layout). */
+[aria-label="Scrollable conversation area"] { flex:0 1 auto !important; min-height:0 !important; scrollbar-width:none; }
+[aria-label="Scrollable conversation area"]::-webkit-scrollbar { display:none; }   /* a 1 px sub-pixel overflow drew a bar at the window edge */
+[data-lb-part="window"] > .responsive-container:last-child { flex:1 0 auto; display:flex; flex-direction:column; padding:22px 26px 28px !important; }
+[aria-label="Conversation messages"] { padding:22px 26px 0 !important; gap:22px !important; }
+[aria-label="Conversation messages"] > div[data-ins-old] { display:none !important; }                          /* JS: arrival order */
+body:not(.ins-js) [aria-label="Conversation messages"] > div:has([data-lb-author="user"]) { display:none !important; }   /* no-JS fallback */
+body:not(.ins-js) [aria-label="Conversation messages"] > div:has(~ div [data-lb-author="user"]) { display:none !important; }
+[aria-label="Conversation messages"] > span { display:none !important; }                                  /* typing indicator */
+[data-lb-part="message"][data-lb-author="bot"] > div:has([data-lb-part="message-avatar"]) { display:none !important; }
+[data-lb-part="message-timestamp"] { display:none !important; }
+[data-lb-part="message"] { animation:ins-in .32s cubic-bezier(.2,.7,.2,1); }
+@keyframes ins-in { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+
+/* MESSAGES: text on the page, no bubble. Default = the question (bold); JS tags lead-ins, price, fine print, record. */
+[data-lb-part="message"][data-lb-author="bot"] > div { align-items:stretch !important; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-bubble"] { background:transparent !important; border:none !important; box-shadow:none !important; padding:0 !important; border-radius:0 !important; max-width:100% !important; width:100%; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-text"] { font:800 22px/1.3 "Manrope",sans-serif; color:#1A1A1A; white-space:pre-line; letter-spacing:-0.2px; }
+[data-lb-part="message"][data-ins-kind="lead"] [data-lb-part="message-text"], [data-lb-part="message"][data-ins-kind="lead"] .ins-clone { font:500 22px/1.4 "Manrope",sans-serif; color:#1A1A1A; }
+[data-lb-part="message"][data-ins-kind="fine"] [data-lb-part="message-text"] { font:500 13px/1.5 "Manrope",sans-serif; color:#7A7A7A; letter-spacing:0; }
+[data-ins-src] { display:none !important; }
+.ins-clone { margin-top:0 !important; width:100%; flex:1 1 auto; align-self:stretch; }
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-bubble"] { flex-direction:column !important; align-items:stretch !important; }
+
+/* CARDS: native option buttons as icon cards. Subtitle = span[data-sub] (JS attribute), icon = [data-ins-icon] (JS attribute). */
+div:has(> [data-lb-part="options-group"]) { border:none !important; padding:0 !important; background:transparent !important; box-shadow:none !important; border-radius:0 !important; }
+[data-lb-part="options-group"] { background:transparent !important; border:none !important; padding:0 !important; box-shadow:none !important; }
+[data-lb-part="options-prompt"], div:has(> [data-lb-part="options-prompt"]) { display:none !important; }
+[data-lb-part="options-group"] > div:has(> input) { display:none !important; }
+[data-lb-part="options-list"] { display:grid !important; grid-template-columns:1fr 1fr; gap:12px !important; max-height:none !important; height:auto !important; overflow:visible !important; padding:0 !important; }
+[data-lb-part="option-button"] {
+  display:flex !important; flex-direction:column !important; align-items:flex-start !important; justify-content:flex-start !important; gap:10px !important;
+  height:auto !important; min-height:120px; width:100%; padding:18px !important; text-align:left;
+  background:#FFFFFF !important; color:#1A1A1A !important; border:2px solid #ECECEC !important; border-radius:18px !important; box-shadow:none !important;
+  font:800 17px/1.25 "Manrope",sans-serif !important; cursor:pointer; -webkit-tap-highlight-color:transparent;
+}
+[data-lb-part="option-button"] span { white-space:normal !important; overflow:visible !important; text-overflow:clip !important; text-align:left !important; flex-grow:0 !important; }
+[data-lb-part="option-button"] span[data-sub]::after { content:attr(data-sub); display:block; max-width:118px; margin-top:2px; font:500 13px/1.4 "Manrope",sans-serif; color:#7A7A7A; }
+[data-lb-part="option-button"]::before { content:""; flex:0 0 auto; width:30px; height:30px; background:no-repeat center / 30px 30px; }
+[data-lb-part="option-button"]:not([data-ins-icon])::before { display:none; }
+@media (hover:hover) { [data-lb-part="option-button"]:hover { border-color:#FFB3CD !important; } }
+[data-lb-part="option-button"][data-lb-picked] { border-color:#FF3D7F !important; background:#FFF0F5 !important; transition:none !important; }
+[data-lb-part="option-button"]:focus-visible { outline:3px solid rgba(255,61,127,.35); outline-offset:2px; }
+body.ins-nudge [data-lb-part="option-button"] { animation:ins-nudge .38s ease; }
+@keyframes ins-nudge { 0%,100% { transform:none; } 25% { transform:translateX(-4px); border-color:#FF3D7F; } 75% { transform:translateX(4px); border-color:#FF3D7F; } }
+[data-ins-icon="flat"]::before  { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF3D7F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='4' y='3' width='16' height='18' rx='1'/><path d='M9 8h2M13 8h2M9 12h2M13 12h2M9 16h2M13 16h2'/></svg>"); }
+[data-ins-icon="house"]::before { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF3D7F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z'/></svg>"); }
+[data-ins-icon="key"]::before   { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF3D7F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='7.5' cy='15.5' r='3.5'/><path d='M10 13l9-9M15.5 7.5l2 2M13.5 9.5l2 2'/></svg>"); }
+[data-ins-icon="own"]::before   { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF3D7F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 11l9-8 9 8v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z'/><path d='M9 15l2 2 4-4'/></svg>"); }
+[data-ins-icon="bed"]::before   { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF3D7F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M2 19v-7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v7M2 15h20M5 10V6h14v4'/></svg>"); }
+[data-ins-icon="box"]::before   { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF3D7F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 8l-9-5-9 5 9 5 9-5z'/><path d='M3 8v8l9 5 9-5V8M12 13v8'/></svg>"); }
+[data-ins-icon="sofa"]::before  { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF3D7F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 11V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3'/><path d='M2 13a2 2 0 0 1 4 0v2h12v-2a2 2 0 0 1 4 0v4H2z'/><path d='M5 17v2M19 17v2'/></svg>"); }
+[data-ins-icon="tv"]::before    { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF3D7F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='12' rx='2'/><path d='M8 20h8M12 16v4'/></svg>"); }
+[data-ins-icon="gem"]::before   { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF3D7F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 3h12l4 6-10 12L2 9z'/><path d='M2 9h20M12 21L8 9l4-6 4 6-4 12'/></svg>"); }
+[data-ins-icon="shield"]::before{ background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF3D7F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z'/><path d='M12 9v6M9 12h6'/></svg>"); }
+
+/* TEXT INPUT (name, email): a big field; the pink CTA submits (native submit stays in the DOM, hidden). Input-row guard (REFERENCE §9). */
+[data-lb-part="text-input"] { padding:0 !important; }
+[data-lb-part="input-field"] {
+  display:flex !important; flex-direction:row !important; flex-wrap:nowrap !important; align-items:center !important; gap:8px !important;
+  background:#FFFFFF !important; border:2px solid #ECECEC !important; border-radius:18px !important; box-shadow:none !important; padding:6px 8px 6px 18px !important; min-height:62px;
+}
+[data-lb-part="input-field"]:focus-within { border-color:#FF3D7F !important; }
+[data-lb-part="text-input"][data-lb-state="error"] [data-lb-part="input-field"] { border-color:#D92D20 !important; }
+[data-lb-part="input-field"] > input, [data-lb-part="input-field"] > textarea { flex:1 1 0% !important; width:auto !important; min-width:0 !important; height:auto !important; padding:10px 0 !important;
+  border:none !important; outline:none !important; box-shadow:none !important; background:transparent !important; color:#1A1A1A !important; font:700 18px/1.3 "Manrope",sans-serif !important; }
+[data-lb-part="input-field"] > input::placeholder { color:#B5B5B5 !important; font-weight:600; }
+[data-lb-part="input-field"] > div { flex:0 0 auto !important; width:auto !important; max-width:none !important; }
+[data-lb-part="input-submit"] { display:none !important; }
+[data-lb-part="input-error"] { color:#D92D20 !important; font:600 13px/1.4 "Manrope",sans-serif !important; margin-top:8px; }
+
+/* INJECTED UI (channel JS): price card after the cards, CTA group at the bottom of the footer */
+#ins-price { display:flex; align-items:center; gap:14px; margin-top:22px; padding:16px 18px; border-radius:18px; background:#FFF0F5; }
+#ins-price[hidden] { display:none; }
+#ins-price .ins-p-l { display:flex; flex-direction:column; gap:2px; flex:1 1 auto; min-width:0; }
+#ins-price .ins-p-k { font:500 13px/1.4 "Manrope",sans-serif; color:#7A7A7A; }
+#ins-price .ins-p-v { font:800 26px/1.4 "Manrope",sans-serif; color:#1A1A1A; }
+#ins-price .ins-p-v small { font:700 14px/1 "Manrope",sans-serif; color:#7A7A7A; }
+#ins-price .ins-p-r { display:flex; flex-direction:column; align-items:flex-end; gap:4px; text-align:right; }
+#ins-price .ins-p-tag { font:700 12px/1.2 "Manrope",sans-serif; color:#FF3D7F; }
+#ins-price .ins-p-demo { font:500 11px/1.4 "Manrope",sans-serif; color:#A3A3A3; }
+#ins-price.ins-bump .ins-p-v { animation:ins-bump .28s ease; }
+@keyframes ins-bump { 50% { color:#FF3D7F; } }
+#ins-cta-wrap { margin-top:auto; padding-top:22px; display:flex; flex-direction:column; align-items:stretch; gap:22px; }
+#ins-cta { min-height:58px; border:0; border-radius:999px; background:#FF3D7F; color:#FFFFFF; font:800 18px/1 "Manrope",sans-serif; cursor:pointer; -webkit-tap-highlight-color:transparent; transition:transform .08s, background .12s; }
+#ins-cta:hover { background:#F5286E; }
+#ins-cta:active, #ins-cta.ins-pressed { transform:scale(.98); background:#E61E63; }
+#ins-cta:focus-visible { outline:3px solid rgba(255,61,127,.35); outline-offset:3px; }
+#ins-step { display:flex; align-items:center; justify-content:center; gap:6px; font:500 13px/1.3 "Manrope",sans-serif; color:#7A7A7A; }
+#ins-step[hidden] { display:none; }
+#ins-step::before { content:""; width:16px; height:16px; background:no-repeat center / 16px 16px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237A7A7A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M12 7v5l3 2'/></svg>"); }
+#ins-hint { display:flex; align-items:center; justify-content:center; gap:6px; font:600 13px/1.3 "Manrope",sans-serif; color:#D92D20; margin:-12px 0 -8px; }
+#ins-hint::before { content:""; width:14px; height:14px; background:no-repeat center / 14px 14px; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23D92D20' stroke-width='2.2' stroke-linecap='round'><circle cx='12' cy='12' r='9'/><path d='M12 8v5M12 16.5v.5'/></svg>"); }
+#ins-hint[hidden] { display:none; }
+
+/* SCREEN CHANGE (channel JS body.ins-leaving): fade out on send, the next screen fades in, so nothing jumps */
+[aria-label="Conversation messages"], #ins-price, [data-lb-part="window"] > .responsive-container:last-child > div:first-child { transition:opacity .16s ease; }
+body.ins-leaving [aria-label="Conversation messages"], body.ins-leaving #ins-price, body.ins-leaving [data-lb-part="window"] > .responsive-container:last-child > div:first-child { opacity:0; transition:opacity .1s ease; }
+
+body.ins-leaving #ins-cta { color:transparent; position:relative; }
+body.ins-leaving #ins-cta::after { content:""; position:absolute; left:50%; top:50%; width:22px; height:22px; margin:-11px 0 0 -11px; border-radius:50%;
+  border:3px solid rgba(255,255,255,.45); border-top-color:#FFFFFF; animation:ins-spin .7s linear infinite; }
+@keyframes ins-spin { to { transform:rotate(360deg); } }
+body.ins-leaving #ins-step { opacity:.4; }
+/* email error: the v4 line is built in ("Please enter a valid email"); re-worded in the build's tone. input-error is a catalog anchor. */
+body[data-ins-screen="email"] [data-lb-part="input-error"] > p { display:none !important; }   /* markup: svg icon + p text */
+body[data-ins-screen="email"] [data-lb-part="input-error"]::after { content:"That email looks incomplete. Try name@example.com."; font:600 13px/1.4 "Manrope",sans-serif; color:#D92D20; }
+
+/* BRANDING: the "Powered by Landbot" pill */
+[data-lb-part="window"] > .responsive-container:last-child > div:last-child { padding-top:22px !important; display:flex; justify-content:center; }
+[data-lb-part="branding"] { display:inline-block !important; padding:6px 12px !important; border-radius:999px; background:#F3F3F3; color:#7A7A7A !important; font:600 11px/1.2 "Manrope",sans-serif !important; }
+[data-lb-part="branding"]::before { content:""; display:inline-block; vertical-align:1px; width:8px; height:8px; margin-right:6px; border-radius:50%; background:currentColor; }
+[data-lb-part="branding"] a { color:#7A7A7A !important; font-weight:600 !important; }
+
+/* END SCREENS: quote price card and the record card are clones built by JS from the flow's own text */
+.ins-quote-card { display:flex; align-items:center; gap:14px; padding:18px; border-radius:18px; background:#FFF0F5; }
+.ins-quote-card .ins-q-l { display:flex; flex-direction:column; gap:2px; flex:1 1 auto; }
+.ins-quote-card .ins-q-k { font:500 13px/1.3 "Manrope",sans-serif; color:#7A7A7A; letter-spacing:0; }
+.ins-quote-card .ins-q-v { font:800 34px/1.15 "Manrope",sans-serif; color:#1A1A1A; letter-spacing:-0.5px; }
+.ins-quote-card .ins-q-v small { font:700 15px/1 "Manrope",sans-serif; color:#7A7A7A; letter-spacing:0; }
+.ins-quote-card .ins-q-r { display:flex; flex-direction:column; align-items:flex-end; gap:4px; text-align:right; }
+.ins-quote-card .ins-q-tag { font:700 12px/1.2 "Manrope",sans-serif; color:#FF3D7F; letter-spacing:0; }
+.ins-quote-card .ins-q-demo { font:500 11px/1.4 "Manrope",sans-serif; color:#A3A3A3; }
+.ins-record { border:2px solid #ECECEC; border-radius:18px; padding:16px 18px; }
+.ins-record .ins-r-t { display:flex; align-items:center; gap:8px; font:800 12px/1.2 "Manrope",sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#FF3D7F; margin-bottom:10px; }
+.ins-record .ins-r-row { display:flex; justify-content:space-between; gap:12px; padding:7px 0; border-top:1px solid #F3F3F3; font:500 14px/1.35 "Manrope",sans-serif; color:#1A1A1A; letter-spacing:0; }
+.ins-record .ins-r-row:first-of-type { border-top:none; }
+.ins-record .ins-r-k { color:#7A7A7A; flex:0 0 auto; }
+.ins-record .ins-r-v { font-weight:700; text-align:right; min-width:0; overflow-wrap:anywhere; }
+/* quote: "Get covered" is the pink CTA (proxy), "Change my answers" stays as a quiet text button; done/fail: the CTA is "Start over" */
+body[data-ins-screen="quote"] [data-lb-part="options-list"], body[data-ins-screen="done"] [data-lb-part="options-list"], body[data-ins-screen="fail"] [data-lb-part="options-list"] { display:flex !important; justify-content:center; }
+[data-lb-part="option-button"][data-ins-role="primary"] { display:none !important; }
+[data-lb-part="option-button"][data-ins-role="link"] { min-height:0 !important; padding:6px 10px !important; border:none !important; background:transparent !important; color:#7A7A7A !important; font:700 14px/1.2 "Manrope",sans-serif !important; align-items:center !important; text-decoration:underline; text-underline-offset:3px; width:auto; }
+[data-lb-part="option-button"][data-ins-role="link"]::before { display:none; }
+body[data-ins-screen="quote"] #ins-cta-wrap, body[data-ins-screen="done"] #ins-cta-wrap, body[data-ins-screen="fail"] #ins-cta-wrap { padding-top:14px; }
+
+/* DESKTOP: one centred column, same layout as the phone */
+.responsive-container { max-width:480px !important; margin-left:auto !important; margin-right:auto !important; width:100%; }
+@media (min-width:700px) {
+  /* no phone-length void on a desktop: fixed top offset (centring made the header jump between screens) and the CTA follows the price card */
+  [data-lb-part="window"] { justify-content:flex-start !important; }
+  [data-lb-part="header"] > .responsive-container { padding-top:max(48px, 9vh) !important; }
+  [data-lb-part="window"] > .responsive-container:last-child { flex:0 0 auto; padding-bottom:36px !important; }
+  #ins-cta-wrap { margin-top:0; padding-top:36px; }
+}
+
+/* SCROLLBARS */
+* { scrollbar-width:thin; scrollbar-color:#E0E0E0 transparent; }
+*::-webkit-scrollbar { width:8px; height:8px; }
+*::-webkit-scrollbar-thumb { background:#E0E0E0; border-radius:8px; }
+
+/* BACK (Jiaqi 09-25): native Back ON (channel design.back_button_visible:true). v4 puts it in a hover-only wrapper (opacity-0 group-hover)
+   inside the last bot message's group [OFF-CATALOG: no data-lb-part anchor]. The group is flattened (display:contents) so the wrapper can
+   sit at the top of the screen (order:-1), right under the avatar header, as a small "‹ Back". Forced opacity:1 (phones have no hover),
+   position:static (fixed breaks: .responsive-container is a CSS container). Hidden on screen 1 (nothing before it) and on the done/fail
+   end screens (results, not questions). The quote shows it: Back from the quote re-asks the email, a second Back the last card. */
+[aria-label="Conversation messages"] > div:has(> div > button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { display:contents; }
+[aria-label="Conversation messages"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { opacity:1 !important; position:static !important; display:flex; order:-1; margin:-8px 0 -10px; }
+[aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"] { position:static !important; height:auto !important; min-height:40px; padding:6px 12px 6px 0 !important;
+  border:none !important; background:transparent !important; box-shadow:none !important; color:#7A7A7A !important; font:700 14px/1.2 "Manrope",sans-serif !important; cursor:pointer; gap:0; -webkit-tap-highlight-color:transparent; }
+[aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"] svg { display:none; }
+[aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"]::before { content:"\2039"; font:700 22px/1 "Manrope",sans-serif; margin:-3px 6px 0 0; }
+@media (hover:hover) { [aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"]:hover { color:#FF3D7F !important; } }
+[aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"]:active { color:#E61E63 !important; transform:translateX(-2px); }
+[aria-label="Conversation messages"] button[data-slot="button"][data-size="sm"][data-variant="ghost"]:focus-visible { outline:3px solid rgba(255,61,127,.35); outline-offset:2px; border-radius:8px; }
+body[data-ins-screen="type"] [aria-label="Conversation messages"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]),
+body[data-ins-screen="done"] [aria-label="Conversation messages"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]),
+body[data-ins-screen="fail"] [aria-label="Conversation messages"] div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { display:none !important; }

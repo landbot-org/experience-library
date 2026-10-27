@@ -1,0 +1,204 @@
+/* lb-style: quenderly-handoff 2026-09-25 · mockup 14 · bot-to-human handoff, messenger look (GOAL 11)
+   Palette from the mockup: blue #1F3FD1 · ink #1F1F1F · grey text #6B7280 · bot bubble #F2F3F5 · hairline #E4E6EA
+   · online dot #5BE38F · avatar orange #FFB86B/#5A2E00 · avatar teal #8BE0C4/#0B4A36. Font Figtree.
+   Works without the channel JS: the native header, cards as plain bubbles and the takeover line stay readable.
+   Everything marked [OFF-CATALOG] targets web-chat internals and may break on a web-chat release. */
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --background:#FFFFFF !important;
+  --foreground:#1F1F1F !important;
+  --muted:#6B7280 !important;
+  --muted-foreground:#6B7280 !important;
+  --border:#E4E6EA !important;
+  --button-color-primary-default:#1F3FD1 !important;
+  --button-color-primary-hover:#1733B0 !important;
+  --button-color-primary-active:#1733B0 !important;
+  --button-color-primary-disabled:#1F3FD1 !important;
+  --button-border-color-primary-default:#1F3FD1 !important;
+  --button-font-color-primary-default:#FFFFFF !important;
+  --button-font-color-primary-disabled:#FFFFFF !important;
+  --chat-bubble-color-font-bot:#1F1F1F !important;
+  --chat-bubble-surface-user:#1F3FD1 !important;
+  --chat-bubble-border-color-user:#1F3FD1 !important;
+  --chat-bubble-color-font-user:#FFFFFF !important;
+  --input-background-default:#FFFFFF !important;
+  --textarea-background-default:#FFFFFF !important;
+  --input-border-color-default:transparent !important;
+  --textarea-border-color-default:transparent !important;
+  --input-color-text-default:#1F1F1F !important;
+  --textarea-color-text-default:#1F1F1F !important;
+  --select-content-background:#FFFFFF !important;
+  --web-chat-header-background:#1F3FD1 !important;
+  --web-chat-header-text-color:#FFFFFF !important;
+  --font-family-sans:"Figtree", -apple-system, BlinkMacSystemFont, sans-serif !important;
+  --typography-font-family:"Figtree", -apple-system, BlinkMacSystemFont, sans-serif !important;
+  --chat-bubble-font-family:"Figtree", -apple-system, BlinkMacSystemFont, sans-serif !important;
+  --font-size:16px !important;
+}
+html, body { background:#FFFFFF !important; font-family:"Figtree", -apple-system, BlinkMacSystemFont, sans-serif; }
+
+/* ANCHORS (plain) */
+[data-lb-part="window"] { background:#FFFFFF; border:none; border-radius:0; }
+[data-lb-part="header"] { background:#1F3FD1; color:#FFFFFF; border-bottom:none; }
+[data-lb-part="message-text"] { font-size:15.5px; line-height:1.45; letter-spacing:normal; overflow-wrap:anywhere; }
+[data-lb-part="message-bubble"] { padding:12px 15px; max-width:82%; box-shadow:none; border:none; }
+/* v4 sets one corner with a layered !important utility reading var(--radius-xs): the corner goes through the token */
+[data-lb-part="message"][data-lb-author="bot"] [data-lb-part="message-bubble"] { background:#F2F3F5; color:#1F1F1F; border-radius:18px !important; --radius-xs:18px; }
+[data-lb-part="message"][data-lb-author="user"] [data-lb-part="message-bubble"] { background:#1F3FD1; color:#FFFFFF; border-radius:18px 18px 6px 18px !important; --radius-xs:6px; }
+[data-lb-part="message-timestamp"] { color:#9CA3AF; }
+
+/* quick replies: outlined blue pills, right-aligned like the visitor's own messages */
+[data-lb-part="options-group"] { background:transparent; border:none; box-shadow:none; padding:0; }
+[data-lb-part="options-prompt"] { display:none; }
+[data-lb-part="options-list"] { display:flex; flex-direction:row; flex-wrap:wrap; justify-content:flex-end; gap:8px; max-height:none; overflow:visible; }
+[data-lb-part="option-button"] {
+  width:auto; min-height:44px; margin:0; padding:10px 18px; border-radius:999px; border:1.5px solid #1F3FD1;
+  background:#FFFFFF; color:#1F3FD1; font:600 15px/1.2 "Figtree", sans-serif; box-shadow:none; justify-content:center;
+  transition:background-color 80ms ease, color 80ms ease, transform 80ms ease;
+}
+@media (hover:hover) { [data-lb-part="option-button"]:hover { background:#EEF1FF; color:#1F3FD1; } }
+[data-lb-part="option-button"]:active,
+[data-lb-part="option-button"][data-lb-state="selected"] { background:#1F3FD1; color:#FFFFFF; transform:scale(.97); }
+[data-lb-part="option-button"]:focus-visible { outline:3px solid #D6DDFF; outline-offset:2px; }
+
+/* composer: "Write a reply" + round blue send, hairline on top */
+[data-lb-part="input-field"] {
+  display:flex !important; flex-direction:row !important; align-items:center !important; gap:10px !important; height:auto !important;
+  background:transparent !important; border:none !important; border-radius:0 !important; box-shadow:none !important; ring:0;
+}
+[data-lb-part="free-text"] { resize:none; max-height:120px; }
+[data-lb-part="input-submit"] {
+  width:48px !important; height:48px !important; min-width:48px !important; border-radius:50% !important; border:none !important; opacity:1 !important;
+  background:#1F3FD1 url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12h14M13 6l6 6-6 6'/></svg>") no-repeat center / 22px 22px !important;
+  transition:transform 80ms ease, background-color 80ms ease;
+}
+[data-lb-part="input-submit"]:active { transform:scale(.92); background-color:#1733B0 !important; }
+[data-lb-part="input-submit"]:disabled { background-color:#1F3FD1 !important; opacity:.9 !important; }
+[data-lb-part="input-submit"] svg { display:none; }
+[data-lb-part="input-error"] { color:#C62828; font-size:14px; }
+[data-lb-part="text-input"][data-lb-state="error"] [data-lb-part="input-field"] > input { box-shadow:inset 0 -2px 0 #C62828 !important; }
+[data-lb-part="branding"] { display:inline-flex; align-items:center; gap:6px; margin:6px auto 0; padding:5px 14px; border-radius:999px; background:#F2F3F5; color:#6B7280; font-size:12px; font-weight:600; letter-spacing:.02em; }
+[data-lb-part="branding"]::before { content:""; width:8px; height:8px; border-radius:50%; background:#6B7280; }
+[data-lb-part="branding"] a { color:#6B7280; }
+
+/* INPUT-ROW GUARD (mandatory): the submit wrapper is w-full and would collapse the input */
+[data-lb-part="input-field"] > input, [data-lb-part="input-field"] > textarea {
+  flex:1 1 0% !important; width:auto !important; min-width:0 !important; min-height:48px !important; height:auto !important;
+  padding:12px 4px !important; font:400 17px/24px "Figtree", sans-serif !important; color:#1F1F1F !important; background:transparent !important;
+  border:none !important; box-shadow:none !important; -moz-appearance:textfield;
+}
+[data-lb-part="input-field"] > input::-webkit-outer-spin-button,
+[data-lb-part="input-field"] > input::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
+[data-lb-part="input-field"] > input::placeholder, [data-lb-part="input-field"] > textarea::placeholder { color:#6B7280 !important; opacity:1; }
+[data-lb-part="input-field"] > div { flex:0 0 auto !important; width:auto !important; max-width:none !important; padding:0 !important; }
+
+/* takeover = the mockup's centred "X joined" system line (native card: avatar + title + subtitle) */
+[data-lb-part="takeover"] { background:transparent; border:none; border-radius:0; margin:6px 0 2px; }
+[data-lb-part="takeover"] > div { flex-direction:column; align-items:stretch; gap:4px; padding:0; }
+[data-lb-part="takeover"] > div > div { align-items:center; }
+[data-lb-part="takeover-avatar"] { display:none; }
+[data-lb-part="takeover-title"] {
+  width:100%; text-align:center; font:700 14px/20px "Figtree", sans-serif; letter-spacing:.02em; color:#6B7280;
+  background:linear-gradient(#E4E6EA, #E4E6EA) center / 100% 1px no-repeat;
+}
+/* the JS copies the REAL assigned agent's name (the avatar's alt text) into data-qd-name → "<name> joined" */
+[data-lb-part="takeover-title"][data-qd-name] { font-size:0; line-height:0; padding:10px 0; }
+[data-lb-part="takeover-title"][data-qd-name]::after { content:attr(data-qd-name) " joined"; font-size:14px; line-height:20px; padding:0 12px; background:#FFFFFF; }
+[data-lb-part="takeover-subtitle"] { width:100%; text-align:center; font-size:13px; line-height:18px; color:#6B7280; white-space:pre-line; }
+[data-lb-part="takeover-subtitle"]::after { content:"\A Demo inbox · a real teammate replies here when online"; color:#9CA3AF; }
+
+/* SCROLLBARS */
+* { scrollbar-width:thin; scrollbar-color:#D1D5DB transparent; }
+*::-webkit-scrollbar { width:6px; height:6px; }
+*::-webkit-scrollbar-track { background:transparent; }
+*::-webkit-scrollbar-thumb { background:#D1D5DB; border-radius:6px; }
+*::-webkit-scrollbar-thumb:hover { background:#9CA3AF; }
+
+/* ---------------- [OFF-CATALOG] web-chat internals (layout classes, :has(), aria-labels) ---------------- */
+/* [OFF-CATALOG] messenger threads show no avatar / "· Just now" row above each bot bubble (gap: no anchor to hide it) */
+[data-lb-part="message"][data-lb-author="bot"]:not([data-qd="agent"]) > div:has([data-lb-part="message-avatar"]) { display:none !important; }
+/* [OFF-CATALOG] a message from the human agent keeps its avatar and name (set as data-qd="agent" by the JS: it comes after the takeover line) */
+[data-lb-part="message"][data-qd="agent"] [data-lb-part="message-avatar"] { width:36px; height:36px; border-radius:50%; overflow:hidden; }
+[data-lb-part="message"][data-qd="agent"] > div:first-child p { color:#6B7280; font-size:12.5px; }
+/* [OFF-CATALOG] the header separator line (gap: no anchor) */
+[data-lb-part="header"] + [data-slot="separator"] { display:none !important; }
+/* [OFF-CATALOG] thread spacing (gap: no message-list anchor) */
+[aria-label="Conversation messages"] { gap:14px !important; padding:18px 16px 12px !important; }
+/* [OFF-CATALOG] the typing indicator is a bare <span> in the list: drawn as the mockup's three-dot bubble */
+[aria-label="Conversation messages"] > span {
+  display:inline-flex !important; align-self:flex-start; width:64px; height:34px; border-radius:17px; background:#F2F3F5; font-size:0 !important; color:transparent !important;
+  background-image:radial-gradient(circle, #9CA3AF 4px, transparent 4.5px), radial-gradient(circle, #9CA3AF 4px, transparent 4.5px), radial-gradient(circle, #9CA3AF 4px, transparent 4.5px);
+  background-size:10px 10px; background-repeat:no-repeat; background-position:17px 12px, 27px 12px, 37px 12px;
+}
+[aria-label="Conversation messages"] > span * { display:none !important; }
+/* [OFF-CATALOG] no card behind the options and no search box (gap: no options-container anchor) */
+div:has(> [data-lb-part="options-group"]) { background:transparent !important; border:none !important; box-shadow:none !important; }
+[data-lb-part="options-group"] > div:has(> input) { display:none !important; }
+/* [OFF-CATALOG] NATIVE BACK (channel design.back_button_visible:true). No anchor; hover-only by default (invisible on a phone)
+   → forced visible and kept IN FLOW (position:fixed traps it in the scroll area). Drawn as the mockup's back chevron + "Back".
+   Hidden once the chat is with a person or on the record screen (body.qd-end, set by the JS). */
+div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { opacity:1 !important; visibility:visible !important; }
+button[data-slot="button"][data-size="sm"][data-variant="ghost"] {
+  display:inline-flex !important; align-items:center; gap:4px; height:auto !important; min-height:36px; padding:6px 14px 6px 8px !important;
+  border:none !important; border-radius:999px !important; background:#EEF1FF !important; color:#1F3FD1 !important;
+  font:600 14px/1 "Figtree", sans-serif !important; opacity:1 !important; transition:background-color 80ms ease, transform 80ms ease;
+}
+button[data-slot="button"][data-size="sm"][data-variant="ghost"]::before {
+  content:""; width:18px; height:18px; flex:0 0 auto;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231F3FD1' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M15 5l-7 7 7 7'/></svg>") no-repeat center / 18px 18px;
+}
+button[data-slot="button"][data-size="sm"][data-variant="ghost"] svg { display:none; }
+button[data-slot="button"][data-size="sm"][data-variant="ghost"]:hover { background:#DDE3FF !important; }
+button[data-slot="button"][data-size="sm"][data-variant="ghost"]:active { background:#1F3FD1 !important; color:#FFFFFF !important; transform:scale(.96); }
+body.qd-end div:has(> button[data-slot="button"][data-size="sm"][data-variant="ghost"]) { display:none !important; }
+/* the visitor's "Back" line reads as a small system note, and a card superseded after a Back is folded away */
+[data-lb-part="message"][data-qd="back"] { justify-content:center; }
+[data-lb-part="message"][data-qd="back"] [data-lb-part="message-bubble"] { background:transparent !important; color:#6B7280 !important; padding:0 !important; border-radius:0 !important; }
+[data-lb-part="message"][data-qd="back"] [data-lb-part="message-text"] { font-size:0 !important; }
+[data-lb-part="message"][data-qd="back"] [data-lb-part="message-text"]::after { content:"You went back to change an answer"; font-size:13px; color:#6B7280; }
+[data-lb-part="message"][data-qd="back"] > div { justify-content:center !important; padding-left:0 !important; }
+[data-lb-part="message"][data-qd-old] { display:none !important; }
+/* [OFF-CATALOG] footer: hairline on top, composer row, branding pill centred */
+[data-lb-part="window"] > .responsive-container:last-child { border-top:1px solid #E4E6EA; padding:10px 16px 8px !important; }
+[data-lb-part="window"] > .responsive-container:last-child > div { align-items:stretch; }
+[data-lb-part="window"] > .responsive-container:last-child div:has(> [data-lb-part="branding"]) { display:flex; justify-content:center; }
+/* [OFF-CATALOG] focus ring on the composer group (v4 draws a 3px ring on the whole group) */
+[data-lb-part="input-field"]:focus-within { box-shadow:none !important; --tw-ring-shadow:0 0 #0000 !important; }
+
+/* ---------------- channel JS elements (#qd-*, data-qd-*) ---------------- */
+/* the JS draws the mockup header inside the native header; the native row is hidden only when the JS ran */
+body.qd-js [data-lb-part="header"] > .responsive-container { display:none !important; }
+#qd-head { background:#1F3FD1; color:#FFFFFF; font-family:"Figtree", sans-serif; }
+#qd-head .qd-in { position:relative; max-width:720px; margin:0 auto; padding:20px 20px 20px; }
+#qd-head .qd-stack { display:flex; justify-content:center; margin-bottom:12px; }
+#qd-head .qd-av { width:40px; height:40px; border-radius:50%; border:2.5px solid #1F3FD1; margin-left:-10px; display:flex; align-items:center; justify-content:center; font:800 15px/1 "Figtree", sans-serif; }
+#qd-head .qd-av:first-child { margin-left:0; }
+#qd-head .qd-av.a { background:#FFB86B; color:#5A2E00; }
+#qd-head .qd-av.b { background:#8BE0C4; color:#0B4A36; }
+#qd-head .qd-av.c { background:#FFFFFF; color:#1F3FD1; }
+#qd-head .qd-av svg { width:20px; height:20px; }
+#qd-head .qd-title { font:800 21px/1.2 "Figtree", sans-serif; letter-spacing:-.005em; margin:0; }
+#qd-head .qd-status { display:flex; align-items:center; gap:8px; margin-top:8px; font:500 14px/1.3 "Figtree", sans-serif; color:rgba(255,255,255,.92); }
+#qd-head .qd-status::before { content:""; width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,.55); flex:0 0 auto; transition:background-color 300ms ease; }
+/* the dot turns green only once a real team member has been assigned (body.qd-live, set by the JS when the takeover line exists) */
+body.qd-live #qd-head .qd-status::before { background:#5BE38F; }
+/* context / record card, built by the JS from the "Shared with … · Label: value" line */
+[data-lb-part="message"][data-qd="card"] { width:100%; max-width:560px; }
+[data-lb-part="message"][data-qd="card"] [data-lb-part="message-bubble"] { background:#FFFFFF !important; border:1.5px solid #E4E6EA !important; border-radius:14px !important; max-width:100%; width:100%; padding:14px 16px 10px; box-sizing:border-box; }
+[data-lb-part="message"][data-qd="card"] [data-lb-part="message-text"] { display:none !important; }
+.qd-card-t { display:flex; align-items:center; gap:8px; margin-bottom:8px; font:800 12px/1.2 "Figtree", sans-serif; letter-spacing:.09em; text-transform:uppercase; color:#6B7280; }
+.qd-card-t svg { width:15px; height:15px; flex:0 0 auto; }
+.qd-card-r { display:grid; grid-template-columns:minmax(80px, 40%) 1fr; column-gap:12px; padding:2px 0; font:400 15px/1.45 "Figtree", sans-serif; }
+.qd-card-r span:first-child { color:#6B7280; }
+.qd-card-r span:last-child { color:#1F1F1F; font-weight:700; letter-spacing:normal; overflow-wrap:break-word; min-width:0; }
+/* the "Demo: …" line reads as a small caption, not a message */
+[data-lb-part="message"][data-qd="demo"] [data-lb-part="message-bubble"] { background:transparent !important; padding:0 4px; }
+[data-lb-part="message"][data-qd="demo"] [data-lb-part="message-text"] { font-size:13px; color:#6B7280; }
+
+/* [OFF-CATALOG] round 2: no fade mask at the top of the thread (the mockup has none); tighter gap above the chips */
+[data-lb-part="window"] > .scroll-fade { -webkit-mask-image:none !important; mask-image:none !important; }
+[data-lb-part="window"] > .responsive-container:last-child div:has(> [data-lb-part="options-group"]) { padding-top:0 !important; margin-top:0 !important; }
+/* round 6: the card takes the bubble's full width (the bubble is an inline flex box that shrink-wrapped it, so the email wrapped) */
+[data-lb-part="message"][data-qd="card"] [data-lb-part="message-bubble"] { display:block !important; }
+.qd-card { display:block; width:100%; box-sizing:border-box; }

@@ -1,0 +1,98 @@
+#!/usr/bin/env python3
+"""Pull the public layer of every web experience into experiences/<slug>/channel/.
+
+Each Landbot share URL serves its published config at .../index.json, with no
+account needed. That config carries the channel's Custom CSS, Custom JS, design
+settings, welcome message and media. It does NOT carry the flow or the AI agents:
+those need an export from the account that owns the bot.
+
+Run it again any time; it overwrites channel/ with what is live now.
+"""
+import json
+import pathlib
+import re
+import sys
+import urllib.request
+
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+MEDIA = re.compile(r"https://storage\.googleapis\.com/media\.landbot\.io/[^\s\"')\\]+")
+# Anything that looks like a secret or personal data stops the pull for review.
+SUSPECT = re.compile(
+    r"hooks\.(zapier|slack)\.com|api[_-]?key|secret|bearer\s|[A-Za-z0-9._%+-]+@(?!example\.)[A-Za-z0-9.-]+\.[a-z]{2,}",
+    re.I,
+)
+
+
+# Matches reviewed and known to be safe: form placeholders, and the visitor's own
+# session token that the webchat sets at runtime.
+ALLOWED = {"nombre@ejemplo.com", "name@company.com", "you@company.com", "Bearer "}
+
+
+def fetch(url, binary=False):
+    with urllib.request.urlopen(url, timeout=30) as r:
+        data = r.read()
+    return data if binary else data.decode("utf-8")
+
+
+def split_scripts(foot):
+    """Custom JS is stored as one or more <script> tags; return their bodies."""
+    return [m.strip() for m in re.findall(r"<script[^>]*>(.*?)</script>", foot or "", re.S)]
+
+
+def pull(exp):
+    base = exp["live_url"].rsplit("/", 1)[0]
+    cfg = json.loads(fetch(base + "/index.json"))
+    out = ROOT / "experiences" / exp["slug"] / "channel"
+    out.mkdir(parents=True, exist_ok=True)
+
+    (out / "style.css").write_text((cfg.get("style") or "").rstrip() + "\n")
+
+    scripts = split_scripts(cfg.get("foot"))
+    js = out / "custom.js"
+    if scripts:
+        js.write_text("\n\n".join(scripts) + "\n")
+    elif js.exists():
+        js.unlink()
+
+    design = {
+        "version": cfg.get("version"),
+        "design": cfg.get("design"),
+        "welcome": cfg.get("welcome"),
+        "text": cfg.get("text"),
+        "launcher": cfg.get("launcher"),
+        "keywords": cfg.get("keywords"),
+        "typing_options": cfg.get("typing_options"),
+    }
+    (out / "config.json").write_text(json.dumps(design, ensure_ascii=False, indent=2) + "\n")
+
+    assets = out / "assets"
+    found = sorted(set(MEDIA.findall(json.dumps(cfg))))
+    for url in found:
+        assets.mkdir(exist_ok=True)
+        (assets / url.rsplit("/", 1)[1]).write_bytes(fetch(url, binary=True))
+
+    text = (out / "style.css").read_text() + js.read_text() if js.exists() else (out / "style.css").read_text()
+    hits = sorted(set(m.group(0) for m in SUSPECT.finditer(text + json.dumps(design))) - ALLOWED)
+    return bool(scripts), len(found), hits
+
+
+def main():
+    catalog = json.loads((ROOT / "catalog.json").read_text())
+    flagged = False
+    for exp in catalog["experiences"]:
+        if exp["channel"] != "web":
+            continue
+        if exp.get("hold"):
+            print(f"{exp['slug']:45} held, not pulled: {exp['hold'][:60]}…")
+            continue
+        has_js, n_assets, hits = pull(exp)
+        exp["export"]["channel_css"] = True
+        exp["export"]["channel_js"] = has_js
+        print(f"{exp['slug']:45} js={'yes' if has_js else 'no ':3} assets={n_assets}" + (f"  REVIEW: {hits}" if hits else ""))
+        flagged |= bool(hits)
+    (ROOT / "catalog.json").write_text(json.dumps(catalog, ensure_ascii=False, indent=2) + "\n")
+    sys.exit(1 if flagged else 0)
+
+
+if __name__ == "__main__":
+    main()
